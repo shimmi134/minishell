@@ -6,15 +6,26 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/04/29 17:57:03 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/04/29 18:37:41 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_test.h"
 
-void	do_builtins(t_shell *elem, t_env *env)
+void delete_node(t_env **env, t_env *target, t_env *prev)
+{
+	if (prev == target)
+		*env = target->next;
+	else
+		prev->next = target->next;
+	free(target);
+}
+
+
+void	do_builtins(t_shell *elem, t_env **env, char *av[])
 {
 	char	*buf;
+	t_env	*nd;
 	int		i;
 
 	i = 0;
@@ -25,6 +36,7 @@ void	do_builtins(t_shell *elem, t_env *env)
 			perror("getcwd");
 		else
 			printf("%s\n", buf);
+		free(buf);
 	}
 	else if (elem->word == "exit")
 	{
@@ -33,14 +45,33 @@ void	do_builtins(t_shell *elem, t_env *env)
 	}
 	else if (elem->word == "env")
 	{
-		while (env)
+		nd = (*env);
+		while (nd)
 		{
-			printf("%s=%s\n",env->key, env->value);
-			env = env->next;
+			printf("%s=%s\n",nd->key, nd->value);
+			nd = nd->next;
 		}
 	}
 	else if (elem->word == "unset")
 	{
+		t_env	*nd = (*env);
+		t_env	*prev = nd;
+		while (nd)
+		{
+			if (!ft_strncmp(av[1],nd->key,ft_strlen(av[1])))
+			{
+				delete_node(env, nd, prev);
+				break ;
+			}
+			prev = nd;
+			nd = nd->next;
+		}
+		nd = (*env);
+		while (nd)
+		{
+			printf("%s=%s\n",nd->key, nd->value);
+			nd = nd->next;
+		}
 	}
 	else if (elem->word == "echo")
 	{
@@ -52,10 +83,10 @@ void	do_builtins(t_shell *elem, t_env *env)
 	{
 	}
 }
-void	do_element(t_shell *elem, t_env *env)
+void	do_element(t_shell *elem, t_env **env, char *av[])
 {
 	if (elem->type == "built-in")
-		do_builtins(elem, env);
+		do_builtins(elem, env, av);
 }
 
 t_env	*create_node(char *env)
@@ -101,7 +132,7 @@ t_env	*copy_env(char *envp[])
 	return (head);
 }
 
-int	main(int ac, char *argv, char *envp[])
+int	main(int ac, char *argv[], char *envp[])
 {
 	t_shell	*element;
 	t_env	*env;
@@ -109,6 +140,6 @@ int	main(int ac, char *argv, char *envp[])
 	env = copy_env(envp);
 	element = malloc(sizeof(t_shell));
 	element->type = "built-in";
-	element->word = "env";
-	do_element(element, env);
+	element->word = "unset";
+	do_element(element, &env, argv);
 }
