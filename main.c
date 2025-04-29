@@ -98,7 +98,7 @@ int main (int argc, char **argv)
 	i = 0;
 	(void) argc;
 	//char *str = argv[1];
-	char *str = "\"\'quoted_word hello\'\"echo|test><$";
+	char *str = "\"\"\'quot\"$USER\"ed_word hello\'echo\'$USER\'|test><$\"\"";
 	//char *str = "test |hello";
 	t_token *node = lexer(str);
 	t_token *head = node;

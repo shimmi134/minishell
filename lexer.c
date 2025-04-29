@@ -41,6 +41,12 @@ char *add_quoted_word(char *str, int *i, int type)
 			j++;
 	}
 	arr[j] = '\0';
+	if (str[*i] != quote)
+	{
+		printf("Error: no closing quote\n");
+		exit(EXIT_FAILURE);
+
+	}
 	return(arr);
 }
 t_token	*handle_quote(char *str, int *i)
@@ -65,7 +71,7 @@ t_token	*handle_quote(char *str, int *i)
 		exit(EXIT_FAILURE);
 	}	
 	j = *i;
-	arr = add_quoted_word(str, &j , type);
+		arr = add_quoted_word(str, &j , type);
 	current = new_token(TOKEN_WORD, arr, 1);
 	free(arr);
 	(*i) = j;
