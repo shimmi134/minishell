@@ -30,6 +30,12 @@ typedef struct s_token
     struct s_token *next;
 } t_token;
 
+/*
+typedef struct s_command
+{
+
+}
+*/
 
 char *ft_strdup (char *str);
 char **ft_split(char *str);

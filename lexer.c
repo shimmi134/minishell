@@ -72,7 +72,7 @@ t_token	*handle_quote(char *str, int *i)
 	}	
 	j = *i;
 		arr = add_quoted_word(str, &j , type);
-	current = new_token(TOKEN_WORD, arr, 1);
+	current = new_token(TOKEN_WORD, arr, flag);
 	free(arr);
 	(*i) = j;
 	return(current);
@@ -107,9 +107,11 @@ t_token *lexer (char *str)
 	t_token *head;
 	t_token *current;
 	int	 type;
+	int empty;
 
 	i = 0;
 	j = 0;
+	empty = 0;
 	head = NULL;
 	printf("str = %s\n", str);
 	while (str[i])
@@ -120,18 +122,23 @@ t_token *lexer (char *str)
 			type = find_token_type(&str[i]);
 			if (type == TOKEN_QUOTE_SINGLE || type == TOKEN_QUOTE_DOUBLE)
 			{
-				if (!head)
+				if (str[i + 1] == str[i])
+				{
+					i++;
+					empty = 1;
+				}
+				if (!head && !empty)
 				{
 					head = handle_quote(str, &i);
 					current = head;
 				}
-				else
+				else if(!empty)
 				{
 					current->next = handle_quote(str, &i);
 					current = current->next;
 				}
 			}
-			else
+			else if (type != TOKEN_QUOTE_SINGLE && type != TOKEN_QUOTE_DOUBLE && !empty)
 			{
 				if (!head)
 				{

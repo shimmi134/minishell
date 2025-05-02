@@ -1,4 +1,6 @@
 #include "minishell.h"
+#include <readline/readline.h>
+
 /*
 t_token *lexer (char *str)
 {
@@ -90,7 +92,7 @@ void free_tokens(t_token *head)
         head = tmp;
     }
 }
-
+/*
 int main (int argc, char **argv)
 {
 	int i;
@@ -98,7 +100,7 @@ int main (int argc, char **argv)
 	i = 0;
 	(void) argc;
 	//char *str = argv[1];
-	char *str = "\"\"\'quot\"$USER\"ed_word hello\'echo\'$USER\'|test><$\"\"";
+	char *str = "e\"c\"ho""hello";
 	//char *str = "test |hello";
 	t_token *node = lexer(str);
 	t_token *head = node;
@@ -106,4 +108,23 @@ int main (int argc, char **argv)
 	free_tokens(head);
 
 
+}
+*/
+
+//compile with:  cc *.c -L/usr/include -lreadline
+int main (void)
+{
+	char *line;
+	t_token *node;
+	t_token *head;
+	while (1)
+	{
+            line = readline("> ");
+			node = lexer(line);
+			head = node;
+			print_list(node);
+			free_tokens(head);
+
+	}
+	return (0);
 }
