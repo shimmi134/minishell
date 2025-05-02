@@ -123,6 +123,7 @@ int main (void)
 			node = lexer(line);
 			head = node;
 			print_list(node);
+			check_tokens(head);
 			free_tokens(head);
 
 	}

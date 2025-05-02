@@ -33,10 +33,9 @@ typedef struct s_token
 /*
 typedef struct s_command
 {
-
+    
 }
 */
-
 char *ft_strdup (char *str);
 char **ft_split(char *str);
 char *ft_strdup_char (char c);
@@ -55,4 +54,5 @@ int is_token(char c);
 void free_tokens(t_token *head);
 void print_list(t_token *head);
 void print_enum(t_token *list);
+void check_tokens (t_token *tokens);
 #endif
