@@ -45,7 +45,6 @@ char *add_quoted_word(char *str, int *i, int type)
 	{
 		printf("Error: no closing quote\n");
 		exit(EXIT_FAILURE);
-
 	}
 	return(arr);
 }

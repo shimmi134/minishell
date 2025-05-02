@@ -6,7 +6,7 @@ void check_tokens (t_token *tokens)
     int prev_type;
 
     head = tokens;
-if (tokens->type == TOKEN_PIPE || tokens->type == TOKEN_REDIRECT_IN || tokens->type == TOKEN_REDIRECT_OUT)
+if (!tokens ||tokens->type == TOKEN_PIPE || tokens->type == TOKEN_REDIRECT_IN || tokens->type == TOKEN_REDIRECT_OUT)
         {
             printf("Syntax error, invalid token at start\n");
             return ;
