@@ -110,11 +110,10 @@ t_token *lexer (char *str)
 
 	i = 0;
 	j = 0;
-	empty = 0;
 	head = NULL;
-	printf("str = %s\n", str);
 	while (str[i])
 	{
+		empty = 0;
 		i = skip(str, i);
 		if (is_token(str[i]))
 		{
