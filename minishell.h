@@ -27,6 +27,7 @@ typedef struct s_token
     token_type type;
     char *value;
     bool inside_quotes;
+    bool new_word;
     struct s_token *next;
 } t_token;
 
@@ -42,7 +43,7 @@ char *ft_strdup_char (char c);
 char *ft_strdup_char (char c);
 char *add_quoted_word(char *str, int *i, int type);
 token_type find_token_type(char *str);
-t_token *new_token(token_type type, char *value, int flag);
+t_token *new_token(token_type type, char *value, int flag, int new_word);
 t_token *lexer (char *str);
 t_token *lexer (char *str);
 t_token *add_word(char *str, int *i);

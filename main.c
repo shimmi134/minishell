@@ -71,8 +71,13 @@ void print_list(t_token *head)
 		print_enum(current);
 		if (current->inside_quotes)
 			printf("[inside quotes]");
-        printf("-> %s\n", current->value);
-		
+		if ((current != head) && !current->new_word)
+			printf("[part of prev word]");
+		if (current->value[0] == '\0')
+			printf("[empty]\n");
+		else
+        	printf("-> %s\n", current->value);
+
         current = current->next;
     }
     printf("NULL\n");

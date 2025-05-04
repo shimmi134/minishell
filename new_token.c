@@ -18,7 +18,7 @@ void split_token(char *str)
 
 }
 */
-t_token *new_token(token_type type, char *value, int flag)
+t_token *new_token(token_type type, char *value, int quote, int new_word)
 {
 	char c;
     t_token *token = malloc(sizeof(t_token));
@@ -34,7 +34,8 @@ t_token *new_token(token_type type, char *value, int flag)
     	token->value = ft_strdup(value);
 	else
 		token->value = ft_strdup_char(value[0]);
-	token->inside_quotes = flag;
+	token->inside_quotes = quote;
+	token->new_word = new_word;
     token->next = NULL;
     return (token);
 }
