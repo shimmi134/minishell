@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/05/05 18:55:38 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/05/05 19:15:06 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	do_builtins(t_shell *elem, t_env **env, char *av[], int ac)
 		// kill(t_pid val_of_child, signal) MOst likely need to do in loop or smth
 		exit(0);
 	}
-	else if (elem->word == "env")
+	else if (!ft_strncmp(elem->word, "env", 3))
 	{
 		nd = (*env);
 		while (nd)
