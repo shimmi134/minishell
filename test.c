@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/04/29 18:37:41 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/05/05 18:55:38 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void delete_node(t_env **env, t_env *target, t_env *prev)
 }
 
 
-void	do_builtins(t_shell *elem, t_env **env, char *av[])
+void	do_builtins(t_shell *elem, t_env **env, char *av[], int ac)
 {
 	char	*buf;
 	t_env	*nd;
@@ -73,8 +73,26 @@ void	do_builtins(t_shell *elem, t_env **env, char *av[])
 			nd = nd->next;
 		}
 	}
-	else if (elem->word == "echo")
+	else if (!ft_strncmp(elem->word,"echo",4))
 	{
+		int newline;
+
+		newline = 1;
+		i = 2;
+		while (i < ac && !ft_strncmp(av[i], "-n", 3))
+		{
+			newline = 0;
+			i++;
+		}
+		while (i < ac)
+		{
+			printf("%s",av[i]);
+			if (i < ac-1)
+				printf(" ");
+			i++;
+		}
+		if (newline)
+			printf("\n");
 	}
 	else if (elem->word == "export")
 	{
@@ -83,10 +101,10 @@ void	do_builtins(t_shell *elem, t_env **env, char *av[])
 	{
 	}
 }
-void	do_element(t_shell *elem, t_env **env, char *av[])
+void	do_element(t_shell *elem, t_env **env, char *av[],int ac)
 {
 	if (elem->type == "built-in")
-		do_builtins(elem, env, av);
+		do_builtins(elem, env, av, ac);
 }
 
 t_env	*create_node(char *env)
@@ -140,6 +158,6 @@ int	main(int ac, char *argv[], char *envp[])
 	env = copy_env(envp);
 	element = malloc(sizeof(t_shell));
 	element->type = "built-in";
-	element->word = "unset";
-	do_element(element, &env, argv);
+	element->word = argv[1];
+	do_element(element, &env, argv, ac);
 }
