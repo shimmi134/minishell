@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/05/06 18:38:07 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/05/07 15:25:02 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_env	*create_node(char *env)
 	t_env	*node;
 
 	split = ft_split(env, '=');
-	if (!split || !split[0] || !split[1])
+	if (!split)
 		return (NULL);
 	node = malloc(sizeof(t_env));
 	if (!node)
@@ -74,7 +74,8 @@ void	do_builtins(t_shell *elem, t_env **env, char *av[], int ac)
 		nd = (*env);
 		while (nd)
 		{
-			printf("%s=%s\n",nd->key, nd->value);
+			if (nd->value != NULL)
+				printf("%s=%s\n",nd->key, nd->value);
 			nd = nd->next;
 		}
 	}
@@ -119,34 +120,61 @@ void	do_builtins(t_shell *elem, t_env **env, char *av[], int ac)
 		char **split = ft_split(av[1], '=');
 		t_env *node = create_node(av[1]);
 		
-
-		if (split[0][(int)ft_strlen(split[0])-1] != '+')
+		if (split)
 		{
-			addlast(env, node);
+			if (split[0][(int)ft_strlen(split[0])-1] != '+')
+			{
+				addlast(env, node);
+			}
+			else
+			{
+				t_env *nd = (*env);
+				split[0] = ft_strtrim(split[0], "+");
+				while (nd != NULL)
+				{
+					if (!ft_strncmp(nd->key,split[0], ft_strlen(split[0])))
+					{
+						nd->value = ft_strjoin(nd->value, split[1]);
+						break ;
+					}
+					nd = nd->next;
+				}
+				if (nd == NULL)
+				{
+					node->key = split[0];
+					node->value = split[1];
+					addlast(env,node);
+				}
+			}
 		}
 		else
 		{
-			t_env *nd = (*env);
-			split[0] = ft_strtrim(split[0], "+");
-			while (nd != NULL)
+			t_env *tmp = *env;
+			while (tmp)
 			{
-				if (!ft_strncmp(nd->key,split[0], ft_strlen(split[0])))
-				{
-					nd->value = ft_strjoin(nd->value, split[1]);
-					break ;
-				}
-				nd = nd->next;
-			}
-			if (nd == NULL)
-			{
-				node->key = split[0];
-				node->value = split[1];
-				addlast(env,node);
+				printf("declare -x %s", tmp->key);
+				if (tmp->value)
+					printf("=%s", tmp->value);
+				printf("\n");
+				tmp = tmp->next;
 			}
 		}
 	}
-	else if (!ft_strncmp(elem->word, "env", 3))
+	else if (!ft_strncmp(elem->word, "cd", 2))
 	{
+		i = chdir(av[1]);
+		if (i == -1)
+		{
+			char *str = getcwd(NULL,0);
+			t_env* temp = *env;
+			while (temp)
+			{
+				if (!ft_strncmp(temp->key, "PWD", 3))
+					temp->value = str;
+				temp = temp->next;
+			}
+		}
+		//return i;
 	}
 }
 void	do_element(t_shell *elem, t_env **env, char *av[],int ac)
