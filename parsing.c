@@ -32,11 +32,18 @@ if (!tokens ||tokens->type == TOKEN_PIPE || tokens->type == TOKEN_REDIRECT_IN ||
             }
              //printf("token type = %d\n", tokens->type);
         }
+         else if(tokens->type == TOKEN_HEREDOC)
+         {
+            if (!tokens->next || tokens->next->type != TOKEN_WORD)
+            {
+                printf("Syntax error near unexpected token\n");
+                break ;
+            }
+         }
         else if (tokens->type == TOKEN_REDIRECT_IN || tokens->type == TOKEN_REDIRECT_OUT)
         {
             if (!tokens->next)
             {
-                printf("doesnt exist\n");
                 printf("Syntax error: expected filename\n");
                 break ;
             }

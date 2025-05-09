@@ -62,12 +62,15 @@ token_type  find_token_type(char *str)
                 return(TOKEN_QUOTE_SINGLE);
         else if (c == '\"')
                 return(TOKEN_QUOTE_DOUBLE);
+        else if (c == '<' && str[1] == '<')
+                return (TOKEN_HEREDOC);
         else if (c == '<')
                 return(TOKEN_REDIRECT_IN);
         else if (c == '>')
                 return(TOKEN_REDIRECT_OUT);
         else if(c == ';')
             return(TOKEN_SEPARATOR);
+        
       //  else if (is_word(str))
        //     return(TOKEN_WORD);
         else

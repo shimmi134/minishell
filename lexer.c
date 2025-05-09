@@ -131,6 +131,7 @@ t_token *lexer (char *str)
 		if (is_token(str[i]))
 		{
 			type = find_token_type(&str[i]);
+			printf("type = %d\n", type);
 			if (type == TOKEN_QUOTE_SINGLE || type == TOKEN_QUOTE_DOUBLE)
 			{
 				// if (str[i + 1] == str[i])
@@ -163,6 +164,8 @@ t_token *lexer (char *str)
 					current->next = new_token(type, &str[i], 0, new_word);
 					current = current->next;
 				}
+				if (type == TOKEN_HEREDOC)
+					i++;
 			}
 			i++;
 		}

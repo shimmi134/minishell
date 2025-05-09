@@ -32,6 +32,8 @@ t_token *new_token(token_type type, char *value, int quote, int new_word)
     token->type = type;
 	if (type == TOKEN_WORD)
     	token->value = ft_strdup(value);
+	else if (type == TOKEN_HEREDOC)
+		token->value = ft_strdup("<<");
 	else
 		token->value = ft_strdup_char(value[0]);
 	token->inside_quotes = quote;
