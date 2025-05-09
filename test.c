@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/05/09 18:28:15 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/05/09 19:06:28 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <sys/wait.h>
@@ -300,7 +300,7 @@ char	*get_element(char *line)
 	if (!ft_strncmp(split[0], "pwd", 4) || !ft_strncmp(split[0], "kill", 5)
 		|| !ft_strncmp(split[0], "env", 4) || !ft_strncmp(split[0], "unset",
 			6) || !ft_strncmp(split[0], "echo", 5) || !ft_strncmp(split[0],
-			"export", 6) || !ft_strncmp(split[0], "cd ", 3))
+			"export", 6) || !ft_strncmp(split[0], "cd", 2))
 	{
 		return ("built-in");
 	}
