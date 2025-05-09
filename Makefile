@@ -6,7 +6,7 @@
 #    By: shimi-be <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/11 11:53:14 by shimi-be          #+#    #+#              #
-#    Updated: 2025/05/06 18:12:20 by shimi-be         ###   ########.fr        #
+#    Updated: 2025/05/09 17:14:18 by shimi-be         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ $(NAME): $(OBJ) $(INCLUDE)
 	cc  $(SRC) -L/usr/include -lreadline -lhistory $(LIB)  -g  -o $(NAME)
 
 %.o: %.c $(INCLUDE) Makefile
-	cc $(FLAGS) -L/usr/include -lreadline -lhistory $(LIB) -c $< -o $@
+	cc -L/usr/include -lreadline -lhistory $(LIB) -c $< -o $@
 
 clean:
 	rm -rf $(OBJ) $(OBJ_BONUS)
