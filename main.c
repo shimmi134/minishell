@@ -128,9 +128,9 @@ int main (void)
 			node = lexer(line);
 			head = node;
 			print_list(node);
-			check_tokens(head);
+			if (check_tokens(head))
+				init_cmds(node);
 			free_tokens(head);
-
 	}
 	return (0);
 }

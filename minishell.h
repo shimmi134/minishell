@@ -31,12 +31,19 @@ typedef struct s_token
     struct s_token *next;
 } t_token;
 
-/*
+
 typedef struct s_command
 {
-    
-}
-*/
+    char *cmd;
+    char **args;
+    char *infile;
+    char *outfile;
+    int append;
+    int heredoc;
+    char *heredoc_delim;
+    struct s_command *next;    
+} t_cmd;
+
 char *ft_strdup (char *str);
 char **ft_split(char *str);
 char *ft_strdup_char (char c);
@@ -55,5 +62,7 @@ int is_token(char c);
 void free_tokens(t_token *head);
 void print_list(t_token *head);
 void print_enum(t_token *list);
-void check_tokens (t_token *tokens);
+int check_tokens (t_token *tokens);
+void init_cmds(t_token *tokens);
+void print_cmd_list(t_cmd *head);
 #endif
