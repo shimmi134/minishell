@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
+/*   Updated: 2025/05/11 17:14:03 by joshapir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int check_tokens (t_token *tokens)
@@ -32,12 +44,12 @@ if (!tokens ||tokens->type == TOKEN_PIPE || tokens->type == TOKEN_REDIRECT_IN ||
             }
              //printf("token type = %d\n", tokens->type);
         }
-         else if(tokens->type == TOKEN_HEREDOC)
+         else if(tokens->type == TOKEN_HEREDOC || tokens->type == TOKEN_APPEND)
          {
             if (!tokens->next || tokens->next->type != TOKEN_WORD)
             {
                 printf("Syntax error near unexpected token\n");
-                break ;
+                return (0);
             }
          }
         else if (tokens->type == TOKEN_REDIRECT_IN || tokens->type == TOKEN_REDIRECT_OUT)
@@ -84,11 +96,21 @@ t_cmd *new_cmd_token(t_token *tokens)
         return(NULL);
     if (tokens->type == TOKEN_WORD)
         cmd->cmd = tokens->value;
+    else if (tokens->type == TOKEN_HEREDOC || tokens->type == TOKEN_APPEND)
+            cmd->cmd = NULL;
+    else if(!cmd->cmd && !cmd->next && tokens->type != TOKEN_PIPE)
+            cmd->cmd = tokens->value;
     else
         cmd->cmd = tokens->next->value;
+        int i;
+
+        i = 0;
+    // while (i < count + 1)
+    //     cmd->args[i++] = NULL;
     cmd->args[0] = NULL;
     cmd->infile = NULL;
     cmd->outfile = NULL;
+    cmd->heredoc_delim = NULL;
     cmd->append = 0;
     cmd->heredoc = 0;
     //cmd->args[0] = NULL;
@@ -107,7 +129,7 @@ t_token *assign_args(t_token *tokens, t_cmd *cmds)
     //current_c = *(cmds);
     while (tokens && tokens->type == TOKEN_WORD)
     {
-        printf("token->value = %s\n", tokens->value);
+        //printf("token->value = %s\n", tokens->value);
         cmds->args[i] = tokens->value;
         i++;
         tokens = tokens->next;
@@ -116,12 +138,116 @@ t_token *assign_args(t_token *tokens, t_cmd *cmds)
   //  printf("token type at end of assign = %d\n", tokens->type);
     return (tokens);
 }
-t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd)
+
+int find_char_pos(char *str, char c)
+{
+    int i;
+
+    i = 0;
+
+    while (str[i])
+    {
+        if (str[i] == c)
+            return (i);
+        i++;
+    }
+    return (0);
+}
+char *expand_var_in_str(t_token *token, t_env *env)
+{
+    int i;
+    char *val;
+    char *temp;
+    char *temp2;
+
+    i = 0;
+    i = find_char_pos(token->value, '$');
+           
+            strncpy(temp , token->value, i + 1);
+           
+            temp[i] = '\0';
+            strcpy(temp2 + i, token->value);
+            printf("temp value = %s\n", temp2);
+    while(env)
+    {
+        if (!strcmp(temp2, env->key))
+        {
+                val = env->value;
+                break ;
+        }
+        env = env->next;
+    }
+    if (val)
+    {
+        strcat(temp, val);
+        val = temp;
+        printf("vallll = %s\n", val);
+        return (val);
+    }
+    return(NULL);
+}
+
+char *expand_var(t_token *token, t_env *env)
+{
+    char *val;
+    int i;
+    char *temp;
+    char *temp2;
+
+    i = 0;
+ //   if (token->inside_single)
+   //     return(token->value);
+    
+ //   if (token->value[0] == '$' && strlen(token->value) > 1)
+  //      memmove(token->value, token->value + 1, strlen(token->value));
+  //  else 
+  printf("len = %ld", strlen(token->value));
+        if (strlen(token->value) == 1)
+            token = token->next;
+        /*
+        else
+        {
+            i = find_char_pos(token->value, '$');
+            strncpy(temp , token->value, i);
+            temp[i] = '\0';
+            strcpy(temp2 + i, token->value);
+            printf("temp value = %s\n", temp2);
+           // strcat(temp, token->value + i);
+           
+        }
+*/
+
+
+       /*
+        else if (token->value[i] == '\'' || token->value[i] == '\"' || token->value[i] == '$')
+        {
+            printf("goes in\n");
+            while (token->value[i] == '\'' || token->value[i] == '\"' || token->value[i] == '$')
+                        i++;
+                memmove(token->value, token->value + i, strlen(token->value + i));
+        }
+        */
+    while(env)
+    {
+        if (!strcmp(token->value, env->key))
+        {
+                val = env->value;
+                return(val);
+        }
+        env = env->next;
+    }
+    return(NULL);
+}
+
+t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp)
 {
     int type;
+    int i;
+
+    i = 0;
 
     type = token->type;
-
+    printf("test\n");
     if (type == TOKEN_REDIRECT_IN)
     {
          if (token->next)
@@ -141,18 +267,47 @@ t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd)
         cmd->heredoc = 1;
         if (token->next)
             cmd->heredoc_delim = ft_strdup(token->next->value);
-        else    
-            printf("Error: no heredoc delim found\n");
-        exit (EXIT_FAILURE);
+        token = token->next->next;
     }
     else if (type == TOKEN_APPEND)
     {
         cmd->append = 1;
-        cmd->outfile = ft_strdup(token->value);
+        if (token->next)
+            cmd->outfile = ft_strdup(token->next->value);
+        token = token->next->next;
+    }
+    else if (type == TOKEN_VARIABLE)
+    {
+        while (cmd->args[i])
+                i++;
+   //     printf("len of var %ld\n", strlen(token->value));
+        if (!token->inside_single)
+        {  
+            if (strlen(token->value) == 1)
+            {    
+                cmd->args[i] = expand_var(token, envp);
+               
+                if (token->next->next && !token->next->next->new_word)
+                        cmd->args[i] = ft_strjoin(cmd->args[i], token->next->next->value);
+        //        printf("args = %s\n", cmd->args[i]);
+                token = token->next->next;
+            } 
+        //    else
+        //    {
+        //        cmd->args[i] = expand_var_in_str(token, envp);
+        //        token = token->next;
+        //    }
+        }
+        else
+        {
+            cmd->args[i] = token->value;
+            token = token->next->next;
+        }
+       
     }
     return (token);
 }
-void init_cmds(t_token *tokens)
+void init_cmds(t_token *tokens, t_env *envp)
 {
     t_cmd *head;
     t_cmd *cmds;
@@ -160,18 +315,18 @@ void init_cmds(t_token *tokens)
     int type;
 
     i = 0;
-  //  prev_type = 10;
+    
     cmds = new_cmd_token(tokens);
+    //printf("test\n");
     head = cmds;
- //   cmds->cmd = tokens-> value;
-    //if (tokens->next)
-        tokens = tokens->next;
+    if (tokens->type == TOKEN_WORD)
+    {
+            tokens = tokens->next;
+    }
+    
     while (tokens)
     { 
         type = tokens->type;
-   //     prev_type = tokens->type;
-   //     if (prev_type != TOKEN_WORD)
-     //       tokens=tokens->next;
         if (type == TOKEN_WORD)
             tokens = assign_args(tokens, cmds);
         else if (type == TOKEN_PIPE)
@@ -181,7 +336,7 @@ void init_cmds(t_token *tokens)
             cmds = cmds->next;
         }
         else
-            tokens = assign_ctl_tokens(tokens, cmds);
+            tokens = assign_ctl_tokens(tokens, cmds, envp);
     }
     print_cmd_list(head);
 }
@@ -195,20 +350,22 @@ void print_cmd_list(t_cmd *head)
     while (current != NULL) 
 	{
         printf("\n-----------------------\n");
-		//print_enum(current);
-        printf("cmd = %s\n", current->cmd);
-		if (current->append)
-			printf("[append]");
-        if (current->heredoc)
-			printf("[heredoc]");
+        if (current->cmd)
+            printf("cmd = %s\n", current->cmd);
+		 if (current->append)
+		 	printf("[append]");
+         if (current->heredoc)
+		 	printf("[heredoc] ");
+        if (current->heredoc_delim)
+            printf("heredoc_delim = %s\n", current->heredoc_delim);
 		if (current->infile)
-			printf("infile = %s\n", current->infile);
+		 	printf("infile = %s\n", current->infile);
         if (current->outfile)
 			printf("outfile = %s\n", current->outfile);
         if (current->args[i])
-            printf("args = ");
-        while(current->args[i])
-            printf("%s ", current->args[i++]);
+           printf("args = ");
+       while(current->args[i])
+           printf("%s ", current->args[i++]);
         current = current->next;
         i = 0;
     }

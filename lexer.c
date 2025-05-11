@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
+/*   Updated: 2025/05/11 16:03:30 by joshapir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 
@@ -68,6 +80,8 @@ t_token	*handle_quote(char *str, int *i)
 	type = find_token_type(&str[*i]);
 	if (type == TOKEN_QUOTE_DOUBLE)
 			quote = 1;
+	else if (type == TOKEN_QUOTE_SINGLE)
+			quote = 2;
 	if (!str[*i])
 	{
 		printf("Error: no closing quote\n");
@@ -131,14 +145,22 @@ t_token *lexer (char *str)
 		if (is_token(str[i]))
 		{
 			type = find_token_type(&str[i]);
-			printf("type = %d\n", type);
 			if (type == TOKEN_QUOTE_SINGLE || type == TOKEN_QUOTE_DOUBLE)
 			{
-				// if (str[i + 1] == str[i])
-				// {
-				// 	i++;
-				// 	empty = 1;
-				// }
+				if (str[i + 1] == '$')
+				{
+					i++;
+					if (!head)
+				{
+					head = new_token(type, &str[i], 0, new_word);
+					current = head;
+				}
+				else
+				{
+					current->next = new_token(type, &str[i], 0, new_word);
+					current = current->next;
+				}
+				}
 				if (!head && !empty)
 				{
 					head = handle_quote(str, &i);
@@ -164,11 +186,13 @@ t_token *lexer (char *str)
 					current->next = new_token(type, &str[i], 0, new_word);
 					current = current->next;
 				}
-				if (type == TOKEN_HEREDOC)
-					i++;
+				//printf("type = %d\n", type);
+				if (type == TOKEN_HEREDOC || type == TOKEN_APPEND)
+							i++;
 			}
 			i++;
 		}
+		
 		i = skip(str, i);
 		if((str[i]) && !is_token(str[i]))
 		{

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   new_token.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/11 03:06:03 by joshapir          #+#    #+#             */
+/*   Updated: 2025/05/11 09:45:40 by joshapir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /*
@@ -34,9 +46,18 @@ t_token *new_token(token_type type, char *value, int quote, int new_word)
     	token->value = ft_strdup(value);
 	else if (type == TOKEN_HEREDOC)
 		token->value = ft_strdup("<<");
+	else if (type == TOKEN_APPEND)
+		token->value = ft_strdup(">>");
 	else
 		token->value = ft_strdup_char(value[0]);
-	token->inside_quotes = quote;
+	if	(strchr(value, '$'))
+		token->type = TOKEN_VARIABLE;
+	token->inside_double = 0;
+	token->inside_single = 0;
+	if (quote == 1)
+		token->inside_double = 1;
+	else if (quote == 2)
+		token->inside_single = 1;
 	token->new_word = new_word;
     token->next = NULL;
     return (token);

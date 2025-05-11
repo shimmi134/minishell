@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   token_type.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/11 03:06:30 by joshapir          #+#    #+#             */
+/*   Updated: 2025/05/11 04:05:51 by joshapir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 
@@ -52,6 +64,7 @@ token_type  find_token_type(char *str)
        
   // if (str[0])
         c = str[0];
+       // printf("c = %c c + 1 = %c\n", c, str[1]);
       //  else
              //   return(TOKEN_INVALID);
         if (c == '|')
@@ -64,6 +77,8 @@ token_type  find_token_type(char *str)
                 return(TOKEN_QUOTE_DOUBLE);
         else if (c == '<' && str[1] == '<')
                 return (TOKEN_HEREDOC);
+        else if (c == '>' && str[1] == '>')
+                return (TOKEN_APPEND);
         else if (c == '<')
                 return(TOKEN_REDIRECT_IN);
         else if (c == '>')

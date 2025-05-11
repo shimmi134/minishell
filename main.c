@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
+/*   Updated: 2025/05/11 06:48:25 by joshapir         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 #include <readline/readline.h>
 
@@ -69,8 +81,10 @@ void print_list(t_token *head)
     while (current != NULL) 
 	{
 		print_enum(current);
-		if (current->inside_quotes)
-			printf("[inside quotes]");
+		if (current->inside_double)
+			printf("[inside double quotes]");
+		else if (current->inside_single)
+			printf("[inside single quotes]");
 		if ((current != head) && !current->new_word)
 			printf("[part of prev word]");
 		if (current->value[0] == '\0')
@@ -115,13 +129,59 @@ int main (int argc, char **argv)
 
 }
 */
+t_env	*create_node(char *env)
+{
+	char	**split;
+	t_env	*node;
+	
+	split = ft_split(env, '=');
+	if (!split)
+		return (NULL);
+	node = malloc(sizeof(t_env));
+	if (!node)
+		return (NULL);
+	node->key = split[0];
+	node->value = split[1];
+	node->next = NULL;
+	return (node);
+}
+
+t_env	*copy_env(char *envp[])
+{
+	
+	t_env	*head;
+	t_env	*node;
+	t_env	*nnode;
+	int		i;
+	
+	head = create_node(envp[0]);
+	if (!head)
+		return (NULL);
+	i = 2;
+	node = create_node(envp[1]);
+	if (!node)
+		return (NULL);
+	head->next = node;
+	while (envp[i])
+	{
+		nnode = create_node(envp[i]);
+		if (!nnode)
+			return (NULL);
+		node->next = nnode;
+		node = node->next;
+		i++;
+	}
+	return (head);
+}
 
 //compile with:  cc *.c -L/usr/include -lreadline
-int main (void)
+int main(int argc, char *argv[], char *envp[])
 {
 	char *line;
 	t_token *node;
 	t_token *head;
+	t_env	*env;
+	env = copy_env(envp);
 	while (1)
 	{
             line = readline("> ");
@@ -129,7 +189,7 @@ int main (void)
 			head = node;
 			print_list(node);
 			if (check_tokens(head))
-				init_cmds(node);
+				init_cmds(node, env);
 			free_tokens(head);
 	}
 	return (0);
