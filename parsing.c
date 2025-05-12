@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/05/11 17:14:03 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/05/12 20:14:39 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ if (!tokens ||tokens->type == TOKEN_PIPE || tokens->type == TOKEN_REDIRECT_IN ||
                 return (0);
             }
             //tokens = tokens->next;
-            if (tokens->next->type != TOKEN_WORD)
+            if (tokens->next->type != TOKEN_WORD && tokens->next->type != TOKEN_VARIABLE)
             {
                 printf("Syntax error: pipe without command\n");
                 return (0);
@@ -243,6 +243,7 @@ t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp)
 {
     int type;
     int i;
+    char *temp;
 
     i = 0;
 
@@ -284,11 +285,20 @@ t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp)
         if (!token->inside_single)
         {  
             if (strlen(token->value) == 1)
-            {    
-                cmd->args[i] = expand_var(token, envp);
+            {   
+                if (i != 0 && !token->new_word)
+                {
+                    i--;
+                    temp = expand_var(token, envp);
+                    cmd->args[i] = ft_strjoin(cmd->args[i], temp);
+                    //free(temp);
+                    i++;
+                } 
+               else
+                    cmd->args[i] = expand_var(token, envp);
                
-                if (token->next->next && !token->next->next->new_word)
-                        cmd->args[i] = ft_strjoin(cmd->args[i], token->next->next->value);
+                // if (token->next->next && !token->next->next->new_word)
+                //         cmd->args[i] = ft_strjoin(cmd->args[i], token->next->next->value);
         //        printf("args = %s\n", cmd->args[i]);
                 token = token->next->next;
             } 
