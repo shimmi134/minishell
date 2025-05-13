@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/05/09 19:06:28 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/05/13 16:43:11 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <sys/wait.h>
@@ -55,7 +55,7 @@ void	do_builtins(t_shell *elem, t_env **env, char *av[], int ac)
 	t_env	*nd;
 	int		i;
 	t_env	*prev;
-		int newline;
+	int		newline;
 	char	**split;
 	t_env	*node;
 	t_env	*tmp;
@@ -129,7 +129,18 @@ void	do_builtins(t_shell *elem, t_env **env, char *av[], int ac)
 		{
 			if (split[0][(int)ft_strlen(split[0]) - 1] != '+')
 			{
-				addlast(env, node);
+				nd = (*env);
+				while (nd)
+				{
+					if (!ft_strncmp(split[0],nd->key, ft_strlen(split[0])))
+					{
+						nd->value = node->value;
+						break;
+					}
+					nd = nd->next;
+				}
+				if (!nd)
+					addlast(env, node);
 			}
 			else
 			{
@@ -159,7 +170,7 @@ void	do_builtins(t_shell *elem, t_env **env, char *av[], int ac)
 			{
 				printf("declare -x %s", tmp->key);
 				if (tmp->value)
-					printf("=%s", tmp->value);
+					printf("=\"%s\"", tmp->value);
 				printf("\n");
 				tmp = tmp->next;
 			}
