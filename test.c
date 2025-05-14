@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/05/13 16:43:11 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/05/14 13:08:40 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <sys/wait.h>
@@ -176,7 +176,7 @@ void	do_builtins(t_shell *elem, t_env **env, char *av[], int ac)
 			}
 		}
 	}
-	else if (!ft_strncmp(elem->word, "cd", 2))
+	else if (!ft_strncmp(elem->word, "cd", 2)) // HAVE TO ADD OLDPWD
 	{
 		i = chdir(av[1]);
 		if (i != -1)
@@ -225,6 +225,7 @@ char	*try_paths(char	**split, char *comm)
 		free(temp);
 		i++;
 	}
+	return (NULL);
 }
 
 void exec_command(t_shell *elem, t_env **env, char** av, int ac, char **envp)
@@ -233,13 +234,19 @@ void exec_command(t_shell *elem, t_env **env, char** av, int ac, char **envp)
 	char	*paths;
 	char	**split;
 
-	paths = get_paths(env);
-	if (!paths)
-		exit(1);
-	split = ft_split(paths, ':');
-	path = try_paths(split, elem->word);
-	if (!paths)
-		exit(1);
+	if (access(elem->word, F_OK) != 0)
+	{
+		printf("Gotinside\n");
+		paths = get_paths(env);
+		if (!paths)
+			exit(1);
+		split = ft_split(paths, ':');
+		path = try_paths(split, elem->word);
+		if (!paths)
+			exit(1);
+	}
+	else
+		path = elem->word;
 	execve(path, av, envp);
 	printf("Error: %s\n", strerror(errno));
 }
