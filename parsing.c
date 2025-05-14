@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/05/12 20:14:39 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/05/14 20:21:48 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,12 +127,14 @@ t_token *assign_args(t_token *tokens, t_cmd *cmds)
     i = 0;
     //current_t = *(tokens);
     //current_c = *(cmds);
-    while (tokens && tokens->type == TOKEN_WORD)
+    if (tokens && tokens->type == TOKEN_WORD)
     {
+        while(cmds->args[i])
+            i++;
         //printf("token->value = %s\n", tokens->value);
         cmds->args[i] = tokens->value;
         i++;
-        tokens = tokens->next;
+        //tokens = tokens->next;
     }
     cmds->args[i] = NULL;
   //  printf("token type at end of assign = %d\n", tokens->type);
@@ -201,9 +203,8 @@ char *expand_var(t_token *token, t_env *env)
  //   if (token->value[0] == '$' && strlen(token->value) > 1)
   //      memmove(token->value, token->value + 1, strlen(token->value));
   //  else 
-  printf("len = %ld", strlen(token->value));
-        if (strlen(token->value) == 1)
-            token = token->next;
+      //  if (strlen(token->value) == 1)
+      //      token = token->next;
         /*
         else
         {
@@ -248,60 +249,69 @@ t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp)
     i = 0;
 
     type = token->type;
-    printf("test\n");
     if (type == TOKEN_REDIRECT_IN)
     {
          if (token->next)
             token = token->next;
         cmd->infile = ft_strdup(token->value);
-        token = token->next;
+      //  token = token->next;
     }
     else if (type == TOKEN_REDIRECT_OUT)
     {  
         if (token->next)
             token = token->next;
         cmd->outfile = ft_strdup(token->value);
-        token = token->next;
+      //  token = token->next;
     }
     else if (type == TOKEN_HEREDOC)
     {
         cmd->heredoc = 1;
         if (token->next)
-            cmd->heredoc_delim = ft_strdup(token->next->value);
-        token = token->next->next;
+            token = token->next;
+            cmd->heredoc_delim = ft_strdup(token->value);
+      //  token = token->next;
     }
     else if (type == TOKEN_APPEND)
     {
         cmd->append = 1;
         if (token->next)
-            cmd->outfile = ft_strdup(token->next->value);
-        token = token->next->next;
+            token = token->next;
+            cmd->outfile = ft_strdup(token->value);
+       // token = token->next;
     }
     else if (type == TOKEN_VARIABLE)
     {
+        i = 0;
         while (cmd->args[i])
                 i++;
    //     printf("len of var %ld\n", strlen(token->value));
         if (!token->inside_single)
-        {  
-            if (strlen(token->value) == 1)
-            {   
+        {
+            
+       //     if (strlen(token->value) == 1)
+      //      {   
                 if (i != 0 && !token->new_word)
-                {
-                    i--;
-                    temp = expand_var(token, envp);
-                    cmd->args[i] = ft_strjoin(cmd->args[i], temp);
+                { 
+                    //token = token->next; 
+                    temp = expand_var(token->next, envp);
+                    cmd->args[i - 1] = ft_strjoin(cmd->args[i - 1], temp);
                     //free(temp);
-                    i++;
-                } 
-               else
-                    cmd->args[i] = expand_var(token, envp);
+                    // if (!token->next->new_word)
+                    // {
+                    //     token = token->next;
+                    //     cmd->args[i] = ft_strjoin(cmd->args[i], token->value);   
+                    // }
+       //         } 
+     //          else
+     //               cmd->args[i] = expand_var(token, envp);
                
                 // if (token->next->next && !token->next->next->new_word)
                 //         cmd->args[i] = ft_strjoin(cmd->args[i], token->next->next->value);
         //        printf("args = %s\n", cmd->args[i]);
-                token = token->next->next;
-            } 
+              //  token = token->next;
+            }
+            else
+                cmd->args[i] = expand_var(token->next, envp); 
         //    else
         //    {
         //        cmd->args[i] = expand_var_in_str(token, envp);
@@ -311,8 +321,25 @@ t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp)
         else
         {
             cmd->args[i] = token->value;
-            token = token->next->next;
+           // token = token->next;
         }
+        i = 0;
+        // if (token)
+        // {
+        //     while(cmd->args[i])
+        //         i++;
+        //         i = i - 1;
+        //             if (i != 0 && !token->new_word && cmd->args[i])
+        //             {
+        //                 //token = token->next;
+                        
+        //                 cmd->args[i - 1] = ft_strjoin(cmd->args[i - 1], cmd->args[i]);
+        //                 free(cmd->args[i]);   
+        //             }
+        //             i++;
+        //             //token = token->next;
+        // }
+        //token = token->next;
        
     }
     return (token);
@@ -342,11 +369,24 @@ void init_cmds(t_token *tokens, t_env *envp)
         else if (type == TOKEN_PIPE)
         {
             cmds->next = new_cmd_token(tokens);
-            tokens = tokens->next->next;
+            tokens = tokens->next;
             cmds = cmds->next;
         }
         else
             tokens = assign_ctl_tokens(tokens, cmds, envp);
+        i = 0;
+        while(cmds->args[i])
+            i++;
+        i = i - 1;
+        if (i != 0 && !tokens->new_word && type != TOKEN_VARIABLE)
+        {
+            cmds->args[i - 1] = ft_strjoin(cmds->args[i - 1], cmds->args[i]);
+            cmds->args[i] = NULL;
+        }
+        if (tokens->type == TOKEN_VARIABLE)
+            tokens= tokens->next;
+        tokens = tokens->next;
+        
     }
     print_cmd_list(head);
 }

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:03 by joshapir          #+#    #+#             */
-/*   Updated: 2025/05/12 20:13:02 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/05/14 19:52:39 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,16 @@ t_token *new_token(token_type type, char *value, int quote, int new_word)
 	else
 		token->value = ft_strdup_char(value[0]);
 	//if	(strchr(value, '$'))
-	if (value[0] == '$')
-		token->type = TOKEN_VARIABLE;
+	
 	token->inside_double = 0;
 	token->inside_single = 0;
 	if (quote == 1)
 		token->inside_double = 1;
-	else if (quote == 2)
+	else if (quote == 2 || type == TOKEN_QUOTE_SINGLE)
 		token->inside_single = 1;
 	token->new_word = new_word;
+	if (value[0] == '$' && quote != 2)
+		token->type = TOKEN_VARIABLE;
     token->next = NULL;
     return (token);
 }

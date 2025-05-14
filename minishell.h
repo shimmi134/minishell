@@ -6,7 +6,11 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/05/13 16:54:24 by shimi-be         ###   ########.fr       */
+=======
+/*   Updated: 2025/05/14 20:11:43 by joshapir         ###   ########.fr       */
+>>>>>>> 15d059d (added command struct with content and added var expansion)
 /*                                                                            */
 /* ************************************************************************** */
 

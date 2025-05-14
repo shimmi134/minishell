@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/05/11 16:03:30 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/05/14 20:46:55 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ char *add_quoted_word(char *str, int *i, int type)
 	j = 0;
 	while ((str[(*i)]) && str[(*i)] != quote)
 	{
+		
 			arr[j] = str[(*i)];
 			(*i)++;
 			j++;
@@ -62,11 +63,11 @@ char *add_quoted_word(char *str, int *i, int type)
 	}
 	return(arr);
 }
-t_token	*handle_quote(char *str, int *i)
+t_token	*handle_quote(char *str, int *i, int type)
 {
 	char *arr;
 	char c;
-	int type;
+//	int type;
 	t_token *current;
 	int quote;
 	int j;
@@ -77,7 +78,7 @@ t_token	*handle_quote(char *str, int *i)
 	quote = 0;
 	j = 0;
 	c = str[*i];
-	type = find_token_type(&str[*i]);
+	//type = find_token_type(&str[*i]);
 	if (type == TOKEN_QUOTE_DOUBLE)
 			quote = 1;
 	else if (type == TOKEN_QUOTE_SINGLE)
@@ -147,7 +148,10 @@ t_token *lexer (char *str)
 			type = find_token_type(&str[i]);
 			if (type == TOKEN_QUOTE_SINGLE || type == TOKEN_QUOTE_DOUBLE)
 			{
-				if (str[i + 1] == '$')
+			//	printf("type = %d\n", type);
+				if (str[i - 1] == ' ')
+					new_word = 1;
+				if (str[i + 1] == '$' && type != TOKEN_QUOTE_SINGLE)
 				{
 					i++;
 					if (!head)
@@ -163,12 +167,12 @@ t_token *lexer (char *str)
 				}
 				if (!head && !empty)
 				{
-					head = handle_quote(str, &i);
+					head = handle_quote(str, &i, type);
 					current = head;
 				}
 				else if(!empty)
 				{
-					current->next = handle_quote(str, &i);
+					current->next = handle_quote(str, &i, type);
 					current = current->next;
 				}
 			}
