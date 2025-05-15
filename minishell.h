@@ -6,11 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/05/13 16:54:24 by shimi-be         ###   ########.fr       */
-=======
-/*   Updated: 2025/05/14 20:11:43 by joshapir         ###   ########.fr       */
->>>>>>> 15d059d (added command struct with content and added var expansion)
+/*   Updated: 2025/05/15 20:04:52 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +86,7 @@ t_token					*new_token(token_type type, char *value, int flag,
 t_token					*lexer(char *str);
 t_token					*lexer(char *str);
 t_token					*add_word(char *str, int *i);
-t_token					*handle_quote(char *str, int *i);
+t_token					*handle_quote(char *str, int *i, int type);
 t_token					*assign_args(t_token *tokens, t_cmd *cmds);
 t_token					*assign_ctl_tokens(t_token *token, t_cmd *cmd,
 							t_env *envp);
