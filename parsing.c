@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/05/14 20:21:48 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/05/15 21:57:54 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int arg_count(t_token *tokens)
     return(count);
 }
 
-t_cmd *new_cmd_token(t_token *tokens)
+t_cmd *new_cmd_token(t_token *tokens, t_env *envp)
 {
     int count;
     
@@ -100,6 +100,10 @@ t_cmd *new_cmd_token(t_token *tokens)
             cmd->cmd = NULL;
     else if(!cmd->cmd && !cmd->next && tokens->type != TOKEN_PIPE)
             cmd->cmd = tokens->value;
+    else if (tokens->type == TOKEN_VARIABLE && tokens->next->type == TOKEN_WORD)
+    {
+        cmd->cmd = expand_var(tokens, envp);
+    }
     else
         cmd->cmd = tokens->next->value;
         int i;
@@ -353,14 +357,17 @@ void init_cmds(t_token *tokens, t_env *envp)
 
     i = 0;
     
-    cmds = new_cmd_token(tokens);
+    cmds = new_cmd_token(tokens, envp);
     //printf("test\n");
     head = cmds;
     if (tokens->type == TOKEN_WORD)
     {
             tokens = tokens->next;
     }
-    
+    else if (tokens->type == TOKEN_VARIABLE)
+    {
+        tokens = tokens->next->next;
+    }
     while (tokens)
     { 
         type = tokens->type;
@@ -368,7 +375,7 @@ void init_cmds(t_token *tokens, t_env *envp)
             tokens = assign_args(tokens, cmds);
         else if (type == TOKEN_PIPE)
         {
-            cmds->next = new_cmd_token(tokens);
+            cmds->next = new_cmd_token(tokens, envp);
             tokens = tokens->next;
             cmds = cmds->next;
         }

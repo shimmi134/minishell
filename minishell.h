@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/05/15 20:04:52 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/05/15 21:52:07 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ t_token					*handle_quote(char *str, int *i, int type);
 t_token					*assign_args(t_token *tokens, t_cmd *cmds);
 t_token					*assign_ctl_tokens(t_token *token, t_cmd *cmd,
 							t_env *envp);
-t_cmd					*new_cmd_token(t_token *tokens);
+t_cmd					*new_cmd_token(t_token *tokens, t_env *envp);
 int						has_token(char *str);
 int						skip(char *str, int i);
 int						is_word(char *str);

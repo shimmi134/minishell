@@ -1,0 +1,31 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "gcc",
+      "args": [
+        "-g",
+        "main.c",
+        "lexer.c",
+        "parsing.c",
+        "new_token.c",
+        "token_type.c",
+        "token_utils.c",
+        "utils.c",
+        "ft_split.c",
+        "ft_strjoin.c",
+        "-I.",
+        "-o",
+        "ms",
+        "-lreadline"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}
