@@ -6,12 +6,12 @@
 #    By: shimi-be <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/11 11:53:14 by shimi-be          #+#    #+#              #
-#    Updated: 2025/05/14 13:13:16 by shimi-be         ###   ########.fr        #
+#    Updated: 2025/05/16 14:52:05 by shimi-be         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
-SRC = test.c
+SRC = $(wildcard *.c) $(wildcard joe/*.c)
 LIB = libft.a
 FLAGS = -Wall -Werror -Wextra
 
@@ -23,7 +23,11 @@ $(NAME): $(OBJ) $(LIB)
 	cc $(OBJ) -L/usr/include -lreadline -lhistory $(LIB) -g -o $(NAME)
 
 %.o: %.c $(INCLUDE) Makefile
-	cc -L/usr/include -lreadline -lhistory -c $< -o $@
+	cc -L/usr/include -lreadline -lhistory -g -c $< -o $@
+
+libft.a:
+	$(MAKE) -C libft
+	mv libft/libft.a .
 
 clean:
 	rm -rf $(OBJ)

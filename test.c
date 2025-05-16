@@ -6,11 +6,11 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/05/14 13:08:40 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/05/16 16:18:45 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <sys/wait.h>
-#include "minishell_test.h"
+#include "minishell.h"
 #include <readline/readline.h>
 #include <errno.h>
 
@@ -21,6 +21,16 @@ void	delete_node(t_env **env, t_env *target, t_env *prev)
 	else
 		prev->next = target->next;
 	free(target);
+}
+
+int	count_len(char **sp)
+{
+	int	i;
+
+	i = 0;
+	while (sp[i])
+		i++;
+	return (i);
 }
 
 void	addlast(t_env **env, t_env *add)
@@ -49,7 +59,31 @@ t_env	*create_node(char *env)
 	return (node);
 }
 
-void	do_builtins(t_shell *elem, t_env **env, char *av[], int ac)
+int ft_strspn(char *str, char *sep)
+{
+	int	i;
+	int	j;
+
+	if (!str || !sep)
+		return (0);
+	i = 0;
+	while (str[i])
+	{
+		j = 0;
+		while (sep[j])
+		{
+			if (sep[j] == str[i])
+				break;
+			j++;
+		}
+		if (!sep[j])
+			return (i);
+		i++;
+	}
+	return (i);
+}
+
+void	do_builtins(t_shell *elem, t_env **env)
 {
 	char	*buf;
 	t_env	*nd;
@@ -63,7 +97,7 @@ void	do_builtins(t_shell *elem, t_env **env, char *av[], int ac)
 	t_env	*temp;
 
 	i = 0;
-	if (!ft_strncmp(elem->word, "pwd", 3))
+	if (!ft_strncmp(elem->command->cmd, "pwd", 3))
 	{
 		buf = getcwd(NULL, 0);
 		if (!buf)
@@ -72,12 +106,12 @@ void	do_builtins(t_shell *elem, t_env **env, char *av[], int ac)
 			printf("%s\n", buf);
 		free(buf);
 	}
-	else if (!ft_strncmp(elem->word, "kill", 4))
+	else if (!ft_strncmp(elem->command->cmd, "kill", 4))
 	{
 		// kill(t_pid val_of_child, signal) MOst likely need to do in loop or smth
 		exit(0);
 	}
-	else if (!ft_strncmp(elem->word, "env", 3))
+	else if (!ft_strncmp(elem->command->cmd, "env", 3))
 	{
 		nd = (*env);
 		while (nd)
@@ -87,13 +121,13 @@ void	do_builtins(t_shell *elem, t_env **env, char *av[], int ac)
 			nd = nd->next;
 		}
 	}
-	else if (!ft_strncmp(elem->word, "unset", 5))
+	else if (!ft_strncmp(elem->command->cmd, "unset", 5))
 	{
 		nd = (*env);
 		prev = nd;
 		while (nd)
 		{
-			if (!ft_strncmp(av[1], nd->key, ft_strlen(av[1])))
+			if (!ft_strncmp(elem->command->args[1], nd->key, ft_strlen(elem->command->args[1])))
 			{
 				delete_node(env, nd, prev);
 				break ;
@@ -102,29 +136,29 @@ void	do_builtins(t_shell *elem, t_env **env, char *av[], int ac)
 			nd = nd->next;
 		}
 	}
-	else if (!ft_strncmp(elem->word, "echo", 4))
+	else if (!ft_strncmp(elem->command->cmd, "echo", 4))
 	{
 		newline = 1;
-		i = 1;
-		while (i < ac && !ft_strncmp(av[i], "-n", 3))
+		i = 0;
+		while (i < count_len(elem->command->args) && !ft_strncmp(elem->command->args[i], "-n", 2) && ft_strlen(elem->command->args[i]) == ft_strspn(elem->command->args[i], "-n"))
 		{
 			newline = 0;
 			i++;
 		}
-		while (i < ac)
+		while (i < count_len(elem->command->args))
 		{
-			printf("%s", av[i]);
-			if (i < ac - 1)
+			printf("%s", elem->command->args[i]);
+			if (i < count_len(elem->command->args) - 1)
 				printf(" ");
 			i++;
 		}
 		if (newline)
 			printf("\n");
 	}
-	else if (!ft_strncmp(elem->word, "export", 6))
+	else if (!ft_strncmp(elem->command->cmd, "export", 6))
 	{
-		split = ft_split(av[1], '=');
-		node = create_node(av[1]);
+		split = ft_split(elem->command->args[0], '=');
+		node = create_node(elem->command->args[0]);
 		if (split)
 		{
 			if (split[0][(int)ft_strlen(split[0]) - 1] != '+')
@@ -176,9 +210,10 @@ void	do_builtins(t_shell *elem, t_env **env, char *av[], int ac)
 			}
 		}
 	}
-	else if (!ft_strncmp(elem->word, "cd", 2)) // HAVE TO ADD OLDPWD
+	else if (!ft_strncmp(elem->command->cmd, "cd", 2))
 	{
-		i = chdir(av[1]);
+		char *oldpwd = getcwd(NULL, 0);
+		i = chdir(elem->command->args[1]);
 		if (i != -1)
 		{
 			str = getcwd(NULL, 0);
@@ -187,6 +222,8 @@ void	do_builtins(t_shell *elem, t_env **env, char *av[], int ac)
 			{
 				if (!ft_strncmp(temp->key, "PWD", 3))
 					temp->value = str;
+				else if (!ft_strncmp(temp->key, "OLDPWD", ft_strlen(temp->key)))
+					temp->value = oldpwd;
 				temp = temp->next;
 			}
 		}
@@ -228,30 +265,56 @@ char	*try_paths(char	**split, char *comm)
 	return (NULL);
 }
 
-void exec_command(t_shell *elem, t_env **env, char** av, int ac, char **envp)
+char **join_args(char *cmd, char**args)
+{
+	int	len;
+	int	i;
+	char	**final_args;
+
+	i = 1;
+	len = count_len(args) + 1;
+	final_args = malloc((len+1) * sizeof(char *));
+	if (!final_args)
+		return NULL;
+	final_args[0] = cmd;
+	final_args[len] = NULL;
+	while (i < len)
+	{
+		final_args[i] =  args[i-1];
+		i++;
+	}
+	return final_args;
+}
+
+void exec_command(t_shell *elem, t_env **env, char **envp)
 {
 	char	*path;
 	char	*paths;
+	char	**args;
 	char	**split;
 
-	if (access(elem->word, F_OK) != 0)
+	if (access(elem->command->cmd, F_OK) != 0)
 	{
-		printf("Gotinside\n");
 		paths = get_paths(env);
 		if (!paths)
 			exit(1);
 		split = ft_split(paths, ':');
-		path = try_paths(split, elem->word);
-		if (!paths)
-			exit(1);
+		path = try_paths(split, elem->command->cmd);
+		if (!path)
+		{
+			perror(elem->command->cmd);
+			exit(errno);
+		}
 	}
 	else
-		path = elem->word;
-	execve(path, av, envp);
+		path = elem->command->cmd;
+	args = join_args(elem->command->cmd, elem->command->args);
+	execve(path, args, envp);
 	printf("Error: %s\n", strerror(errno));
+	exit(127);
 }
 
-void	do_commands(t_shell *elem, t_env **env, char** av, int ac, char **envp)
+void	do_commands(t_shell *elem, t_env **env, char **envp)
 {
 	int id;
 
@@ -262,17 +325,17 @@ void	do_commands(t_shell *elem, t_env **env, char** av, int ac, char **envp)
 		exit(1);
 	}
 	if (id == 0) // child
-		exec_command(elem, env, av, ac, envp);
+		exec_command(elem, env, envp);
 	else
 		wait(NULL);
 }
 
-void	do_element(t_shell *elem, t_env **env, char *av[], int ac, char**envp)
+void	do_element(t_shell *elem, t_env **env, char**envp)
 {
 	if (!ft_strncmp(elem->type, "built-in", ft_strlen(elem->type)))
-		do_builtins(elem, env, av, ac);
+		do_builtins(elem, env);
 	else if (!ft_strncmp(elem->type, "command", ft_strlen(elem->type)))
-		do_commands(elem, env, av , ac, envp);
+		do_commands(elem, env, envp);
 }
 
 t_env	*copy_env(char *envp[])
@@ -302,16 +365,6 @@ t_env	*copy_env(char *envp[])
 	return (head);
 }
 
-int	count_len(char **sp)
-{
-	int	i;
-
-	i = 0;
-	while (sp[i])
-		i++;
-	return (i);
-}
-
 char	*get_element(char *line)
 {
 	char **split = ft_split(line, ' ');
@@ -332,6 +385,9 @@ char	*get_element(char *line)
 int	main(int ac, char *argv[], char *envp[])
 {
 	t_shell	*element;
+	t_cmd	*command;
+	t_token *node;
+	t_token *head;
 	t_env	*env;
 	char	*line;
 	char	**split;
@@ -343,12 +399,33 @@ int	main(int ac, char *argv[], char *envp[])
 		line = readline(">>> ");
 		if (ft_strncmp(line, "", 1))
 		{
+			/*
+			node = lexer(line);
+			head = node;
+			print_list(node);
+			if (check_tokens(head))
+			{
+				element = init_cmds(node, env); //Elem should be a command. COunt how many command I will have so I know how long the list will be.
+												//Inside the loop, create a node, and assign it a type such as that shell->type = get_element(element->cmmd), and if i < than the number of commands -1 make next
+												//
+				do_element(element, &env, envp);
+			}
+			free_tokens(head);
+*/
+			node = lexer(line);
+			head = node;
+			if (check_tokens(head))
+			{
+			command = init_cmds(node,env);
+			//i = size(command);
 			element = malloc(sizeof(t_shell));
-			element->type = get_element(line);
-			split = ft_split(line, ' ');
-			ac = count_len(split);
-			element->word = split[0];
-			do_element(element, &env, split, ac, envp);
+			element->command = malloc (sizeof(t_cmd));
+			element->command = command;
+			element->type = get_element(command->cmd);
+			element->command->args = command->args;
+			ac = count_len(command->args);
+			do_element(element, &env, envp);
+			}
 		}
 	}
 }

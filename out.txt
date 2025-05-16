@@ -1,0 +1,10 @@
+a.out$
+libft$
+libft.a$
+Makefile$
+minishell$
+minishell.h$
+minishell_test.h$
+out.txt$
+test.c$
+test.o$
