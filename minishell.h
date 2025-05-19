@@ -69,11 +69,11 @@ t_token					*new_token(token_type type, char *value, int flag,
 							int new_word);
 t_token					*lexer(char *str);
 t_token					*add_word(char *str, int *i);
-t_token					*handle_quote(char *str, int *i);
+t_token					*handle_quote(char *str, int *i, int type);
 t_token					*assign_args(t_token *tokens, t_cmd *cmds);
 t_token					*assign_ctl_tokens(t_token *token, t_cmd *cmd,
 							t_env *envp);
-t_cmd					*new_cmd_token(t_token *tokens);
+t_cmd                   *new_cmd_token(t_token *tokens, t_env *envp);
 int						has_token(char *str);
 int						skip(char *str, int i);
 int						is_word(char *str);
