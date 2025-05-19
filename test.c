@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/05/16 16:18:45 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/05/19 15:50:22 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <sys/wait.h>
@@ -138,6 +138,8 @@ void	do_builtins(t_shell *elem, t_env **env)
 	}
 	else if (!ft_strncmp(elem->command->cmd, "echo", 4))
 	{
+//		printf("[%s]\n", elem->command->args[0]);
+//		printf("[%s]\n", elem->command->args[1]);
 		newline = 1;
 		i = 0;
 		while (i < count_len(elem->command->args) && !ft_strncmp(elem->command->args[i], "-n", 2) && ft_strlen(elem->command->args[i]) == ft_strspn(elem->command->args[i], "-n"))
@@ -399,32 +401,18 @@ int	main(int ac, char *argv[], char *envp[])
 		line = readline(">>> ");
 		if (ft_strncmp(line, "", 1))
 		{
-			/*
 			node = lexer(line);
 			head = node;
-			print_list(node);
 			if (check_tokens(head))
 			{
-				element = init_cmds(node, env); //Elem should be a command. COunt how many command I will have so I know how long the list will be.
-												//Inside the loop, create a node, and assign it a type such as that shell->type = get_element(element->cmmd), and if i < than the number of commands -1 make next
-												//
+				command = init_cmds(node,env);
+				element = malloc(sizeof(t_shell));
+				element->command = malloc (sizeof(t_cmd));
+				element->command = command;
+				element->type = get_element(command->cmd);
+				element->command->args = command->args;
+				ac = count_len(command->args);
 				do_element(element, &env, envp);
-			}
-			free_tokens(head);
-*/
-			node = lexer(line);
-			head = node;
-			if (check_tokens(head))
-			{
-			command = init_cmds(node,env);
-			//i = size(command);
-			element = malloc(sizeof(t_shell));
-			element->command = malloc (sizeof(t_cmd));
-			element->command = command;
-			element->type = get_element(command->cmd);
-			element->command->args = command->args;
-			ac = count_len(command->args);
-			do_element(element, &env, envp);
 			}
 		}
 	}
