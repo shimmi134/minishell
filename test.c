@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/05/19 15:50:22 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/05/21 10:42:29 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <sys/wait.h>
@@ -229,6 +229,9 @@ void	do_builtins(t_shell *elem, t_env **env)
 				temp = temp->next;
 			}
 		}
+		else{
+			printf("%s\n",strerror(errno));
+		}
 		// return (i);
 	}
 }
@@ -399,7 +402,9 @@ int	main(int ac, char *argv[], char *envp[])
 	while (1)
 	{
 		line = readline(">>> ");
-		if (ft_strncmp(line, "", 1))
+		/*if (!line)
+			return 1;*/
+		if (line != NULL && ft_strncmp(line, "", 1))
 		{
 			node = lexer(line);
 			head = node;
