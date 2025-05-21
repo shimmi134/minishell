@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/05/19 16:06:28 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/05/21 12:25:43 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,14 +133,16 @@ t_token *assign_args(t_token *tokens, t_cmd *cmds)
     //current_c = *(cmds);
     if (tokens && tokens->type == TOKEN_WORD)
     {
-        while(cmds->args[i])
+        while(cmds->args && cmds->args[i])
             i++;
         //printf("token->value = %s\n", tokens->value);
-        cmds->args[i] = tokens->value;
+        if (cmds->args)
+        	cmds->args[i] = tokens->value;
         i++;
         //tokens = tokens->next;
+        if (cmds->args)
+        	cmds->args[i] = NULL;
     }
-    cmds->args[i] = NULL;
   //  printf("token type at end of assign = %d\n", tokens->type);
     return (tokens);
 }
@@ -375,14 +377,27 @@ t_cmd* init_cmds(t_token *tokens, t_env *envp)
             tokens = assign_args(tokens, cmds);
         else if (type == TOKEN_PIPE)
         {
+			t_cmd *helper = malloc(sizeof(t_cmd));
+			helper->pipe = 1;
+			helper->cmd = NULL;
+			helper->args = NULL;
+			helper->infile = NULL;
+			helper->outfile = NULL;
+			helper->append = 0;
+			helper->heredoc = 0;
+			helper->heredoc_delim = NULL;
+			cmds->next = helper;
+			cmds = cmds->next;
+			/*
             cmds->next = new_cmd_token(tokens, envp);
             tokens = tokens->next;
             cmds = cmds->next;
+			*/
         }
         else
             tokens = assign_ctl_tokens(tokens, cmds, envp);
         i = 0;
-        while(cmds->args[i])
+        while(cmds->args && cmds->args[i])
             i++;
         i = i - 1;
         if (i != 0 && !tokens->new_word && type != TOKEN_VARIABLE)

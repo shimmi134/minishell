@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/05/21 10:42:29 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/05/21 12:18:23 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <sys/wait.h>
@@ -28,7 +28,7 @@ int	count_len(char **sp)
 	int	i;
 
 	i = 0;
-	while (sp[i])
+	while (sp && sp[i])
 		i++;
 	return (i);
 }
@@ -373,10 +373,10 @@ t_env	*copy_env(char *envp[])
 char	*get_element(char *line)
 {
 	char **split = ft_split(line, ' ');
-	if (!ft_strncmp(split[0], "pwd", 4) || !ft_strncmp(split[0], "kill", 5)
+	if (split && (!ft_strncmp(split[0], "pwd", 4) || !ft_strncmp(split[0], "kill", 5)
 		|| !ft_strncmp(split[0], "env", 4) || !ft_strncmp(split[0], "unset",
 			6) || !ft_strncmp(split[0], "echo", 5) || !ft_strncmp(split[0],
-			"export", 6) || !ft_strncmp(split[0], "cd", 2))
+			"export", 6) || !ft_strncmp(split[0], "cd", 2)))
 	{
 		return ("built-in");
 	}
@@ -384,6 +384,37 @@ char	*get_element(char *line)
 		return ("command");
 	}
 }
+
+void	do_struct(t_shell **element, t_cmd *command)
+{
+	int	i;
+	t_shell *temp;
+
+	while(command)
+	{
+		if (!(*element)->command)
+		{
+			(*element) = malloc(sizeof(t_shell));
+			if (!(*element))
+				exit(1);
+		}
+		else if (!(*element)->next)
+		{
+			(*element)->next = malloc(sizeof(t_shell));
+			if (!(*element)->next)
+				exit(1);
+			(*element) = (*element)->next;
+		}
+		(*element)->command = malloc(sizeof(t_cmd));
+		if (!(*element)->command)
+			exit(2);
+		(*element)->command = command;
+		(*element)->type = get_element(command->cmd);
+		command = command->next;
+	}
+}
+
+
 // TODO:
 // Make it so I transform all of line into nodes of t_shell
 //
@@ -411,11 +442,14 @@ int	main(int ac, char *argv[], char *envp[])
 			if (check_tokens(head))
 			{
 				command = init_cmds(node,env);
+				do_struct(&element,command);	
+				/*
 				element = malloc(sizeof(t_shell));
 				element->command = malloc (sizeof(t_cmd));
 				element->command = command;
 				element->type = get_element(command->cmd);
 				element->command->args = command->args;
+				*/
 				ac = count_len(command->args);
 				do_element(element, &env, envp);
 			}

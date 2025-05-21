@@ -42,6 +42,7 @@ typedef struct s_command
 	char				*outfile;
 	int					append;
 	int					heredoc;
+	int					pipe;
 	char				*heredoc_delim;
 	struct s_command	*next;
 }						t_cmd;
