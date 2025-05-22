@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/05/11 06:48:25 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/05/22 21:19:53 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,32 @@ void free_tokens(t_token *head)
         head = tmp;
     }
 }
+void free_cmds(t_cmd *head)
+{
+    t_cmd *tmp;
+	int i;
+
+	i = 0;
+    while (head)
+    {
+        if (head->cmd)
+           free(head->cmd);
+//		if (head->heredoc_delim)
+//			free(head->heredoc_delim);
+//		if (head->infile)
+//			free(head->infile);
+//		if(head->outfile)
+//			free(head->outfile);
+		while (head->args[i])
+		{
+			free(head->args[i++]);
+		}
+		tmp = head->next;
+		free(head);
+        head = tmp;
+		i = 0;
+    }
+}
 /*
 int main (int argc, char **argv)
 {
@@ -180,17 +206,22 @@ int main(int argc, char *argv[], char *envp[])
 	char *line;
 	t_token *node;
 	t_token *head;
+	t_cmd *t_head;
 	t_env	*env;
 	env = copy_env(envp);
 	while (1)
 	{
+			head = NULL;
             line = readline("> ");
 			node = lexer(line);
 			head = node;
 			print_list(node);
 			if (check_tokens(head))
-				init_cmds(node, env);
+				t_head = init_cmds(node, env);
+			//printf("head: %s\n", head->value);
+			//printf("%s\n", expand_var(head->next, env));
 			free_tokens(head);
+				free_cmds(t_head);
 	}
 	return (0);
 }

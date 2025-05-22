@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/05/14 20:46:55 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/05/22 21:11:53 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,11 @@ t_token *add_word(char *str, int *i)
 
 	j = *i;
 	new_word = 0;
+	if (j > 0)
+	{
 	if (str[j - 1] == ' ')
 		new_word = 1;
+	}
 	arr = NULL;
 	while ((str[j]) && !is_token(str[j]) && str[j] != ' ')
 				j++;
@@ -132,6 +135,7 @@ t_token *lexer (char *str)
 	t_token *current;
 	int	 type;
 	int empty;
+	int quote;
 	int new_word;
 
 	i = 0;
@@ -148,6 +152,10 @@ t_token *lexer (char *str)
 			type = find_token_type(&str[i]);
 			if (type == TOKEN_QUOTE_SINGLE || type == TOKEN_QUOTE_DOUBLE)
 			{
+				if (type == TOKEN_QUOTE_DOUBLE)
+					quote = 1;
+				else if (type == TOKEN_QUOTE_SINGLE)
+					quote = 2;
 			//	printf("type = %d\n", type);
 				if (str[i - 1] == ' ')
 					new_word = 1;
@@ -156,12 +164,12 @@ t_token *lexer (char *str)
 					i++;
 					if (!head)
 				{
-					head = new_token(type, &str[i], 0, new_word);
+					head = new_token(type, &str[i], quote, new_word);
 					current = head;
 				}
 				else
 				{
-					current->next = new_token(type, &str[i], 0, new_word);
+					current->next = new_token(type, &str[i], quote, new_word);
 					current = current->next;
 				}
 				}
@@ -178,7 +186,7 @@ t_token *lexer (char *str)
 			}
 			else if (type != TOKEN_QUOTE_SINGLE && type != TOKEN_QUOTE_DOUBLE && !empty)
 			{
-				if (str[i - 1] == ' ')
+				if (i > 1 && str[i - 1] == ' ')
 						new_word = 1;
 				if (!head)
 				{
