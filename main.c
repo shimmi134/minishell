@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/06/21 19:57:19 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/06/24 22:28:56 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,8 @@ void free_cmds(t_cmd *head)
 		}
 
 		tmp = head->next;
+		if (head->args)
+			free(head->args);
 		if (head)
 			free(head);
         head = tmp;
@@ -163,16 +165,21 @@ t_env	*create_node(char *env)
 {
 	char	**split;
 	t_env	*node;
-	
+	int i;
+
+	i = 0;
 	split = ft_split(env, '=');
 	if (!split)
 		return (NULL);
 	node = malloc(sizeof(t_env));
 	if (!node)
 		return (NULL);
-	node->key = split[0];
-	node->value = split[1];
+	node->key = ft_strdup(split[0]);
+	node->value = ft_strdup(split[1]);
 	node->next = NULL;
+	while (split[i])
+		free(split[i++]);
+	free(split);
 	return (node);
 }
 
@@ -212,6 +219,25 @@ void handle_sigint(int sig_num)
     rl_on_new_line();
     rl_redisplay();
 }
+
+void free_env_list_tmp(t_env *env)
+{
+    t_env *tmp;
+
+    while (env)
+    {
+        tmp = env->next;
+
+        if (env->key)
+            free(env->key);
+        if (env->value)
+            free(env->value);
+
+        free(env);
+        env = tmp;
+    }
+}
+
 
 
 //compile with:  cc *.c -L/usr/include -lreadline
@@ -304,9 +330,11 @@ int main(int argc, char *argv[], char *envp[])
 			//  free_tokens(head);
 			//  	free_cmds(t_head);
 			}
-			 free_tokens(head);
-			  	free_cmds(t_head);
+			free_tokens(head);
+			free_cmds(t_head);
+			
 
 	}
+	free_env_list_tmp(env);
 	return (0);
 }

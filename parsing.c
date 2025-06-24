@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/06/24 21:04:12 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/06/24 22:01:10 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,33 +171,16 @@ int arg_count(t_token *tokens)
 t_cmd *new_cmd_token(t_token *tokens, t_env *envp)
 {
     int count;
+    int i;
     
+    i = 0;
     t_cmd *cmd = malloc(sizeof(t_cmd));
-    //cmd->cmd = NULL;
     count = arg_count(tokens);
-    // printf("count = %d\n", count);
-        cmd->args = malloc(sizeof(char *) * (100 + 1));
+        cmd->args = calloc(101, sizeof(char *));
     if (!cmd->args)
         return(NULL);
-        cmd->args[count] = NULL;
-    // if (tokens->type == TOKEN_WORD)
-    //     cmd->cmd = tokens->value;
-    // else if (tokens->type == TOKEN_HEREDOC || tokens->type == TOKEN_APPEND)
-    //         cmd->cmd = NULL;
-    // else if(!cmd->cmd && !cmd->next && tokens->type != TOKEN_PIPE)
-    //         cmd->cmd = tokens->value;
-    // else if (tokens->type == TOKEN_VARIABLE && tokens->next->type == TOKEN_WORD)
-    // {
-    //     cmd->cmd = expand_var(tokens->next, envp);
-    // }
-    // else
-    //     cmd->cmd = tokens->next->value;
-         int i;
-
-        i = 0;
+        cmd->args[count] = NULL;    
         cmd->cmd = NULL;
-    // while (i < count + 1)
-    //     cmd->args[i++] = NULL;
     cmd->args[0] = NULL;
     cmd->infile = NULL;
     cmd->outfile = NULL;
@@ -390,6 +373,8 @@ t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp)
     {  
         if (token->next)
             token = token->next;
+        if (cmd->outfile)
+            free(cmd->outfile);
         cmd->outfile = ft_strdup(token->value);
       //  token = token->next;
     }

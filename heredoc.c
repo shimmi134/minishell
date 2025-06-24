@@ -57,11 +57,15 @@ char *heredoc_expand(char *str, t_env * env)
 		}
 		tmp2[i] = '\0';
 		expanded = expand_var(tmp2, env);
-		//free (tmp2);
+		if (tmp2)
+			free (tmp2);
 		if (expanded)
         {
             if (tmp)
+			{
 			    tmp2 = ft_strjoin(tmp, expanded);
+				free(tmp);
+			}
             else
                 tmp2 = expanded;
             return(tmp2);

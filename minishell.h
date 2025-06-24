@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/06/20 22:04:58 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/06/24 22:27:29 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,4 +122,5 @@ char *expand_with_quotes(char *str, t_env *env);
 int    check_quotes(t_token *token, char *str);
 int	read_heredoc(char *delimiter, int quoted, t_env *env);
 void	handle_sigint(int sig_num);
+void	free_env_list_tmp(t_env *env);
 #endif
