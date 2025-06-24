@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/05/22 21:19:53 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/06/21 19:57:19 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void print_list(t_token *head)
 
         current = current->next;
     }
-    printf("NULL\n");
+    	printf("NULL\n");
 }
 
 
@@ -117,22 +117,26 @@ void free_cmds(t_cmd *head)
 	int i;
 
 	i = 0;
+	if (!head)
+		return ;
     while (head)
     {
         if (head->cmd)
            free(head->cmd);
-//		if (head->heredoc_delim)
-//			free(head->heredoc_delim);
-//		if (head->infile)
-//			free(head->infile);
-//		if(head->outfile)
-//			free(head->outfile);
+		if (head->heredoc_delim)
+			free(head->heredoc_delim);
+		if (head->infile)
+			free(head->infile);
+		if(head->outfile)
+			free(head->outfile);
 		while (head->args[i])
 		{
 			free(head->args[i++]);
 		}
+
 		tmp = head->next;
-		free(head);
+		if (head)
+			free(head);
         head = tmp;
 		i = 0;
     }
@@ -200,6 +204,16 @@ t_env	*copy_env(char *envp[])
 	return (head);
 }
 
+void handle_sigint(int sig_num)
+{
+    (void)sig_num;
+    rl_replace_line("", 0);
+    write(1, "\n", 1);
+    rl_on_new_line();
+    rl_redisplay();
+}
+
+
 //compile with:  cc *.c -L/usr/include -lreadline
 int main(int argc, char *argv[], char *envp[])
 {
@@ -208,20 +222,91 @@ int main(int argc, char *argv[], char *envp[])
 	t_token *head;
 	t_cmd *t_head;
 	t_env	*env;
+	pid_t pid;
 	env = copy_env(envp);
 	while (1)
 	{
 			head = NULL;
-            line = readline("> ");
-			node = lexer(line);
-			head = node;
-			print_list(node);
-			if (check_tokens(head))
-				t_head = init_cmds(node, env);
+			t_head = NULL;
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
+            line = readline("\033[1;34mminishell>\033[0m ");
+		//  line = strdup("< h")
+		//	printf("line = %s\n", line);
+		if (line == NULL)
+		{
+			printf("exit\n");
+			break ;
+		}
+			if (check_quotes(head, line))
+			{
+				node = lexer(line);
+				head = node;
+			//	print_list(node);
+				if (check_tokens(head))
+				{
+					t_head = init_cmds(node, env);
+				if (ft_strcmp(t_head->cmd, "exit") == 0)
+				{
+					free_tokens(head);
+			 		free_cmds(t_head);
+					break ;
+				}
+				print_cmd_list(t_head);
+				t_cmd *hd_temp;
+				hd_temp = t_head;
+				
+				while (hd_temp->next)
+					hd_temp = hd_temp->next;
+				
+		if (hd_temp->heredoc_delim)
+		{
+			hd_temp->heredoc_fd = read_heredoc(hd_temp->heredoc_delim, hd_temp->heredoc_quoted, env);
+			if (hd_temp->heredoc_fd == -1)
+    		{
+        		  free(line);
+            		break ;
+    		}
+		
+				pid = fork();
+				if (pid == 0)
+				{
+					if (hd_temp->heredoc_fd != -1)
+				{
+    				dup2(hd_temp->heredoc_fd, STDIN_FILENO);
+    				close(hd_temp->heredoc_fd);
+				}
+				if (hd_temp->cmd)
+					execvp(hd_temp->cmd, hd_temp->args);
+			
+					// perror("execvp");
+				exit(EXIT_FAILURE);
+				}
+				else if (pid > 0)
+				{
+					if (hd_temp->heredoc_fd != -1)
+						close(hd_temp->heredoc_fd);
+						    int status;
+   					 waitpid(pid, &status, 0);
+					 free(line);
+				}
+				else
+				{
+    				perror("fork");
+    				free(line);
+				}
+				
+		}
+		}
+			
 			//printf("head: %s\n", head->value);
 			//printf("%s\n", expand_var(head->next, env));
-			free_tokens(head);
-				free_cmds(t_head);
+			//  free_tokens(head);
+			//  	free_cmds(t_head);
+			}
+			 free_tokens(head);
+			  	free_cmds(t_head);
+
 	}
 	return (0);
 }

@@ -6,11 +6,81 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/05/22 21:16:59 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/06/24 21:04:12 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int    check_quotes(t_token *token, char *str)
+{
+    int s_quote;
+    int d_quote;
+    int i;
+
+    s_quote = 0;
+    d_quote = 0;
+    i = 0;
+
+    while (str[i])
+    {
+        if (str[i] == '"')
+        {
+          //  if (str[i + 1])
+                i++;
+            while (str[i] && str[i] != '"')
+            {
+                
+                // if (s_quote == 1)
+                // s_quote = 0;
+                // else
+                //     s_quote = 1;
+                i++;
+            }
+            if (str[i] != '"' || i == 0)
+            {
+                 printf("Error: no closing quotes\n");
+                return (0);
+            }
+        }
+        else if (str[i] == '\'')
+        {
+       //     if (str[i + 1])
+                i++;
+            while (str[i] && str[i] != '\'')
+            {
+            //     if (d_quote == 1)
+            //         d_quote = 0;
+            // else
+            //     s_quote = 1;
+                i++;
+            }
+            if (str[i] != '\'' || i == 0)
+            {
+                 printf("Error: no closing quotes\n");
+                return (0);
+            }
+        }
+        i++;
+    }
+    //     while (token)
+    // {
+    //     if (token->value[0] == '\'')
+    //     {
+    //         if (s_quote == 1)
+    //             s_quote = 0;
+    //         else
+    //             s_quote = 1;
+    //     }
+    //     token = token->next;
+    // }
+    // if (s_quote != 0 || d_quote != 0)
+    // {
+    //     printf("Error: no closing quotes\n");
+    //     return(0);
+    // }
+    return (1);
+}
 
 int check_tokens (t_token *tokens)
 {
@@ -18,15 +88,17 @@ int check_tokens (t_token *tokens)
     int prev_type;
 
     head = tokens;
-if (!tokens ||tokens->type == TOKEN_PIPE)
+    if (!tokens)
+        return (0);
+if (tokens->type == TOKEN_PIPE)
         {
             printf("Syntax error, invalid token at start\n");
-            return (free_tokens(head), 0);
+            return (0);
         }
         if (tokens->type == TOKEN_VARIABLE && !tokens->next)
         {
             printf("Syntax error, invalid token at start\n");
-            return (free_tokens(head), 0);
+            return (0);
         }       
     while (tokens)
     {
@@ -103,7 +175,7 @@ t_cmd *new_cmd_token(t_token *tokens, t_env *envp)
     t_cmd *cmd = malloc(sizeof(t_cmd));
     //cmd->cmd = NULL;
     count = arg_count(tokens);
-    printf("count = %d\n", count);
+    // printf("count = %d\n", count);
         cmd->args = malloc(sizeof(char *) * (100 + 1));
     if (!cmd->args)
         return(NULL);
@@ -130,8 +202,10 @@ t_cmd *new_cmd_token(t_token *tokens, t_env *envp)
     cmd->infile = NULL;
     cmd->outfile = NULL;
     cmd->heredoc_delim = NULL;
+    cmd->heredoc_quoted = 0;
     cmd->append = 0;
     cmd->heredoc = 0;
+    cmd->heredoc_fd = -1;
     //cmd->args[0] = NULL;
     cmd->next = NULL;
     return (cmd);
@@ -199,20 +273,20 @@ t_token *assign_args(t_token *tokens, t_cmd *cmds, t_env *env)
     while(cmds->args[i])
         i++;
     // printf("i = %d\n", i);
-    if (ft_strchr(tokens-> value, '$') && !tokens->inside_single && ft_strlen(tokens->value) > 1)
-    {
-        if (tokens->value[0] == '\'')
-        {
-            cmds->args[i] = ft_strdup(expand_with_quotes(tokens->value, env));
-            if (cmds->args[i] == NULL)
-            {
-                cmds->args[i] = ft_strdup("''");
-            }
-            //printf("args[i] = %s\n", cmds->args[i]);
-            i++;
-        }
-    }
-    else if (tokens && tokens->type == TOKEN_WORD)
+    // if (ft_strchr(tokens-> value, '$') && !tokens->inside_single && ft_strlen(tokens->value) > 1)
+    // {
+    //     if (tokens->value[0] == '\'')
+    //     {
+    //         cmds->args[i] = ft_strdup(expand_with_quotes(tokens->value, env));
+    //         if (cmds->args[i] == NULL)
+    //         {
+    //             cmds->args[i] = ft_strdup("''");
+    //         }
+    //         //printf("args[i] = %s\n", cmds->args[i]);
+    //         i++;
+    //     }
+    // }
+    if (tokens && tokens->type == TOKEN_WORD)
     {
        
        // printf("token->value = %s\n", tokens->value);
@@ -325,6 +399,8 @@ t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp)
         if (token->next)
             token = token->next;
             cmd->heredoc_delim = ft_strdup(token->value);
+        if (token->inside_single || token->inside_double)
+            cmd->heredoc_quoted = 1;
       //  token = token->next;
     }
     else if (type == TOKEN_APPEND)
@@ -348,10 +424,10 @@ t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp)
       //      {   
                 if (i != 0 && !token->new_word)
                 { 
-                    printf("here?\n");
                     //token = token->next; 
                     temp = expand_var(token->next->value, envp);
-                    cmd->args[i - 1] = ft_strjoin(cmd->args[i - 1], temp);
+                    if (temp)
+                        cmd->args[i - 1] = ft_strjoin(cmd->args[i - 1], temp);
                     //free(temp);
                     // if (!token->next->new_word)
                     // {
@@ -414,6 +490,15 @@ void shift_left(char **arr)
 {
     int i = 0;
     char *tmp;
+    
+    // while (arr[i])
+    //     i++;
+    // if (i == 0)
+    // {
+    //     arr[0] = NULL;
+    //   //  arr[1] = NULL;
+    // }
+    // i = 0;
 //    printf("arr[i] = %s\n", arr[0]);
     while (arr[i + 1])
     {
@@ -462,13 +547,15 @@ t_cmd *init_cmds(t_token *tokens, t_env *envp)
         
                 }
             cmds->next = new_cmd_token(tokens, envp);
-            tokens = tokens->next;
+            //tokens = tokens->next; not sure what it does
             cmds = cmds->next;
         }
        else if (type == TOKEN_VARIABLE && !tokens->inside_double && (tokens->next->inside_single || tokens->next->inside_double))
                 tokens = tokens->next;
         if (tokens->type == TOKEN_WORD)
+        {
             tokens = assign_args(tokens, cmds, envp);
+        }
         // else if (type == TOKEN_PIPE)
         // {
         //         if (!cmds->cmd)
@@ -487,10 +574,11 @@ t_cmd *init_cmds(t_token *tokens, t_env *envp)
         
         while(cmds->args[i])
         {
-            printf("args = %s\n", cmds->args[i]);   
+            // printf("args = %s\n", cmds->args[i]);   
             i++;
         }
         i = i - 1;
+       // printf("args value here is %s\n", cmds->args[i]);
         if (i != 0 && !tokens->new_word && type != TOKEN_VARIABLE)
         {
             cmds->args[i - 1] = ft_strjoin(cmds->args[i - 1], cmds->args[i]);
@@ -506,16 +594,19 @@ t_cmd *init_cmds(t_token *tokens, t_env *envp)
         //     free(cmds->args[0]);
         //     cmds->args[0] = NULL;
         // }
-        if (!cmds->cmd)
+        if (!cmds->cmd && (tokens && tokens->new_word || !tokens))
     {
         cmds->cmd = cmds->args[0];
+        // if (cmds->args[1])
+        //     free(cmds->args[1]);
+            cmds->args[1] = NULL;
         shift_left(cmds->args);
         
     }
         
     }
     
-    print_cmd_list(head);
+    // print_cmd_list(head);
     return (head);
 }
 
@@ -529,7 +620,12 @@ void print_cmd_list(t_cmd *head)
 	{
         printf("\n-----------------------\n");
         if (current->cmd)
-            printf("cmd = %s\n", current->cmd);
+        {
+            if (current->cmd[0] == '\0')
+                printf("cmd = [empty]\n");
+            else
+                printf("cmd = %s\n", current->cmd);
+        }
 		 if (current->append)
 		 	printf("[append]");
          if (current->heredoc)
