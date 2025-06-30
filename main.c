@@ -268,10 +268,12 @@ int main(int argc, char *argv[], char *envp[])
 			{
 				node = lexer(line);
 				head = node;
-			//	print_list(node);
+				print_list(node);
 				if (check_tokens(head))
 				{
+					
 					t_head = init_cmds(node, env);
+					printf("gets to here\n");
 				if (ft_strcmp(t_head->cmd, "exit") == 0)
 				{
 					free_tokens(head);

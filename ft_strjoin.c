@@ -54,6 +54,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	if (!s2)
 		return (NULL);
+	// if (ft_strcmp((char *)s1, "<<"))
+	// 	return("<<");
 	total = ft_strlen(s1) + ft_strlen(s2);
 	i = 0;
 	arr = malloc(total + 1);

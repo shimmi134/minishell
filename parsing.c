@@ -579,17 +579,19 @@ t_cmd *init_cmds(t_token *tokens, t_env *envp)
         //     free(cmds->args[0]);
         //     cmds->args[0] = NULL;
         // }
-        if (!cmds->cmd && (tokens && tokens->new_word || !tokens))
-    {
-        cmds->cmd = cmds->args[0];
-        // if (cmds->args[1])
-        //     free(cmds->args[1]);
-            cmds->args[1] = NULL;
-        shift_left(cmds->args);
+    //     if (!cmds->cmd && (tokens && tokens->new_word || !tokens))
+    // {
+    //     cmds->cmd = cmds->args[0];
+    //     // if (cmds->args[1])
+    //     //     free(cmds->args[1]);
+    //         //cmds->args[1] = NULL; //come back to this
+    //     shift_left(cmds->args);
+        
+    // }
         
     }
-        
-    }
+    cmds->cmd = cmds->args[0];
+    shift_left(cmds->args);
     
     // print_cmd_list(head);
     return (head);

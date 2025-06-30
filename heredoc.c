@@ -3,7 +3,7 @@
 void handle_sigint_heredoc(int sig_int)
 {
 	(void)sig_int;
-	exit(0);
+	exit(1);
 }
 
 char *heredoc_expand(char *str, t_env * env)

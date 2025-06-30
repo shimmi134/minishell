@@ -63,7 +63,12 @@ t_token *new_token(token_type type, char *value, int quote, int new_word)
 	token->new_word = new_word;
 	//printf("value[1] = %s\n", value[1]);
 	if (value[0] == '$' && quote != 2 && (value[1] != '\'' && value[1] != '"'))
+	{
 		token->type = TOKEN_VARIABLE;
+		if (token->value)
+			free(token->value);
+		token->value = ft_strdup_char('$');
+	}
 	//else
 	//	token->type = TOKEN_WORD;
     token->next = NULL;
