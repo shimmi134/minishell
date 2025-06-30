@@ -1,14 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
+/*   Updated: 2025/06/30 17:47:03 by shimi-be         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
 # include <stdbool.h>
 # include <stddef.h>
 # include <stdio.h>
+# include <stdio.h>
+# include <stdlib.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/wait.h>
 # include <unistd.h>
-# include <fcntl.h>
+# include <unistd.h>
+# include <signal.h>
+#include <readline/readline.h>
+#include <fcntl.h>
 
 typedef enum
 {
@@ -43,15 +60,16 @@ typedef struct s_command
 	char				*outfile;
 	int					append;
 	int					heredoc;
-	int					pipe;
 	char				*heredoc_delim;
+	int					heredoc_fd;
+	int					heredoc_quoted;
 	struct s_command	*next;
 }						t_cmd;
 
 typedef struct s_shell
 {
 	char				*type;
-	struct s_command	*command;
+	struct s_command				*command;
 	struct s_shell		*next;
 }						t_shell;
 
@@ -64,18 +82,20 @@ typedef struct s_env
 
 char					*ft_strdup(char *str);
 char					*ft_strdup_char(char c);
-char *add_quoted_word(char *str, int *i, int type, t_token **current);
-char					*expand_var(t_token *token, t_env *env);
+char					*ft_strdup_char(char c);
+char					*add_quoted_word(char *str, int *i, int type, t_token **current);
+char					*expand_var(char *str, t_env *env);
 token_type				find_token_type(char *str);
 t_token					*new_token(token_type type, char *value, int flag,
 							int new_word);
 t_token					*lexer(char *str);
+t_token					*lexer(char *str);
 t_token					*add_word(char *str, int *i);
-t_token	*handle_quote(char *str, int *i, int type, t_token **current);
-t_token					*assign_args(t_token *tokens, t_cmd *cmds);
+t_token					*handle_quote(char *str, int *i, int type, t_token **current);
+t_token					*assign_args(t_token *tokens, t_cmd *cmds, t_env *env);
 t_token					*assign_ctl_tokens(t_token *token, t_cmd *cmd,
 							t_env *envp);
-t_cmd                   *new_cmd_token(t_token *tokens, t_env *envp);
+t_cmd					*new_cmd_token(t_token *tokens, t_env *envp);
 int						has_token(char *str);
 int						skip(char *str, int i);
 int						is_word(char *str);
@@ -85,14 +105,23 @@ int						arg_count(t_token *tokens);
 void					free_tokens(t_token *head);
 void					print_list(t_token *head);
 void					print_enum(t_token *list);
+t_cmd					*init_cmds(t_token *tokens, t_env *env);
 void					print_cmd_list(t_cmd *head);
-t_cmd					*init_cmds(t_token *tokens, t_env *envp);
+//void					init_cmds(t_token *tokens, t_env *envp);
 char					**ft_split(char const *s, char c);
 int						ft_strncmp(const char *s1, const char *s2, size_t n);
+int						ft_strcmp(char *s1, char *s2);
 size_t					ft_strlen(const char *s);
 char					*ft_strjoin(char const *s1, char const *s2);
 char					*ft_strtrim(char const *s1, char const *set);
 t_env					*copy_env(char *envp[]);
 t_env					*create_node(char *env);
 char					*ft_strjoin(char const *s1, char const *s2);
+void free_cmds(t_cmd *head);
+char	*ft_strchr(const char *s, int c);
+char *expand_with_quotes(char *str, t_env *env);
+int    check_quotes(t_token *token, char *str);
+int	read_heredoc(char *delimiter, int quoted, t_env *env);
+void	handle_sigint(int sig_num);
+void	free_env_list_tmp(t_env *env);
 #endif

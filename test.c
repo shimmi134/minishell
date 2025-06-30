@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/06/30 17:27:43 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/06/30 18:13:38 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <sys/wait.h>
@@ -95,8 +95,17 @@ void	do_builtins(t_shell *elem, t_env **env)
 	t_env	*tmp;
 	char	*str;
 	t_env	*temp;
+	int		fd;
 
 	i = 0;
+	if (elem->command->infile != NULL){
+		fd = open(elem->command->infile,O_RDONLY);
+		dup2(fd, STDIN_FILENO);
+	}
+	if (elem->command->outfile != NULL){
+		fd = open(elem->command->outfile,O_WRONLY);
+		dup2(fd, STDOUT_FILENO);
+	}
 	if (!ft_strncmp(elem->command->cmd, "pwd", 3))
 	{
 		buf = getcwd(NULL, 0);
@@ -234,6 +243,12 @@ void	do_builtins(t_shell *elem, t_env **env)
 		}
 		// return (i);
 	}
+	if (elem->command->infile != NULL){
+		dup2(STDIN_FILENO, 0);
+	}
+	if (elem->command->outfile != NULL){
+		dup2(STDIN_FILENO, 1);
+	}
 }
 
 char	*get_paths(t_env **env)
@@ -342,12 +357,6 @@ void	do_commands(t_shell *elem, t_env **env, char **envp)
 			exit(1);
 		}
 		if (id == 0){
-			/*
-			if (pip)
-			{
-
-			}
-			*/
 			if (elem->command->infile != NULL){
 				fd = open(elem->command->infile,O_RDONLY);
 				dup2(fd, STDIN_FILENO);
@@ -445,6 +454,7 @@ void	do_struct(t_shell **element, t_cmd *command)
 			exit(2);
 		(*element)->command = command;
 		(*element)->type = get_element(command->cmd);
+		(*element)->next = NULL;
 		command = command->next;
 	}
 }

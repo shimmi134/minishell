@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/06/30 17:41:51 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/06/30 18:01:25 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -592,6 +592,7 @@ t_cmd *init_cmds(t_token *tokens, t_env *envp)
     }
     
     // print_cmd_list(head);
+	cmds = NULL;
     return (head);
 }
 

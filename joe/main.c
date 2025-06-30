@@ -6,11 +6,11 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/06/30 17:41:45 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/06/30 17:49:33 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 #include <readline/readline.h>
 
 /*
@@ -161,55 +161,6 @@ int main (int argc, char **argv)
 
 }
 */
-t_env	*create_node(char *env)
-{
-	char	**split;
-	t_env	*node;
-	int i;
-
-	i = 0;
-	split = ft_split(env, '=');
-	if (!split)
-		return (NULL);
-	node = malloc(sizeof(t_env));
-	if (!node)
-		return (NULL);
-	node->key = ft_strdup(split[0]);
-	node->value = ft_strdup(split[1]);
-	node->next = NULL;
-	while (split[i])
-		free(split[i++]);
-	free(split);
-	return (node);
-}
-
-t_env	*copy_env(char *envp[])
-{
-	
-	t_env	*head;
-	t_env	*node;
-	t_env	*nnode;
-	int		i;
-	
-	head = create_node(envp[0]);
-	if (!head)
-		return (NULL);
-	i = 2;
-	node = create_node(envp[1]);
-	if (!node)
-		return (NULL);
-	head->next = node;
-	while (envp[i])
-	{
-		nnode = create_node(envp[i]);
-		if (!nnode)
-			return (NULL);
-		node->next = nnode;
-		node = node->next;
-		i++;
-	}
-	return (head);
-}
 
 void handle_sigint(int sig_num)
 {
@@ -237,7 +188,7 @@ void free_env_list_tmp(t_env *env)
         env = tmp;
     }
 }
-
+/*
 
 
 //compile with:  cc *.c -L/usr/include -lreadline
@@ -338,3 +289,4 @@ int main(int argc, char *argv[], char *envp[])
 	free_env_list_tmp(env);
 	return (0);
 }
+*/
