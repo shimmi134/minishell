@@ -1,28 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_utils.c                                      :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
+/*   By: fcela-ga <fcela-ga@student.42barcelona.com +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/11 03:06:45 by joshapir          #+#    #+#             */
-/*   Updated: 2025/06/30 17:39:17 by shimi-be         ###   ########.fr       */
+/*   Created: 2024/09/07 11:40:00 by fcela-ga          #+#    #+#             */
+/*   Updated: 2025/06/30 17:38:05 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int has_token(char *str)
+char	*ft_strchr(const char *s, int c)
 {
-	int i;
-
-	i = 0;
-
-	while (str[i])
+	while (*s != '\0')
 	{
-		if (is_token(str[i]))
-			return(1);
-		i++;
+		if (*s == (char)c)
+			return ((char *)s);
+		s++;
 	}
-	return(0);
+	if ((char)c == '\0')
+		return ((char *)s);
+	return (NULL);
 }

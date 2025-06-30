@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshapir <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:28:54 by joshapir          #+#    #+#             */
-/*   Updated: 2025/05/19 16:00:48 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/06/30 17:39:41 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include"../minishell.h"
+#include "../minishell.h"
 size_t  ft_strlen(const char    *s)
 {
 	size_t i;
@@ -52,7 +52,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		i;
 	char	*arr;
 
-	if (!s1 || !s2)
+	if (!s2)
 		return (NULL);
 	total = ft_strlen(s1) + ft_strlen(s2);
 	i = 0;

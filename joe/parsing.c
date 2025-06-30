@@ -6,11 +6,81 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/05/21 12:25:43 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/06/30 17:41:51 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int    check_quotes(t_token *token, char *str)
+{
+    int s_quote;
+    int d_quote;
+    int i;
+
+    s_quote = 0;
+    d_quote = 0;
+    i = 0;
+
+    while (str[i])
+    {
+        if (str[i] == '"')
+        {
+          //  if (str[i + 1])
+                i++;
+            while (str[i] && str[i] != '"')
+            {
+                
+                // if (s_quote == 1)
+                // s_quote = 0;
+                // else
+                //     s_quote = 1;
+                i++;
+            }
+            if (str[i] != '"' || i == 0)
+            {
+                 printf("Error: no closing quotes\n");
+                return (0);
+            }
+        }
+        else if (str[i] == '\'')
+        {
+       //     if (str[i + 1])
+                i++;
+            while (str[i] && str[i] != '\'')
+            {
+            //     if (d_quote == 1)
+            //         d_quote = 0;
+            // else
+            //     s_quote = 1;
+                i++;
+            }
+            if (str[i] != '\'' || i == 0)
+            {
+                 printf("Error: no closing quotes\n");
+                return (0);
+            }
+        }
+        i++;
+    }
+    //     while (token)
+    // {
+    //     if (token->value[0] == '\'')
+    //     {
+    //         if (s_quote == 1)
+    //             s_quote = 0;
+    //         else
+    //             s_quote = 1;
+    //     }
+    //     token = token->next;
+    // }
+    // if (s_quote != 0 || d_quote != 0)
+    // {
+    //     printf("Error: no closing quotes\n");
+    //     return(0);
+    // }
+    return (1);
+}
 
 int check_tokens (t_token *tokens)
 {
@@ -18,10 +88,17 @@ int check_tokens (t_token *tokens)
     int prev_type;
 
     head = tokens;
-if (!tokens ||tokens->type == TOKEN_PIPE || tokens->type == TOKEN_REDIRECT_IN || tokens->type == TOKEN_REDIRECT_OUT)
+    if (!tokens)
+        return (0);
+if (tokens->type == TOKEN_PIPE)
         {
             printf("Syntax error, invalid token at start\n");
-            return (0) ;
+            return (0);
+        }
+        if (tokens->type == TOKEN_VARIABLE && !tokens->next)
+        {
+            printf("Syntax error, invalid token at start\n");
+            return (0);
         }       
     while (tokens)
     {
@@ -34,13 +111,13 @@ if (!tokens ||tokens->type == TOKEN_PIPE || tokens->type == TOKEN_REDIRECT_IN ||
             if (!tokens->next)
             {
                 printf("Syntax error: pipe without command\n");
-                return (0);
+                return (free_tokens(head), 0);
             }
             //tokens = tokens->next;
             if (tokens->next->type != TOKEN_WORD && tokens->next->type != TOKEN_VARIABLE)
             {
                 printf("Syntax error: pipe without command\n");
-                return (0);
+                return (free_tokens(head), 0);
             }
              //printf("token type = %d\n", tokens->type);
         }
@@ -49,7 +126,7 @@ if (!tokens ||tokens->type == TOKEN_PIPE || tokens->type == TOKEN_REDIRECT_IN ||
             if (!tokens->next || tokens->next->type != TOKEN_WORD)
             {
                 printf("Syntax error near unexpected token\n");
-                return (0);
+                return (free_tokens(head), 0);
             }
          }
         else if (tokens->type == TOKEN_REDIRECT_IN || tokens->type == TOKEN_REDIRECT_OUT)
@@ -57,14 +134,14 @@ if (!tokens ||tokens->type == TOKEN_PIPE || tokens->type == TOKEN_REDIRECT_IN ||
             if (!tokens->next)
             {
                 printf("Syntax error: expected filename\n");
-                return (0);
+                return (free_tokens(head), 0);
             }
             //printf("goes in\n");
             else if ((tokens->next->type) && tokens->next->type != TOKEN_WORD)
             {
                 printf("Syntax error: expected filename\n");
                // exit(EXIT_FAILURE);
-               return (0);
+               return (free_tokens(head), 0);
             }
         }
          tokens = tokens->next;
@@ -77,10 +154,16 @@ int arg_count(t_token *tokens)
     int count;
 
     count = 0;
+    // if (tokens->type == TOKEN_PIPE)
+    //     tokens = tokens->next;
     while (tokens && tokens-> type == TOKEN_WORD)
     {
-            count++;
-            tokens = tokens->next;
+          count++; 
+          tokens = tokens->next;
+          if (tokens && tokens->type == TOKEN_PIPE)
+                break ;
+          if (tokens && tokens->type != TOKEN_WORD)
+                tokens = tokens->next;
     }
     return(count);
 }
@@ -88,61 +171,116 @@ int arg_count(t_token *tokens)
 t_cmd *new_cmd_token(t_token *tokens, t_env *envp)
 {
     int count;
+    int i;
     
+    i = 0;
     t_cmd *cmd = malloc(sizeof(t_cmd));
-    count = arg_count(tokens) - 1;
-        cmd->args = malloc(sizeof(char *) * (count + 1));
+    count = arg_count(tokens);
+        cmd->args = calloc(101, sizeof(char *));
     if (!cmd->args)
         return(NULL);
-    if (tokens->type == TOKEN_WORD)
-        cmd->cmd = tokens->value;
-    else if (tokens->type == TOKEN_HEREDOC || tokens->type == TOKEN_APPEND)
-            cmd->cmd = NULL;
-    else if(!cmd->cmd && !cmd->next && tokens->type != TOKEN_PIPE)
-            cmd->cmd = tokens->value;
-    else if (tokens->type == TOKEN_VARIABLE && tokens->next->type == TOKEN_WORD)
-    {
-        cmd->cmd = expand_var(tokens, envp);
-    }
-    else
-        cmd->cmd = tokens->next->value;
-        int i;
-
-        i = 0;
-    // while (i < count + 1)
-    //     cmd->args[i++] = NULL;
+        cmd->args[count] = NULL;    
+        cmd->cmd = NULL;
     cmd->args[0] = NULL;
     cmd->infile = NULL;
     cmd->outfile = NULL;
     cmd->heredoc_delim = NULL;
+    cmd->heredoc_quoted = 0;
     cmd->append = 0;
     cmd->heredoc = 0;
+    cmd->heredoc_fd = -1;
     //cmd->args[0] = NULL;
     cmd->next = NULL;
     return (cmd);
 }
 
-t_token *assign_args(t_token *tokens, t_cmd *cmds)
+char *expand_with_quotes(char *str, t_env *env)
+{
+    char *tmp;
+    char *t_val;
+    char *new;
+    int i;
+    char quote;
+    int count;
+    
+    count = 0;
+    t_val = NULL;
+    tmp = NULL;
+    quote = str[0];
+    i = 0;
+    i++;
+    while (str[i] != quote)
+        i++;
+    
+    tmp = malloc(sizeof(char) * (i + 1));
+    i = 2;
+    while(str[i] != quote)
+    {
+    
+        tmp[i - 2] = str[i];
+        i++; 
+    }
+    tmp[i - 2] = '\0';
+    
+    t_val = expand_var(tmp, env);
+    if (!t_val)
+        return (free(t_val), NULL);
+      i = 0;
+    while (t_val[i])
+        i++;
+    new = malloc(sizeof(char) * (i + 3));
+    i = 1;
+    new[0] = '\'';
+    while (t_val[i - 1])
+    {
+        new[i] = t_val [i - 1];
+        i++;
+    }
+    new[i] = '\'';
+    new[i + 1] ='\0';
+    //free(tmp);
+   // free(t_val);
+    return(new);
+}
+
+t_token *assign_args(t_token *tokens, t_cmd *cmds, t_env *env)
 {
     t_token *current_t;
     t_cmd *current_c;
     int i;
+    char *tmp;
 
     i = 0;
     //current_t = *(tokens);
-    //current_c = *(cmds);
+    //current_c = *(cmds); 
+    while(cmds->args[i])
+        i++;
+    // printf("i = %d\n", i);
+    // if (ft_strchr(tokens-> value, '$') && !tokens->inside_single && ft_strlen(tokens->value) > 1)
+    // {
+    //     if (tokens->value[0] == '\'')
+    //     {
+    //         cmds->args[i] = ft_strdup(expand_with_quotes(tokens->value, env));
+    //         if (cmds->args[i] == NULL)
+    //         {
+    //             cmds->args[i] = ft_strdup("''");
+    //         }
+    //         //printf("args[i] = %s\n", cmds->args[i]);
+    //         i++;
+    //     }
+    // }
     if (tokens && tokens->type == TOKEN_WORD)
     {
-        while(cmds->args && cmds->args[i])
-            i++;
-        //printf("token->value = %s\n", tokens->value);
-        if (cmds->args)
-        	cmds->args[i] = tokens->value;
+       
+       // printf("token->value = %s\n", tokens->value);
+    //    if (tokens->value[0] == '\0' && ft_strlen(tokens->value) == 1)
+    //         cmds->args[i] = ft_strdup_char('\0');
+   
+        cmds->args[i] = ft_strdup(tokens->value); 
         i++;
         //tokens = tokens->next;
-        if (cmds->args)
-        	cmds->args[i] = NULL;
     }
+    cmds->args[i] = NULL;
   //  printf("token type at end of assign = %d\n", tokens->type);
     return (tokens);
 }
@@ -175,7 +313,6 @@ char *expand_var_in_str(t_token *token, t_env *env)
            
             temp[i] = '\0';
             strcpy(temp2 + i, token->value);
-            printf("temp value = %s\n", temp2);
     while(env)
     {
         if (!strcmp(temp2, env->key))
@@ -189,13 +326,12 @@ char *expand_var_in_str(t_token *token, t_env *env)
     {
         strcat(temp, val);
         val = temp;
-        printf("vallll = %s\n", val);
         return (val);
     }
     return(NULL);
 }
 
-char *expand_var(t_token *token, t_env *env)
+char *expand_var(char *str, t_env *env)
 {
     char *val;
     int i;
@@ -203,45 +339,16 @@ char *expand_var(t_token *token, t_env *env)
     char *temp2;
 
     i = 0;
- //   if (token->inside_single)
-   //     return(token->value);
-    
- //   if (token->value[0] == '$' && strlen(token->value) > 1)
-  //      memmove(token->value, token->value + 1, strlen(token->value));
-  //  else 
-      //  if (strlen(token->value) == 1)
-      //      token = token->next;
-        /*
-        else
-        {
-            i = find_char_pos(token->value, '$');
-            strncpy(temp , token->value, i);
-            temp[i] = '\0';
-            strcpy(temp2 + i, token->value);
-            printf("temp value = %s\n", temp2);
-           // strcat(temp, token->value + i);
-           
-        }
-*/
-
-
-       /*
-        else if (token->value[i] == '\'' || token->value[i] == '\"' || token->value[i] == '$')
-        {
-            printf("goes in\n");
-            while (token->value[i] == '\'' || token->value[i] == '\"' || token->value[i] == '$')
-                        i++;
-                memmove(token->value, token->value + i, strlen(token->value + i));
-        }
-        */
+ 
     while(env)
     {
-        if (!strcmp(token->value, env->key))
+        if (!strcmp(str, env->key))
         {
-                val = env->value;
+                val = ft_strdup(env->value);
                 return(val);
         }
         env = env->next;
+        i++;
     }
     return(NULL);
 }
@@ -266,6 +373,8 @@ t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp)
     {  
         if (token->next)
             token = token->next;
+        if (cmd->outfile)
+            free(cmd->outfile);
         cmd->outfile = ft_strdup(token->value);
       //  token = token->next;
     }
@@ -275,6 +384,8 @@ t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp)
         if (token->next)
             token = token->next;
             cmd->heredoc_delim = ft_strdup(token->value);
+        if (token->inside_single || token->inside_double)
+            cmd->heredoc_quoted = 1;
       //  token = token->next;
     }
     else if (type == TOKEN_APPEND)
@@ -299,8 +410,9 @@ t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp)
                 if (i != 0 && !token->new_word)
                 { 
                     //token = token->next; 
-                    temp = expand_var(token->next, envp);
-                    cmd->args[i - 1] = ft_strjoin(cmd->args[i - 1], temp);
+                    temp = expand_var(token->next->value, envp);
+                    if (temp)
+                        cmd->args[i - 1] = ft_strjoin(cmd->args[i - 1], temp);
                     //free(temp);
                     // if (!token->next->new_word)
                     // {
@@ -316,8 +428,16 @@ t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp)
         //        printf("args = %s\n", cmd->args[i]);
               //  token = token->next;
             }
+        /*    else if (ft_strchr(token->value, '$') && !token->inside_single)
+            {
+                ft_strtrim()
+            }
+            */
             else
-                cmd->args[i] = expand_var(token->next, envp); 
+            {
+                cmd->args[i] = expand_var(token->next->value, envp); 
+                
+            }
         //    else
         //    {
         //        cmd->args[i] = expand_var_in_str(token, envp);
@@ -350,7 +470,37 @@ t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp)
     }
     return (token);
 }
-t_cmd* init_cmds(t_token *tokens, t_env *envp)
+
+void shift_left(char **arr)
+{
+    int i = 0;
+    char *tmp;
+    
+    // while (arr[i])
+    //     i++;
+    // if (i == 0)
+    // {
+    //     arr[0] = NULL;
+    //   //  arr[1] = NULL;
+    // }
+    // i = 0;
+//    printf("arr[i] = %s\n", arr[0]);
+    while (arr[i + 1])
+    {
+            // if (arr[i + 1])
+            //     printf("argss = %s\n", arr[i + 1]);
+        // if (arr[i + 1][0] == '\0')
+        //     arr[i][0] = '\0';
+        // else
+            arr[i] = arr[i + 1];
+            // printf("i = %d\n", i);
+        i++;
+    }
+    arr[i] = NULL;
+    // printf("here\n");
+}
+
+t_cmd *init_cmds(t_token *tokens, t_env *envp)
 {
     t_cmd *head;
     t_cmd *cmds;
@@ -362,44 +512,58 @@ t_cmd* init_cmds(t_token *tokens, t_env *envp)
     cmds = new_cmd_token(tokens, envp);
     //printf("test\n");
     head = cmds;
-    if (tokens->type == TOKEN_WORD)
-    {
-            tokens = tokens->next;
-    }
-    else if (tokens->type == TOKEN_VARIABLE)
-    {
-        tokens = tokens->next->next;
-    }
+    // if (tokens->type == TOKEN_WORD && (!ft_strchr(tokens-> value, '$') && !tokens->inside_single))
+    // {
+    //         tokens = tokens->next;
+    // }
+    // else if (tokens->type == TOKEN_VARIABLE)
+    // {
+    //     tokens = tokens->next->next;
+    // }
     while (tokens)
     { 
         type = tokens->type;
-        if (type == TOKEN_WORD)
-            tokens = assign_args(tokens, cmds);
-        else if (type == TOKEN_PIPE)
+         if (type == TOKEN_PIPE)
         {
-			t_cmd *helper = malloc(sizeof(t_cmd));
-			helper->pipe = 1;
-			helper->cmd = NULL;
-			helper->args = NULL;
-			helper->infile = NULL;
-			helper->outfile = NULL;
-			helper->append = 0;
-			helper->heredoc = 0;
-			helper->heredoc_delim = NULL;
-			cmds->next = helper;
-			cmds = cmds->next;
-			/*
+                if (!cmds->cmd)
+                {
+                    cmds->cmd = cmds->args[0];
+                    shift_left(cmds->args);
+        
+                }
             cmds->next = new_cmd_token(tokens, envp);
-            tokens = tokens->next;
+            //tokens = tokens->next; not sure what it does
             cmds = cmds->next;
-			*/
         }
+       else if (type == TOKEN_VARIABLE && !tokens->inside_double && (tokens->next->inside_single || tokens->next->inside_double))
+                tokens = tokens->next;
+        if (tokens->type == TOKEN_WORD)
+        {
+            tokens = assign_args(tokens, cmds, envp);
+        }
+        // else if (type == TOKEN_PIPE)
+        // {
+        //         if (!cmds->cmd)
+        //         {
+        //             cmds->cmd = cmds->args[0];
+        //             shift_left(cmds->args);
+        
+        //         }
+        //     cmds->next = new_cmd_token(tokens, envp);
+        //     tokens = tokens->next;
+        //     cmds = cmds->next;
+        // }
         else
             tokens = assign_ctl_tokens(tokens, cmds, envp);
         i = 0;
-        while(cmds->args && cmds->args[i])
+        
+        while(cmds->args[i])
+        {
+            // printf("args = %s\n", cmds->args[i]);   
             i++;
+        }
         i = i - 1;
+       // printf("args value here is %s\n", cmds->args[i]);
         if (i != 0 && !tokens->new_word && type != TOKEN_VARIABLE)
         {
             cmds->args[i - 1] = ft_strjoin(cmds->args[i - 1], cmds->args[i]);
@@ -408,9 +572,27 @@ t_cmd* init_cmds(t_token *tokens, t_env *envp)
         if (tokens->type == TOKEN_VARIABLE)
             tokens= tokens->next;
         tokens = tokens->next;
+        // if (!cmds->cmd)
+        // {
+        //     printf("args[0] = %s\n", cmds->args[0]);
+        //     cmds->cmd = ft_strdup(cmds->args[0]);
+        //     free(cmds->args[0]);
+        //     cmds->args[0] = NULL;
+        // }
+        if (!cmds->cmd && (tokens && tokens->new_word || !tokens))
+    {
+        cmds->cmd = cmds->args[0];
+        // if (cmds->args[1])
+        //     free(cmds->args[1]);
+            cmds->args[1] = NULL;
+        shift_left(cmds->args);
         
     }
-	return head;
+        
+    }
+    
+    // print_cmd_list(head);
+    return (head);
 }
 
 void print_cmd_list(t_cmd *head) 
@@ -423,7 +605,12 @@ void print_cmd_list(t_cmd *head)
 	{
         printf("\n-----------------------\n");
         if (current->cmd)
-            printf("cmd = %s\n", current->cmd);
+        {
+            if (current->cmd[0] == '\0')
+                printf("cmd = [empty]\n");
+            else
+                printf("cmd = %s\n", current->cmd);
+        }
 		 if (current->append)
 		 	printf("[append]");
          if (current->heredoc)
@@ -437,7 +624,13 @@ void print_cmd_list(t_cmd *head)
         if (current->args[i])
            printf("args = ");
        while(current->args[i])
-           printf("%s ", current->args[i++]);
+       {
+            if (current->args[i][0] == '\0')
+                printf("[empty]\n");
+            else
+                printf("%s ", current->args[i]);
+            i++;
+       }
         current = current->next;
         i = 0;
     }

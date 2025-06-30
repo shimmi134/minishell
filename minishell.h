@@ -64,14 +64,14 @@ typedef struct s_env
 
 char					*ft_strdup(char *str);
 char					*ft_strdup_char(char c);
-char					*add_quoted_word(char *str, int *i, int type);
+char *add_quoted_word(char *str, int *i, int type, t_token **current);
 char					*expand_var(t_token *token, t_env *env);
 token_type				find_token_type(char *str);
 t_token					*new_token(token_type type, char *value, int flag,
 							int new_word);
 t_token					*lexer(char *str);
 t_token					*add_word(char *str, int *i);
-t_token					*handle_quote(char *str, int *i, int type);
+t_token	*handle_quote(char *str, int *i, int type, t_token **current);
 t_token					*assign_args(t_token *tokens, t_cmd *cmds);
 t_token					*assign_ctl_tokens(t_token *token, t_cmd *cmd,
 							t_env *envp);

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:03 by joshapir          #+#    #+#             */
-/*   Updated: 2025/05/19 16:01:10 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/06/30 17:41:50 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,9 @@ t_token *new_token(token_type type, char *value, int quote, int new_word)
 	 //   return(token);
 //    }
     token->type = type;
-	if (type == TOKEN_WORD)
+	if (value[0] == '$' && !value[1] || value[1] =='"' || value[1] == '"')
+		token->value = ft_strdup_char('$');
+	else if (type == TOKEN_WORD)
     	token->value = ft_strdup(value);
 	else if (type == TOKEN_HEREDOC)
 		token->value = ft_strdup("<<");
@@ -59,8 +61,11 @@ t_token *new_token(token_type type, char *value, int quote, int new_word)
 	else if (quote == 2 || type == TOKEN_QUOTE_SINGLE)
 		token->inside_single = 1;
 	token->new_word = new_word;
-	if (value[0] == '$' && quote != 2)
+	//printf("value[1] = %s\n", value[1]);
+	if (value[0] == '$' && quote != 2 && (value[1] != '\'' && value[1] != '"'))
 		token->type = TOKEN_VARIABLE;
+	//else
+	//	token->type = TOKEN_WORD;
     token->next = NULL;
     return (token);
 }
