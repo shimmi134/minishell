@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/06/24 22:01:10 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/06/30 22:21:30 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -566,6 +566,8 @@ t_cmd *init_cmds(t_token *tokens, t_env *envp)
        // printf("args value here is %s\n", cmds->args[i]);
         if (i != 0 && !tokens->new_word && type != TOKEN_VARIABLE)
         {
+			if (ft_strcmp(cmds->args[i - 1], "<<"))
+					break ;
             cmds->args[i - 1] = ft_strjoin(cmds->args[i - 1], cmds->args[i]);
             cmds->args[i] = NULL;
         }
