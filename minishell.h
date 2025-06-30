@@ -8,6 +8,7 @@
 # include <string.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <fcntl.h>
 
 typedef enum
 {

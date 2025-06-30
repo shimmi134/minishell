@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/05/21 12:18:23 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/06/30 17:27:43 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <sys/wait.h>
@@ -322,17 +322,55 @@ void exec_command(t_shell *elem, t_env **env, char **envp)
 void	do_commands(t_shell *elem, t_env **env, char **envp)
 {
 	int id;
+	int pip;
+	int	p[2];
+	int fd;
+	
+	while (elem != NULL && elem->type != NULL){
+		pip = 0;
+		if (elem->next != NULL){
+			if (pipe(p) == -1){
+				perror("pipe: ");
+				exit(-1); //Error de pipe
+			}
+			pip = 1;
+		}
+		id = fork();
+		if (id == -1)
+		{
+			perror("fork: ");
+			exit(1);
+		}
+		if (id == 0){
+			/*
+			if (pip)
+			{
 
-	id = fork();
-	if (id == -1)
-	{
-		perror("fork: ");
-		exit(1);
+			}
+			*/
+			if (elem->command->infile != NULL){
+				fd = open(elem->command->infile,O_RDONLY);
+				dup2(fd, STDIN_FILENO);
+			}
+			if (elem->command->outfile != NULL){
+				fd = open(elem->command->outfile,O_WRONLY);
+				dup2(fd, STDOUT_FILENO);
+			}
+			exec_command(elem,env,envp);
+		}
+		else{
+			wait(NULL);
+		}
+		elem = elem->next;
 	}
+	/*
+	// Can convert next statement into function?
+	// UP to here
 	if (id == 0) // child
 		exec_command(elem, env, envp);
 	else
 		wait(NULL);
+	*/
 }
 
 void	do_element(t_shell *elem, t_env **env, char**envp)
@@ -387,9 +425,6 @@ char	*get_element(char *line)
 
 void	do_struct(t_shell **element, t_cmd *command)
 {
-	int	i;
-	t_shell *temp;
-
 	while(command)
 	{
 		if (!(*element)->command)
