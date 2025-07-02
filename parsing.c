@@ -134,14 +134,14 @@ if (tokens->type == TOKEN_PIPE)
             if (!tokens->next)
             {
                 printf("Syntax error: expected filename\n");
-                return (free_tokens(head), 0);
+                return (0);
             }
             //printf("goes in\n");
             else if ((tokens->next->type) && tokens->next->type != TOKEN_WORD)
             {
                 printf("Syntax error: expected filename\n");
                // exit(EXIT_FAILURE);
-               return (free_tokens(head), 0);
+               return (0);
             }
         }
          tokens = tokens->next;
