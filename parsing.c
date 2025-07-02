@@ -564,10 +564,8 @@ t_cmd *init_cmds(t_token *tokens, t_env *envp)
         }
         i = i - 1;
        // printf("args value here is %s\n", cmds->args[i]);
-        if (i != 0 && !tokens->new_word && type != TOKEN_VARIABLE)
+        if (i > 0 && !tokens->new_word && type != TOKEN_VARIABLE)
         {
-			if (ft_strcmp(cmds->args[i - 1], "<<"))
-					break ;
             cmds->args[i - 1] = ft_strjoin(cmds->args[i - 1], cmds->args[i]);
             cmds->args[i] = NULL;
         }
@@ -592,8 +590,11 @@ t_cmd *init_cmds(t_token *tokens, t_env *envp)
     // }
         
     }
-    cmds->cmd = cmds->args[0];
-    shift_left(cmds->args);
+    if (!tokens || tokens->new_word)
+    {
+        cmds->cmd = cmds->args[0];
+        shift_left(cmds->args);
+    }
     
     // print_cmd_list(head);
     return (head);
