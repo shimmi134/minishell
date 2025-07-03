@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/03 14:22:01 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/03 15:37:20 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -23,13 +23,28 @@ void	delete_node(t_env **env, t_env *target, t_env *prev)
 	free(target);
 }
 
-int	count_len(char **sp)
+int count_commands(t_shell *sh)
 {
 	int	i;
 
 	i = 0;
-	while (sp && sp[i])
+	while (sh)
+	{
+		sh = sh->next;
 		i++;
+	}
+	return (i);
+}
+
+int	count_len(char **av)
+{
+	int	i;
+
+	i = 0;
+	while (av && av[i])
+	{
+		i++;
+	}
 	return (i);
 }
 
@@ -335,13 +350,15 @@ void	exec_command(t_shell *elem, t_env **env, char **envp)
 	exit(127);
 }
 
-void	do_commands(t_shell *elem, t_env **env, char **envp)
+void	do_commands(t_shell *elem, t_env **env, char **envp, int ac)
 {
 	int	id;
 	int	pip;
 	int	p[2];
 	int	fd;
+	int count;
 
+	count = 0;
 	while (elem != NULL && elem->type != NULL)
 	{
 		pip = 0;
@@ -362,6 +379,18 @@ void	do_commands(t_shell *elem, t_env **env, char **envp)
 		}
 		if (id == 0)
 		{
+			if (pip && !count) //FIrst command, do not redirect input
+			{
+				dup2()
+			}
+			else if (pip && count == ac-1) // Lasr command, do not redirect output
+			{
+
+			}
+			else
+			{
+
+			}
 			if (elem->command->infile != NULL)
 			{
 				fd = open(elem->command->infile, O_RDONLY);
@@ -377,6 +406,7 @@ void	do_commands(t_shell *elem, t_env **env, char **envp)
 		else
 		{
 			wait(NULL);
+			count++;
 		}
 		elem = elem->next;
 	}
@@ -390,12 +420,12 @@ void	do_commands(t_shell *elem, t_env **env, char **envp)
 	*/
 }
 
-void	do_element(t_shell *elem, t_env **env, char **envp)
+void	do_element(t_shell *elem, t_env **env, char **envp, int ac)
 {
 	if (!ft_strncmp(elem->type, "built-in", ft_strlen(elem->type)))
 		do_builtins(elem, env);
 	else if (!ft_strncmp(elem->type, "command", ft_strlen(elem->type)))
-		do_commands(elem, env, envp);
+		do_commands(elem, env, envp, ac);
 }
 
 t_env	*copy_env(char *envp[])
@@ -491,7 +521,7 @@ int	main(int argc, char *argv[], char *envp[])
 		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN);
 		line = readline("\033[1;34mminishell>\033[0m ");
-		if (line == NULL)
+		if (line == NULL) //MALLLL
 		{
 			printf("exit\n");
 			break ;
@@ -509,11 +539,6 @@ int	main(int argc, char *argv[], char *envp[])
 					free_cmds(t_head);
 					break ;
 				}
-				element = malloc (sizeof(t_shell));
-				if (!element)
-					exit(1);
-				do_struct(&element, t_head);
-				do_element(element, &env, envp);
 				hd_temp = t_head;
 				while (hd_temp->next)
 					hd_temp = hd_temp->next;
@@ -534,9 +559,13 @@ int	main(int argc, char *argv[], char *envp[])
 							dup2(hd_temp->heredoc_fd, STDIN_FILENO);
 							close(hd_temp->heredoc_fd);
 						}
-						if (hd_temp->cmd)
-							execvp(hd_temp->cmd, hd_temp->args);
-						exit(EXIT_FAILURE);
+						if (hd_temp->cmd){
+							element = malloc (sizeof(t_shell));
+							if (!element)
+								exit(1);
+							do_struct(&element, hd_temp);
+							do_element(element, &env, envp, argc);
+						}
 					}
 					else if (pid > 0)
 					{
@@ -550,6 +579,15 @@ int	main(int argc, char *argv[], char *envp[])
 						perror("fork");
 						free(line);
 					}
+				}
+				else
+				{
+					argc = count_commands(element);
+					element = malloc (sizeof(t_shell));
+					if (!element)
+						exit(1);
+					do_struct(&element, t_head);
+					do_element(element, &env, envp, argc);
 				}
 			}
 		}
