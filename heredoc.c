@@ -96,7 +96,7 @@ int read_heredoc(char *delimiter, int quoted, t_env *env)
 
 	if (pid == 0)
 	{   
-		signal(SIGINT, handle_sigint_heredoc);
+		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_IGN);
 		close(pipefd[0]);
 
@@ -157,10 +157,17 @@ int read_heredoc(char *delimiter, int quoted, t_env *env)
 		close(pipefd[1]);
 		exit (0);
 	}
-	else
+	close(pipefd[1]);
+	signal(SIGINT, SIG_IGN);
+	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status))
 	{
-		close(pipefd[1]);
-		waitpid(pid, &status, 0);
-		return (pipefd[0]);
+		status = WTERMSIG(status);
+		if (status == SIGINT)
+		{
+			printf("> ^C\n");
+			return (-1);
+		}
 	}
+	return (pipefd[0]);
 }

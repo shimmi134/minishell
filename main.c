@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/06/24 22:28:56 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/03 20:34:52 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -293,7 +293,7 @@ int main(int argc, char *argv[], char *envp[])
 			if (hd_temp->heredoc_fd == -1)
     		{
         		  free(line);
-            		break ;
+            		continue ;
     		}
 		
 				pid = fork();
@@ -315,6 +315,7 @@ int main(int argc, char *argv[], char *envp[])
 					if (hd_temp->heredoc_fd != -1)
 						close(hd_temp->heredoc_fd);
 						    int status;
+					signal(SIGINT, SIG_IGN);
    					 waitpid(pid, &status, 0);
 					 free(line);
 				}
