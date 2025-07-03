@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/03 15:37:20 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/03 18:35:01 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -241,7 +241,7 @@ void	do_builtins(t_shell *elem, t_env **env)
 	else if (!ft_strncmp(elem->command->cmd, "cd", 2))
 	{
 		oldpwd = getcwd(NULL, 0);
-		i = chdir(elem->command->args[1]);
+		i = chdir(elem->command->args[0]);
 		if (i != -1)
 		{
 			str = getcwd(NULL, 0);
@@ -350,75 +350,92 @@ void	exec_command(t_shell *elem, t_env **env, char **envp)
 	exit(127);
 }
 
-void	do_commands(t_shell *elem, t_env **env, char **envp, int ac)
+void do_commands(t_shell *elem, t_env **env, char **envp, int ac)
 {
-	int	id;
-	int	pip;
-	int	p[2];
-	int	fd;
-	int count;
+    int id;
+    int p[2][2]; 
+    int fd;
+    int count;
 
 	count = 0;
-	while (elem != NULL && elem->type != NULL)
+    while (elem != NULL && elem->type != NULL)
+    {
+        if (elem->next != NULL)  
+        {
+            if (pipe(p[count % 2]) == -1)
+            {
+                perror("pipe: ");
+                exit(-1);
+            }
+        }
+
+        id = fork();
+        if (id == -1)
+        {
+            perror("fork: ");
+            exit(1);
+        }
+
+        if (id == 0)
+        {
+            if (count > 0)
+            {
+				if (dup2(p[(count - 1) % 2][0], STDIN_FILENO) == -1)
+                {
+                    perror("dup2 stdin");
+                    exit(1);
+                }
+            }
+
+
+            if (elem->next != NULL)
+            {
+				if (dup2(p[count % 2][1], STDOUT_FILENO) == -1)
+                {
+                    perror("dup2 stdout");
+                    exit(1);
+                }	
+            }
+            if (elem->command->infile != NULL)
+            {
+                fd = open(elem->command->infile, O_RDONLY);
+                dup2(fd, STDIN_FILENO);
+                close(fd);
+            }
+
+            if (elem->command->outfile != NULL)
+            {
+                fd = open(elem->command->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+                dup2(fd, STDOUT_FILENO);
+                close(fd);
+            }
+
+            exec_command(elem, env, envp);
+            exit(1);  
+        }
+        else 
+        {
+            if (count > 0)
+            {
+                close(p[(count - 1) % 2][0]);
+            }
+
+            if (elem->next != NULL)
+            {
+                close(p[count % 2][1]);
+            }
+
+        }
+
+        count++;
+        elem = elem->next;
+    }
+	while(count--)
 	{
-		pip = 0;
-		if (elem->next != NULL)
-		{
-			if (pipe(p) == -1)
-			{
-				perror("pipe: ");
-				exit(-1); // Error de pipe
-			}
-			pip = 1;
-		}
-		id = fork();
-		if (id == -1)
-		{
-			perror("fork: ");
-			exit(1);
-		}
-		if (id == 0)
-		{
-			if (pip && !count) //FIrst command, do not redirect input
-			{
-				dup2()
-			}
-			else if (pip && count == ac-1) // Lasr command, do not redirect output
-			{
-
-			}
-			else
-			{
-
-			}
-			if (elem->command->infile != NULL)
-			{
-				fd = open(elem->command->infile, O_RDONLY);
-				dup2(fd, STDIN_FILENO);
-			}
-			if (elem->command->outfile != NULL)
-			{
-				fd = open(elem->command->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-				dup2(fd, STDOUT_FILENO);
-			}
-			exec_command(elem, env, envp);
-		}
-		else
-		{
-			wait(NULL);
-			count++;
-		}
-		elem = elem->next;
+    	wait(NULL); 
 	}
-	/*
-	// Can convert next statement into function?
-	// UP to here
-	if (id == 0) // child
-		exec_command(elem, env, envp);
-	else
-		wait(NULL);
-	*/
 }
+
 
 void	do_element(t_shell *elem, t_env **env, char **envp, int ac)
 {
@@ -474,32 +491,61 @@ char	*get_element(char *line)
 	}
 }
 
+void do_struct(t_shell **element, t_cmd *command)
+{
+    t_shell *new_node;
+    t_shell *last = NULL;
+
+    *element = NULL;  // Assegura que comencem des de zero
+
+    while (command)
+    {
+        new_node = malloc(sizeof(t_shell));
+        if (!new_node)
+            exit(1);
+        new_node->command = command;
+        new_node->type = get_element(command->cmd);
+        new_node->next = NULL;
+
+        if (!*element)
+            *element = new_node;  // Guardem el primer node
+
+        if (last)
+            last->next = new_node;
+
+        last = new_node;
+        command = command->next;
+    }
+}
+
+/*
 void	do_struct(t_shell **element, t_cmd *command)
 {
+
+
+	t_shell **temp;
+
+	temp = element;
 	while (command)
 	{
-		if (!(*element))
+		if (!(*temp))
 		{
-			(*element) = malloc(sizeof(t_shell));
-			if (!(*element))
+			(*temp) = malloc(sizeof(t_shell));
+			if (!(*temp))
 				exit(1);
 		}
-		else if (!(*element) && !(*element)->next)
-		{
-			(*element)->next = malloc(sizeof(t_shell));
-			if (!(*element)->next)
-				exit(1);
-			(*element) = (*element)->next;
-		}
-		(*element)->command = malloc(sizeof(t_cmd));
-		if (!(*element)->command)
+		(*temp)->command = malloc(sizeof(t_cmd));
+		if (!(*temp)->command)
 			exit(2);
-		(*element)->command = command;
-		(*element)->type = get_element(command->cmd);
-		(*element)->next = NULL;
+		(*temp)->command = command;
+		(*temp)->type = get_element(command->cmd);
 		command = command->next;
+		if (!command)
+			(*temp)->next = NULL;
+		else
+			(*temp) = (*temp)->next;
 	}
-}
+}*/
 
 int	main(int argc, char *argv[], char *envp[])
 {
@@ -526,7 +572,7 @@ int	main(int argc, char *argv[], char *envp[])
 			printf("exit\n");
 			break ;
 		}
-		if (check_quotes(head, line))
+		if (line != NULL && check_quotes(head, line))
 		{
 			node = lexer(line);
 			head = node;
@@ -582,11 +628,8 @@ int	main(int argc, char *argv[], char *envp[])
 				}
 				else
 				{
-					argc = count_commands(element);
-					element = malloc (sizeof(t_shell));
-					if (!element)
-						exit(1);
 					do_struct(&element, t_head);
+					argc = count_commands(element);
 					do_element(element, &env, envp, argc);
 				}
 			}
