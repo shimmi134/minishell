@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/03 20:34:52 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/04 22:52:52 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -238,6 +238,52 @@ void free_env_list_tmp(t_env *env)
     }
 }
 
+int init_heredoc(t_cmd *hd_temp, t_env *env, char *line)
+{
+	pid_t pid;
+			if (hd_temp->heredoc_delim)
+		{
+			hd_temp->heredoc_fd = read_heredoc(hd_temp->heredoc_delim, hd_temp->heredoc_quoted, env);
+			if (hd_temp->heredoc_fd == -1)
+    		{
+        		  free(line);
+            		return(0) ;
+    		}
+		
+				pid = fork();
+				if (pid == 0)
+				{
+					if (hd_temp->heredoc_fd != -1)
+				{
+    				dup2(hd_temp->heredoc_fd, STDIN_FILENO);
+    				close(hd_temp->heredoc_fd);
+				}
+				if (hd_temp->cmd)
+					execvp(hd_temp->cmd, hd_temp->args);
+			
+					// perror("execvp");
+				exit(EXIT_FAILURE);
+				}
+				else if (pid > 0)
+				{
+					if (hd_temp->heredoc_fd != -1)
+						close(hd_temp->heredoc_fd);
+						    int status;
+					signal(SIGINT, SIG_IGN);
+   					 waitpid(pid, &status, 0);
+					 free(line);
+				}
+				else
+				{
+    				perror("fork");
+    				free(line);
+				}
+				
+		}
+		return (0);
+}
+
+
 
 
 //compile with:  cc *.c -L/usr/include -lreadline
@@ -249,6 +295,7 @@ int main(int argc, char *argv[], char *envp[])
 	t_cmd *t_head;
 	t_env	*env;
 	pid_t pid;
+	int hd_res;
 	env = copy_env(envp);
 	while (1)
 	{
@@ -287,45 +334,46 @@ int main(int argc, char *argv[], char *envp[])
 				while (hd_temp->next)
 					hd_temp = hd_temp->next;
 				
-		if (hd_temp->heredoc_delim)
-		{
-			hd_temp->heredoc_fd = read_heredoc(hd_temp->heredoc_delim, hd_temp->heredoc_quoted, env);
-			if (hd_temp->heredoc_fd == -1)
-    		{
-        		  free(line);
-            		continue ;
-    		}
+		 if (hd_temp->heredoc_delim)
+		 	hd_res = init_heredoc(hd_temp, env, line);
+		// {
+		// 	hd_temp->heredoc_fd = read_heredoc(hd_temp->heredoc_delim, hd_temp->heredoc_quoted, env);
+		// 	if (hd_temp->heredoc_fd == -1)
+    	// 	{
+        // 		  free(line);
+        //     		continue ;
+    	// 	}
 		
-				pid = fork();
-				if (pid == 0)
-				{
-					if (hd_temp->heredoc_fd != -1)
-				{
-    				dup2(hd_temp->heredoc_fd, STDIN_FILENO);
-    				close(hd_temp->heredoc_fd);
-				}
-				if (hd_temp->cmd)
-					execvp(hd_temp->cmd, hd_temp->args);
+		// 		pid = fork();
+		// 		if (pid == 0)
+		// 		{
+		// 			if (hd_temp->heredoc_fd != -1)
+		// 		{
+    	// 			dup2(hd_temp->heredoc_fd, STDIN_FILENO);
+    	// 			close(hd_temp->heredoc_fd);
+		// 		}
+		// 		if (hd_temp->cmd)
+		// 			execvp(hd_temp->cmd, hd_temp->args);
 			
-					// perror("execvp");
-				exit(EXIT_FAILURE);
-				}
-				else if (pid > 0)
-				{
-					if (hd_temp->heredoc_fd != -1)
-						close(hd_temp->heredoc_fd);
-						    int status;
-					signal(SIGINT, SIG_IGN);
-   					 waitpid(pid, &status, 0);
-					 free(line);
-				}
-				else
-				{
-    				perror("fork");
-    				free(line);
-				}
+		// 			// perror("execvp");
+		// 		exit(EXIT_FAILURE);
+		// 		}
+		// 		else if (pid > 0)
+		// 		{
+		// 			if (hd_temp->heredoc_fd != -1)
+		// 				close(hd_temp->heredoc_fd);
+		// 				    int status;
+		// 			signal(SIGINT, SIG_IGN);
+   		// 			 waitpid(pid, &status, 0);
+		// 			 free(line);
+		// 		}
+		// 		else
+		// 		{
+    	// 			perror("fork");
+    	// 			free(line);
+		// 		}
 				
-		}
+		// }
 		}
 			
 			//printf("head: %s\n", head->value);
