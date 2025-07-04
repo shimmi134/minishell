@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/04 14:35:41 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/04 16:34:32 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -24,7 +24,6 @@ void	do_builtins(t_shell *elem, t_env **env)
 	t_env	*tmp;
 	char	*str;
 	t_env	*temp;
-	int		fd;
 	char	*oldpwd;
 
 	i = 0;
@@ -209,7 +208,7 @@ void do_commands(t_shell *elem, t_env **env, char **envp, int ac)
                     exit(1);
                 }
             }
-            if (elem->next != NULL )
+            if (elem->next != NULL)
             {
 				if (dup2(p[count % 2][1], STDOUT_FILENO) == -1)
                 {
@@ -219,7 +218,7 @@ void do_commands(t_shell *elem, t_env **env, char **envp, int ac)
             }
 			if (!ft_strncmp(elem->type, "command", ft_strlen(elem->type)))
 			{
-				if (elem->command->infile != NULL)
+				if (elem->command->infile != NULL && !elem)
 				{
 					fd = open(elem->command->infile, O_RDONLY);
 					dup2(fd, STDIN_FILENO);
@@ -228,7 +227,10 @@ void do_commands(t_shell *elem, t_env **env, char **envp, int ac)
 			}
             if (elem->command->outfile != NULL)
             {
-                fd = open(elem->command->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+				if (elem->command->append == 0)
+                	fd = open(elem->command->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+				else
+					fd = open(elem->command->outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
                 dup2(fd, STDOUT_FILENO);
                 close(fd);
             }
@@ -266,10 +268,6 @@ void do_commands(t_shell *elem, t_env **env, char **envp, int ac)
 }
 
 
-void	do_element(t_shell *elem, t_env **env, char **envp, int ac)
-{
-	do_commands(elem, env, envp, ac);
-}
 
 t_env	*copy_env(char *envp[])
 {
@@ -322,8 +320,7 @@ void do_struct(t_shell **element, t_cmd *command)
     t_shell *new_node;
     t_shell *last = NULL;
 
-    *element = NULL;  // Assegura que comencem des de zero
-
+    *element = NULL;
     while (command)
     {
         new_node = malloc(sizeof(t_shell));
@@ -334,7 +331,7 @@ void do_struct(t_shell **element, t_cmd *command)
         new_node->next = NULL;
 
         if (!*element)
-            *element = new_node;  // Guardem el primer node
+            *element = new_node;
 
         if (last)
             last->next = new_node;
@@ -353,8 +350,8 @@ int	main(int argc, char *argv[], char *envp[])
 	t_cmd	*t_head;
 	t_env	*env;
 	pid_t	pid;
-				t_cmd *hd_temp;
-						int status;
+	t_cmd	*hd_temp;
+	int		status;
 
 	env = copy_env(envp);
 	while (1)
@@ -364,11 +361,6 @@ int	main(int argc, char *argv[], char *envp[])
 		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN);
 		line = readline("\033[1;34mminishell>\033[0m ");
-		if (line == NULL) //MALLLL
-		{
-			printf("exit\n");
-			break ;
-		}
 		if (line != NULL && check_quotes(head, line))
 		{
 			node = lexer(line);
@@ -407,8 +399,10 @@ int	main(int argc, char *argv[], char *envp[])
 							if (!element)
 								exit(1);
 							do_struct(&element, hd_temp);
-							do_element(element, &env, envp, argc);
+							do_commands(element, &env, envp, argc);
 						}
+						else
+							exit(0);
 					}
 					else if (pid > 0)
 					{
@@ -427,7 +421,7 @@ int	main(int argc, char *argv[], char *envp[])
 				{
 					do_struct(&element, t_head);
 					argc = count_commands(element);
-					do_element(element, &env, envp, argc);
+					do_commands(element, &env, envp, argc);
 				}
 			}
 		}
