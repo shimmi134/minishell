@@ -6,97 +6,11 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/03 18:35:01 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/04 14:35:41 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
-#include <errno.h>
-#include <readline/readline.h>
-#include <sys/wait.h>
 
-void	delete_node(t_env **env, t_env *target, t_env *prev)
-{
-	if (prev == target)
-		*env = target->next;
-	else
-		prev->next = target->next;
-	free(target);
-}
-
-int count_commands(t_shell *sh)
-{
-	int	i;
-
-	i = 0;
-	while (sh)
-	{
-		sh = sh->next;
-		i++;
-	}
-	return (i);
-}
-
-int	count_len(char **av)
-{
-	int	i;
-
-	i = 0;
-	while (av && av[i])
-	{
-		i++;
-	}
-	return (i);
-}
-
-void	addlast(t_env **env, t_env *add)
-{
-	t_env	*temp;
-
-	temp = *env;
-	while (temp->next != NULL)
-		temp = temp->next;
-	temp->next = add;
-}
-
-t_env	*create_node(char *env)
-{
-	char	**split;
-	t_env	*node;
-
-	split = ft_split(env, '=');
-	if (!split)
-		return (NULL);
-	node = malloc(sizeof(t_env));
-	if (!node)
-		return (NULL);
-	node->key = split[0];
-	node->value = split[1];
-	return (node);
-}
-
-int	ft_strspn(char *str, char *sep)
-{
-	int	i;
-	int	j;
-
-	if (!str || !sep)
-		return (0);
-	i = 0;
-	while (str[i])
-	{
-		j = 0;
-		while (sep[j])
-		{
-			if (sep[j] == str[i])
-				break ;
-			j++;
-		}
-		if (!sep[j])
-			return (i);
-		i++;
-	}
-	return (i);
-}
 
 void	do_builtins(t_shell *elem, t_env **env)
 {
@@ -114,11 +28,6 @@ void	do_builtins(t_shell *elem, t_env **env)
 	char	*oldpwd;
 
 	i = 0;
-	if (elem->command->outfile != NULL)
-	{
-		fd = open(elem->command->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		dup2(fd, STDOUT_FILENO);
-	}
 	if (!ft_strncmp(elem->command->cmd, "pwd", 3))
 	{
 		buf = getcwd(NULL, 0);
@@ -161,8 +70,6 @@ void	do_builtins(t_shell *elem, t_env **env)
 	}
 	else if (!ft_strncmp(elem->command->cmd, "echo", 4))
 	{
-		//		printf("[%s]\n", elem->command->args[0]);
-		//		printf("[%s]\n", elem->command->args[1]);
 		newline = 1;
 		i = 0;
 		while (i < count_len(elem->command->args)
@@ -261,93 +168,6 @@ void	do_builtins(t_shell *elem, t_env **env)
 		}
 		// return (i);
 	}
-	if (elem->command->outfile != NULL)
-	{
-		dup2(STDOUT_FILENO, 1);
-	}
-}
-
-char	*get_paths(t_env **env)
-{
-	t_env	*nd;
-
-	nd = *env;
-	while (nd)
-	{
-		if (ft_strncmp(nd->key, "PATH", 4) == 0)
-			return (nd->value);
-		nd = nd->next;
-	}
-	return (NULL);
-}
-
-char	*try_paths(char **split, char *comm)
-{
-	char	*temp;
-	char	*temp2;
-	int		i;
-
-	i = 0;
-	while (split[i])
-	{
-		temp = ft_strjoin("/", comm);
-		temp2 = ft_strjoin(split[i], temp);
-		if (access(temp2, F_OK) == 0)
-			return (free(temp), temp2);
-		free(temp2);
-		free(temp);
-		i++;
-	}
-	return (NULL);
-}
-
-char	**join_args(char *cmd, char **args)
-{
-	int		len;
-	int		i;
-	char	**final_args;
-
-	i = 1;
-	len = count_len(args) + 1;
-	final_args = malloc((len + 1) * sizeof(char *));
-	if (!final_args)
-		return (NULL);
-	final_args[0] = cmd;
-	final_args[len] = NULL;
-	while (i < len)
-	{
-		final_args[i] = args[i - 1];
-		i++;
-	}
-	return (final_args);
-}
-
-void	exec_command(t_shell *elem, t_env **env, char **envp)
-{
-	char	*path;
-	char	*paths;
-	char	**args;
-	char	**split;
-
-	if (access(elem->command->cmd, F_OK) != 0)
-	{
-		paths = get_paths(env);
-		if (!paths)
-			exit(1);
-		split = ft_split(paths, ':');
-		path = try_paths(split, elem->command->cmd);
-		if (!path)
-		{
-			perror(elem->command->cmd);
-			exit(errno);
-		}
-	}
-	else
-		path = elem->command->cmd;
-	args = join_args(elem->command->cmd, elem->command->args);
-	execve(path, args, envp);
-	printf("Error: %s\n", strerror(errno));
-	exit(127);
 }
 
 void do_commands(t_shell *elem, t_env **env, char **envp, int ac)
@@ -356,8 +176,10 @@ void do_commands(t_shell *elem, t_env **env, char **envp, int ac)
     int p[2][2]; 
     int fd;
     int count;
+	int old_stdout;
 
 	count = 0;
+	old_stdout = dup(STDOUT_FILENO);
     while (elem != NULL && elem->type != NULL)
     {
         if (elem->next != NULL)  
@@ -368,17 +190,18 @@ void do_commands(t_shell *elem, t_env **env, char **envp, int ac)
                 exit(-1);
             }
         }
-
-        id = fork();
-        if (id == -1)
+		if (!ft_strncmp(elem->type, "command", ft_strlen(elem->type)))
+		{
+        	id = fork();
+			if (id == -1)
+			{
+				perror("fork: ");
+				exit(1);
+			}
+		}
+        if (!ft_strncmp(elem->type, "built-in", ft_strlen(elem->type)) || id == 0)
         {
-            perror("fork: ");
-            exit(1);
-        }
-
-        if (id == 0)
-        {
-            if (count > 0)
+            if (count > 0 && ft_strncmp(elem->type, "built-in", ft_strlen(elem->type)) != 0)
             {
 				if (dup2(p[(count - 1) % 2][0], STDIN_FILENO) == -1)
                 {
@@ -386,9 +209,7 @@ void do_commands(t_shell *elem, t_env **env, char **envp, int ac)
                     exit(1);
                 }
             }
-
-
-            if (elem->next != NULL)
+            if (elem->next != NULL )
             {
 				if (dup2(p[count % 2][1], STDOUT_FILENO) == -1)
                 {
@@ -396,53 +217,58 @@ void do_commands(t_shell *elem, t_env **env, char **envp, int ac)
                     exit(1);
                 }	
             }
-            if (elem->command->infile != NULL)
-            {
-                fd = open(elem->command->infile, O_RDONLY);
-                dup2(fd, STDIN_FILENO);
-                close(fd);
-            }
-
+			if (!ft_strncmp(elem->type, "command", ft_strlen(elem->type)))
+			{
+				if (elem->command->infile != NULL)
+				{
+					fd = open(elem->command->infile, O_RDONLY);
+					dup2(fd, STDIN_FILENO);
+					close(fd);
+				}
+			}
             if (elem->command->outfile != NULL)
             {
                 fd = open(elem->command->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
                 dup2(fd, STDOUT_FILENO);
                 close(fd);
             }
-
-            exec_command(elem, env, envp);
-            exit(1);  
-        }
+			if (!ft_strncmp(elem->type, "command", ft_strlen(elem->type)))
+			{
+				if (count > 0)
+					close(p[(count - 1) % 2][0]);
+				if (elem->next != NULL)
+					close(p[count % 2][1]);
+            	exec_command(elem, env, envp);
+            	exit(1);  
+			}
+			else
+			{
+				do_builtins(elem, env);
+				dup2(old_stdout, STDOUT_FILENO);
+				if (count > 0)
+					close(p[(count - 1) % 2][0]);
+				if (elem->next != NULL)
+					close(p[count % 2][1]);
+        	}
+		}
         else 
         {
             if (count > 0)
-            {
                 close(p[(count - 1) % 2][0]);
-            }
-
             if (elem->next != NULL)
-            {
                 close(p[count % 2][1]);
-            }
-
         }
-
         count++;
         elem = elem->next;
     }
 	while(count--)
-	{
     	wait(NULL); 
-	}
 }
 
 
 void	do_element(t_shell *elem, t_env **env, char **envp, int ac)
 {
-	if (!ft_strncmp(elem->type, "built-in", ft_strlen(elem->type)))
-		do_builtins(elem, env);
-	else if (!ft_strncmp(elem->type, "command", ft_strlen(elem->type)))
-		do_commands(elem, env, envp, ac);
+	do_commands(elem, env, envp, ac);
 }
 
 t_env	*copy_env(char *envp[])
@@ -476,7 +302,7 @@ char	*get_element(char *line)
 {
 	char	**split;
 
-	split = ft_split(line, ' ');
+	split = ft_split(line, ' '); //Free this split
 	if (split && (!ft_strncmp(split[0], "pwd", 4) || !ft_strncmp(split[0],
 				"kill", 5) || !ft_strncmp(split[0], "env", 4)
 			|| !ft_strncmp(split[0], "unset", 6) || !ft_strncmp(split[0],
@@ -517,35 +343,6 @@ void do_struct(t_shell **element, t_cmd *command)
         command = command->next;
     }
 }
-
-/*
-void	do_struct(t_shell **element, t_cmd *command)
-{
-
-
-	t_shell **temp;
-
-	temp = element;
-	while (command)
-	{
-		if (!(*temp))
-		{
-			(*temp) = malloc(sizeof(t_shell));
-			if (!(*temp))
-				exit(1);
-		}
-		(*temp)->command = malloc(sizeof(t_cmd));
-		if (!(*temp)->command)
-			exit(2);
-		(*temp)->command = command;
-		(*temp)->type = get_element(command->cmd);
-		command = command->next;
-		if (!command)
-			(*temp)->next = NULL;
-		else
-			(*temp) = (*temp)->next;
-	}
-}*/
 
 int	main(int argc, char *argv[], char *envp[])
 {

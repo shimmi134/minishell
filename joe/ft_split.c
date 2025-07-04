@@ -6,7 +6,7 @@
 /*   By: shimi-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 17:47:58 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/06/30 17:37:52 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/04 13:31:59 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static char	**domalloc(int *w, char **arr, char const *s, char c)
 	{
 		j = 0;
 		size = len(s, c, w[1]);
-		arr[i] = (char *) malloc (size + 1);
+		arr[i] = (char *)malloc(size + 1);
 		if (!arr[i])
 		{
 			while (i > 0)
@@ -97,7 +97,7 @@ char	**ft_split(char const *s, char c)
 	if (!s)
 		return (NULL);
 	w[0] = cwords(s, c);
-	arr = (char **) malloc ((w[0] + 1) * sizeof(char *));
+	arr = (char **)malloc((w[0] + 1) * sizeof(char *));
 	if (!arr)
 		return (NULL);
 	arr[w[0]] = NULL;

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 22:25:30 by joshapir          #+#    #+#             */
-/*   Updated: 2025/06/30 17:39:43 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/04 13:32:25 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,5 +88,5 @@ char	*ft_strtrim(char const *s1, char const *set)
   printf("%s", temp);
   free (temp);
 
-  return (0);	
+  return (0);
 }*/

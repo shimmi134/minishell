@@ -6,41 +6,41 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:07:16 by joshapir          #+#    #+#             */
-/*   Updated: 2025/06/30 17:39:25 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/04 13:32:50 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char *ft_strdup_char (char c)
+char	*ft_strdup_char(char c)
 {
-    int i;
-    char *dup;
+	int		i;
+	char	*dup;
 
-    i = 0;
-    dup = malloc(2);
-    i = 0;
-    dup[0] = c;
-    dup[1] = '\0';
-    return(dup);
+	i = 0;
+	dup = malloc(2);
+	i = 0;
+	dup[0] = c;
+	dup[1] = '\0';
+	return (dup);
 }
-char *ft_strdup (char *str)
+char	*ft_strdup(char *str)
 {
-    int i;
-    char *dup;
+	int		i;
+	char	*dup;
 
-    i = 0;
-    if (!str)
-        return (NULL);
-    while(str[i])
-        i++;
-    dup = malloc(sizeof(char *) * (i + 1));
-    i = 0;
-    while(str[i])
-    {
-        dup[i] = str[i];
-        i++;
-    }
-    dup[i] = '\0';
-    return(dup);
+	i = 0;
+	if (!str)
+		return (NULL);
+	while (str[i])
+		i++;
+	dup = malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	while (str[i])
+	{
+		dup[i] = str[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
 }

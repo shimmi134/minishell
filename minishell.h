@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/06/30 17:47:03 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/04 13:24:54 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,14 @@
 # include <stdbool.h>
 # include <stddef.h>
 # include <stdio.h>
-# include <stdio.h>
-# include <stdlib.h>
 # include <stdlib.h>
 # include <string.h>
-# include <sys/wait.h>
-# include <unistd.h>
 # include <unistd.h>
 # include <signal.h>
 #include <readline/readline.h>
 #include <fcntl.h>
+#include <errno.h>
+#include <sys/wait.h>
 
 typedef enum
 {
@@ -124,4 +122,11 @@ int    check_quotes(t_token *token, char *str);
 int	read_heredoc(char *delimiter, int quoted, t_env *env);
 void	handle_sigint(int sig_num);
 void	free_env_list_tmp(t_env *env);
+int	count_len(char **av);
+void	exec_command(t_shell *elem, t_env **env, char **envp);
+void	delete_node(t_env **env, t_env *target, t_env *prev);
+int count_commands(t_shell *sh);
+void	addlast(t_env **env, t_env *add);
+t_env	*create_node(char *env);
+int	ft_strspn(char *str, char *sep);
 #endif

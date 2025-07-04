@@ -6,23 +6,22 @@
 /*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:45 by joshapir          #+#    #+#             */
-/*   Updated: 2025/06/30 17:39:17 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/04 13:32:47 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int has_token(char *str)
+int	has_token(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
-
 	while (str[i])
 	{
 		if (is_token(str[i]))
-			return(1);
+			return (1);
 		i++;
 	}
-	return(0);
+	return (0);
 }
