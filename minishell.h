@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/05 14:17:28 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/05 21:10:31 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,4 +132,5 @@ int	ft_strspn(char *str, char *sep);
 int		ft_atoi(const char *nptr);
 char	*ft_itoa(int n);
 char **create_envp(t_env *env);
+int init_heredoc(t_cmd *hd_temp, t_env *env, char *line);
 #endif

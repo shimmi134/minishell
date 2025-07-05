@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/05 17:08:15 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/05 21:11:58 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "minishell.h"
 
+#include "minishell.h"
 
 void	do_builtins(t_shell *elem, t_env **env)
 {
@@ -566,6 +566,7 @@ int	main(int argc, char *argv[], char *envp[])
 	pid_t	pid;
 	t_cmd	*hd_temp;
 	int		status;
+	int heredoc_exit_status;
 
 	env = copy_env(envp);
 	while (1)
@@ -592,44 +593,7 @@ int	main(int argc, char *argv[], char *envp[])
 				while (hd_temp->next)
 					hd_temp = hd_temp->next;
 				if (hd_temp->heredoc_delim)
-				{
-					hd_temp->heredoc_fd = read_heredoc(hd_temp->heredoc_delim,
-							hd_temp->heredoc_quoted, env);
-					if (hd_temp->heredoc_fd == -1)
-					{
-						free(line);
-						break ;
-					}
-					pid = fork();
-					if (pid == 0)
-					{
-						if (hd_temp->heredoc_fd != -1)
-						{
-							dup2(hd_temp->heredoc_fd, STDIN_FILENO);
-							close(hd_temp->heredoc_fd);
-						}
-						if (hd_temp->cmd){
-							element = malloc (sizeof(t_shell));
-							if (!element)
-								exit(1);
-							do_struct(&element, hd_temp);
-							do_commands(element, &env, argc);
-						}
-						exit(0);
-					}
-					else if (pid > 0)
-					{
-						if (hd_temp->heredoc_fd != -1)
-							close(hd_temp->heredoc_fd);
-						waitpid(pid, &status, 0);
-						free(line);
-					}
-					else
-					{
-						perror("fork");
-						free(line);
-					}
-				}
+					heredoc_exit_status = init_heredoc(hd_temp, env, line);
 				else
 				{
 					do_struct(&element, t_head);
