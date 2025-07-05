@@ -575,6 +575,11 @@ int	main(int argc, char *argv[], char *envp[])
 		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN);
 		line = readline("\033[1;34mminishell>\033[0m ");
+		if (line == NULL)
+		{
+			printf("exit\n");
+			break ;
+		}
 		if (line != NULL && check_quotes(head, line))
 		{
 			node = lexer(line);
