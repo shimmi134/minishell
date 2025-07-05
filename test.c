@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/04 16:34:32 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/05 15:11:39 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -169,16 +169,18 @@ void	do_builtins(t_shell *elem, t_env **env)
 	}
 }
 
-void do_commands(t_shell *elem, t_env **env, char **envp, int ac)
+void do_commands(t_shell *elem, t_env **env, int ac)
 {
     int id;
     int p[2][2]; 
     int fd;
     int count;
 	int old_stdout;
+	char **penv;
 
 	count = 0;
 	old_stdout = dup(STDOUT_FILENO);
+	penv = create_envp(*env);
     while (elem != NULL && elem->type != NULL)
     {
         if (elem->next != NULL)  
@@ -234,13 +236,15 @@ void do_commands(t_shell *elem, t_env **env, char **envp, int ac)
                 dup2(fd, STDOUT_FILENO);
                 close(fd);
             }
+			close(p[0][0]);
+            close(p[0][1]);
 			if (!ft_strncmp(elem->type, "command", ft_strlen(elem->type)))
 			{
 				if (count > 0)
 					close(p[(count - 1) % 2][0]);
 				if (elem->next != NULL)
 					close(p[count % 2][1]);
-            	exec_command(elem, env, envp);
+            	exec_command(elem, env, penv);
             	exit(1);  
 			}
 			else
@@ -267,7 +271,50 @@ void do_commands(t_shell *elem, t_env **env, char **envp, int ac)
     	wait(NULL); 
 }
 
+int	env_len(t_env *env)
+{
+	int	i;
 
+	i = 0;
+	while (env)
+	{
+		env = env->next;
+		i++;
+	}
+	return (i);
+}
+
+char **create_envp(t_env *env)
+{
+	char	**penv;
+	char	*str;
+	char	*str2;
+	int		i;
+	int		len;
+	
+	i = 0;
+	len = env_len(env);
+	penv = malloc(sizeof(char *) * (len+1));
+	if (!penv)
+		return (NULL);
+	while (i < len)
+	{
+		str = ft_strjoin(env->key, "=");
+		if (!str)
+			return (NULL);
+		str2 = ft_strjoin(str, env->value);
+		if (!str2)
+			return (NULL);
+		free(str);
+		penv[i] = malloc(sizeof(ft_strlen(str2))+1);
+		penv[i] = str2;
+		penv[i][ft_strlen(str2)] = '\0';
+		env = env->next;
+		i++;
+	}
+	penv[i] = NULL;
+	return (penv);
+}
 
 t_env	*copy_env(char *envp[])
 {
@@ -399,10 +446,9 @@ int	main(int argc, char *argv[], char *envp[])
 							if (!element)
 								exit(1);
 							do_struct(&element, hd_temp);
-							do_commands(element, &env, envp, argc);
+							do_commands(element, &env, argc);
 						}
-						else
-							exit(0);
+						exit(0);
 					}
 					else if (pid > 0)
 					{
@@ -421,7 +467,7 @@ int	main(int argc, char *argv[], char *envp[])
 				{
 					do_struct(&element, t_head);
 					argc = count_commands(element);
-					do_commands(element, &env, envp, argc);
+					do_commands(element, &env, argc);
 				}
 			}
 		}

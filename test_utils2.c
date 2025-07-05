@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:26:05 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/04 13:31:26 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/05 14:04:18 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ t_env	*create_node(char *env)
 	node = malloc(sizeof(t_env));
 	if (!node)
 		return (NULL);
+	if (!ft_strncmp("SHLVL", split[0], ft_strlen(split[0])))
+		split[1] = ft_itoa(ft_atoi(split[1])+1);
 	node->key = split[0];
 	node->value = split[1];
 	return (node);

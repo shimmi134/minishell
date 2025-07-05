@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/04 13:24:54 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/05 14:17:28 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,4 +129,7 @@ int count_commands(t_shell *sh);
 void	addlast(t_env **env, t_env *add);
 t_env	*create_node(char *env);
 int	ft_strspn(char *str, char *sep);
+int		ft_atoi(const char *nptr);
+char	*ft_itoa(int n);
+char **create_envp(t_env *env);
 #endif
