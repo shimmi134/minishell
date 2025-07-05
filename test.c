@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/05 15:11:39 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/05 17:08:15 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "minishell.h"
@@ -161,14 +161,177 @@ void	do_builtins(t_shell *elem, t_env **env)
 				temp = temp->next;
 			}
 		}
-		else
+		else if (!ft_strncmp("-\0", elem->command->args[0], 2))
 		{
-			printf("%s\n", strerror(errno));
+			str = getcwd(NULL,0);
+			temp = *env;
+			while (temp && ft_strncmp(temp->key, "OLDPWD", ft_strlen(temp->key)))
+				temp = temp->next;
+			oldpwd = temp->value;
+			i = chdir(oldpwd);
+			if (i != -1)
+			{
+				temp = *env;
+				while (temp)
+				{
+					if (!ft_strncmp(temp->key, "PWD", 3))
+						temp->value = str;
+					else if (!ft_strncmp(temp->key, "OLDPWD", ft_strlen(temp->key)))
+						temp->value = oldpwd;
+					temp = temp->next;
+				}
+			}
+			
+
 		}
+		if (i == -1)
+			printf("cd: %s: %s\n", strerror(errno), elem->command->args[0]);
 		// return (i);
 	}
 }
 
+void close_pipes(int p[2][2], int count, int has_next)
+{
+    if (count > 0)
+    {
+        close(p[(count - 1) % 2][0]);
+        close(p[(count - 1) % 2][1]);
+    }
+    if (!has_next && count >= 0)
+    {
+        close(p[count % 2][0]);
+        close(p[count % 2][1]);
+    }
+}
+
+void do_commands(t_shell *elem, t_env **env, int ac)
+{
+    int id = 0;
+    int p[2][2] = {{-1, -1}, {-1, -1}};
+    int fd;
+    int count = 0;
+    int old_stdout = dup(STDOUT_FILENO);
+    char **penv = create_envp(*env);
+
+    while (elem != NULL && elem->type != NULL)
+    {
+        // Create pipe if not last command
+        if (elem->next != NULL)
+        {
+            if (pipe(p[count % 2]) == -1)
+            {
+                perror("pipe");
+                exit(1);
+            }
+        }
+
+        // Only fork for commands, not for built-ins
+        if (!ft_strncmp(elem->type, "command", ft_strlen("command")))
+        {
+            id = fork();
+            if (id == -1)
+            {
+                perror("fork");
+                exit(1);
+            }
+        }
+
+        // CHILD PROCESS or BUILT-IN
+        if (!ft_strncmp(elem->type, "built-in", ft_strlen("built-in")) || id == 0)
+        {
+            // Set up input redirection
+            if (count > 0) // Not first command
+            {
+                if (dup2(p[(count - 1) % 2][0], STDIN_FILENO) == -1)
+                {
+                    perror("dup2 stdin");
+                    exit(1);
+                }
+            }
+
+            // Set up output redirection
+            if (elem->next != NULL) // Not last command
+            {
+                if (dup2(p[count % 2][1], STDOUT_FILENO) == -1)
+                {
+                    perror("dup2 stdout");
+                    exit(1);
+                }
+            }
+            // Close all pipe ends - VERY IMPORTANT
+            //close_pipes(p, count, elem->next != NULL);
+            // Handle infile redirection
+            if (elem->command->infile != NULL)
+            {
+                fd = open(elem->command->infile, O_RDONLY);
+                if (fd == -1 || dup2(fd, STDIN_FILENO) == -1)
+                {
+                    perror(elem->command->infile);
+                    exit(1);
+                }
+                close(fd);
+            }
+
+            // Handle outfile redirection
+            if (elem->command->outfile != NULL)
+            {
+                fd = elem->command->append ?
+                    open(elem->command->outfile, O_WRONLY | O_CREAT | O_APPEND, 0644) :
+                    open(elem->command->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+                if (fd == -1 || dup2(fd, STDOUT_FILENO) == -1)
+                {
+                    perror(elem->command->outfile);
+                    exit(1);
+                }
+                close(fd);
+            }
+
+            // Execute command or built-in
+            if (!ft_strncmp(elem->type, "command", ft_strlen("command")))
+            {
+				if (count > 0)
+					close(p[(count-1)%2][1]);
+				if (elem->next != NULL)
+					close(p[count%2][0]);
+                exec_command(elem, env, penv);
+                perror("exec_command"); // Only reached if exec fails
+                exit(1);
+            }
+            else
+            {
+                do_builtins(elem, env);
+                dup2(old_stdout, STDOUT_FILENO);
+            }
+        }
+        // PARENT PROCESS (command case only)
+        else
+        {
+            // Close pipe ends that child is using
+            if (count > 0)
+                close(p[(count - 1) % 2][0]);
+            if (elem->next != NULL)
+                close(p[count % 2][1]);
+        }
+
+        count++;
+        elem = elem->next;
+    }
+
+    // Close remaining pipes in parent
+    close_pipes(p, count, 0);
+
+    // Wait for all children
+    while (wait(NULL) > 0)
+        ;
+
+    // Restore stdout
+    dup2(old_stdout, STDOUT_FILENO);
+    close(old_stdout);
+}
+
+// Helper function to close pipe ends
+
+/*
 void do_commands(t_shell *elem, t_env **env, int ac)
 {
     int id;
@@ -209,6 +372,9 @@ void do_commands(t_shell *elem, t_env **env, int ac)
                     perror("dup2 stdin");
                     exit(1);
                 }
+				close(p[(count-1)%2][0]);
+				close(p[(count-1)%2][1]);
+				close(p[count%2][0]);
             }
             if (elem->next != NULL)
             {
@@ -217,6 +383,7 @@ void do_commands(t_shell *elem, t_env **env, int ac)
                     perror("dup2 stdout");
                     exit(1);
                 }	
+				close(p[count%2][1]);
             }
 			if (!ft_strncmp(elem->type, "command", ft_strlen(elem->type)))
 			{
@@ -236,14 +403,13 @@ void do_commands(t_shell *elem, t_env **env, int ac)
                 dup2(fd, STDOUT_FILENO);
                 close(fd);
             }
-			close(p[0][0]);
-            close(p[0][1]);
 			if (!ft_strncmp(elem->type, "command", ft_strlen(elem->type)))
 			{
 				if (count > 0)
 					close(p[(count - 1) % 2][0]);
 				if (elem->next != NULL)
 					close(p[count % 2][1]);
+				close(p[count%2][0]);
             	exec_command(elem, env, penv);
             	exit(1);  
 			}
@@ -251,6 +417,7 @@ void do_commands(t_shell *elem, t_env **env, int ac)
 			{
 				do_builtins(elem, env);
 				dup2(old_stdout, STDOUT_FILENO);
+				close(p[(count-1)%2][1]);
 				if (count > 0)
 					close(p[(count - 1) % 2][0]);
 				if (elem->next != NULL)
@@ -270,7 +437,7 @@ void do_commands(t_shell *elem, t_env **env, int ac)
 	while(count--)
     	wait(NULL); 
 }
-
+*/
 int	env_len(t_env *env)
 {
 	int	i;
