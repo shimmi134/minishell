@@ -108,7 +108,7 @@ if (tokens->type == TOKEN_PIPE)
         {
            // printf("goes in\n");
             prev_type = tokens->type;
-            if (!tokens->next)
+            if (!tokens->next || tokens->next->value[0] == '\0')
             {
                 printf("Syntax error: pipe without command\n");
                 return (0);
