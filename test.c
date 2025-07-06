@@ -57,8 +57,8 @@ void	do_builtins(t_shell *elem, t_env **env)
 		prev = nd;
 		while (nd)
 		{
-			if (!ft_strncmp(elem->command->args[1], nd->key,
-					ft_strlen(elem->command->args[1])))
+			if (!ft_strncmp(elem->command->args[0], nd->key,
+					ft_strlen(elem->command->args[0])))
 			{
 				delete_node(env, nd, prev);
 				break ;
