@@ -68,6 +68,8 @@ t_token *new_token(token_type type, char *value, int quote, int new_word)
 		if (token->value)
 			free(token->value);
 		token->value = ft_strdup_char('$');
+		if (value[1] == '\0')
+			token->type = TOKEN_WORD;
 	}
 	//else
 	//	token->type = TOKEN_WORD;
