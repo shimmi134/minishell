@@ -111,13 +111,13 @@ if (tokens->type == TOKEN_PIPE)
             if (!tokens->next)
             {
                 printf("Syntax error: pipe without command\n");
-                return (free_tokens(head), 0);
+                return (0);
             }
             //tokens = tokens->next;
             if (tokens->next->type != TOKEN_WORD && tokens->next->type != TOKEN_VARIABLE)
             {
                 printf("Syntax error: pipe without command\n");
-                return (free_tokens(head), 0);
+                return (0);
             }
              //printf("token type = %d\n", tokens->type);
         }
@@ -126,7 +126,7 @@ if (tokens->type == TOKEN_PIPE)
             if (!tokens->next || tokens->next->type != TOKEN_WORD)
             {
                 printf("Syntax error near unexpected token\n");
-                return (free_tokens(head), 0);
+                return (0);
             }
          }
         else if (tokens->type == TOKEN_REDIRECT_IN || tokens->type == TOKEN_REDIRECT_OUT)
