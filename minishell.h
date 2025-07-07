@@ -133,4 +133,5 @@ int		ft_atoi(const char *nptr);
 char	*ft_itoa(int n);
 char **create_envp(t_env *env);
 int init_heredoc(t_cmd *hd_temp, t_env *env, char *line);
+int ft_lensplit(char **split);
 #endif

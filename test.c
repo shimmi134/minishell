@@ -12,6 +12,16 @@
 
 #include "minishell.h"
 
+int ft_lensplit(char **split){
+	int	i;
+
+	i = 0;
+	while (split && split[i])
+		i++;
+	return i;
+}
+
+
 void	do_builtins(t_shell *elem, t_env **env)
 {
 	char	*buf;
@@ -95,6 +105,13 @@ void	do_builtins(t_shell *elem, t_env **env)
 		node = create_node(elem->command->args[0]);
 		if (split)
 		{
+			str = split[1];
+			for (int i = 2;  i < ft_lensplit(split); i++)
+			{
+				if (split[i])
+					str = ft_strjoin(str, "=");
+				str = ft_strjoin(str, split[i]); // leaks
+			}
 			if (split[0][(int)ft_strlen(split[0]) - 1] != '+')
 			{
 				nd = (*env);
@@ -102,13 +119,16 @@ void	do_builtins(t_shell *elem, t_env **env)
 				{
 					if (!ft_strncmp(split[0], nd->key, ft_strlen(split[0])))
 					{
-						nd->value = node->value;
+						nd->value = str;
 						break ;
 					}
 					nd = nd->next;
 				}
 				if (!nd)
+				{
+					node->value = str;
 					addlast(env, node);
+				}
 			}
 			else
 			{
@@ -118,7 +138,8 @@ void	do_builtins(t_shell *elem, t_env **env)
 				{
 					if (!ft_strncmp(nd->key, split[0], ft_strlen(split[0])))
 					{
-						nd->value = ft_strjoin(nd->value, split[1]);
+						nd->value = ft_strjoin(nd->value, str);
+						free(str);
 						break ;
 					}
 					nd = nd->next;
@@ -126,7 +147,7 @@ void	do_builtins(t_shell *elem, t_env **env)
 				if (nd == NULL)
 				{
 					node->key = split[0];
-					node->value = split[1];
+					node->value = str;
 					addlast(env, node);
 				}
 			}
@@ -329,115 +350,6 @@ void do_commands(t_shell *elem, t_env **env, int ac)
     close(old_stdout);
 }
 
-// Helper function to close pipe ends
-
-/*
-void do_commands(t_shell *elem, t_env **env, int ac)
-{
-    int id;
-    int p[2][2]; 
-    int fd;
-    int count;
-	int old_stdout;
-	char **penv;
-
-	count = 0;
-	old_stdout = dup(STDOUT_FILENO);
-	penv = create_envp(*env);
-    while (elem != NULL && elem->type != NULL)
-    {
-        if (elem->next != NULL)  
-        {
-            if (pipe(p[count % 2]) == -1)
-            {
-                perror("pipe: ");
-                exit(-1);
-            }
-        }
-		if (!ft_strncmp(elem->type, "command", ft_strlen(elem->type)))
-		{
-        	id = fork();
-			if (id == -1)
-			{
-				perror("fork: ");
-				exit(1);
-			}
-		}
-        if (!ft_strncmp(elem->type, "built-in", ft_strlen(elem->type)) || id == 0)
-        {
-            if (count > 0 && ft_strncmp(elem->type, "built-in", ft_strlen(elem->type)) != 0)
-            {
-				if (dup2(p[(count - 1) % 2][0], STDIN_FILENO) == -1)
-                {
-                    perror("dup2 stdin");
-                    exit(1);
-                }
-				close(p[(count-1)%2][0]);
-				close(p[(count-1)%2][1]);
-				close(p[count%2][0]);
-            }
-            if (elem->next != NULL)
-            {
-				if (dup2(p[count % 2][1], STDOUT_FILENO) == -1)
-                {
-                    perror("dup2 stdout");
-                    exit(1);
-                }	
-				close(p[count%2][1]);
-            }
-			if (!ft_strncmp(elem->type, "command", ft_strlen(elem->type)))
-			{
-				if (elem->command->infile != NULL && !elem)
-				{
-					fd = open(elem->command->infile, O_RDONLY);
-					dup2(fd, STDIN_FILENO);
-					close(fd);
-				}
-			}
-            if (elem->command->outfile != NULL)
-            {
-				if (elem->command->append == 0)
-                	fd = open(elem->command->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-				else
-					fd = open(elem->command->outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
-                dup2(fd, STDOUT_FILENO);
-                close(fd);
-            }
-			if (!ft_strncmp(elem->type, "command", ft_strlen(elem->type)))
-			{
-				if (count > 0)
-					close(p[(count - 1) % 2][0]);
-				if (elem->next != NULL)
-					close(p[count % 2][1]);
-				close(p[count%2][0]);
-            	exec_command(elem, env, penv);
-            	exit(1);  
-			}
-			else
-			{
-				do_builtins(elem, env);
-				dup2(old_stdout, STDOUT_FILENO);
-				close(p[(count-1)%2][1]);
-				if (count > 0)
-					close(p[(count - 1) % 2][0]);
-				if (elem->next != NULL)
-					close(p[count % 2][1]);
-        	}
-		}
-        else 
-        {
-            if (count > 0)
-                close(p[(count - 1) % 2][0]);
-            if (elem->next != NULL)
-                close(p[count % 2][1]);
-        }
-        count++;
-        elem = elem->next;
-    }
-	while(count--)
-    	wait(NULL); 
-}
-*/
 int	env_len(t_env *env)
 {
 	int	i;

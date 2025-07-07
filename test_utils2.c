@@ -58,7 +58,15 @@ t_env	*create_node(char *env)
 	if (!ft_strncmp("SHLVL", split[0], ft_strlen(split[0])))
 		split[1] = ft_itoa(ft_atoi(split[1])+1);
 	node->key = split[0];
-	node->value = split[1];
+	char *str = split[1];
+	for (int i = 2; i < ft_lensplit(split);)
+	{
+		str = ft_strjoin(str, split[i]); // leaks
+		i++;
+		if (split[i])
+			str = ft_strjoin(str, "=");
+	}
+	node->value = str;
 	return (node);
 }
 
