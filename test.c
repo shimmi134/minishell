@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/05 21:11:58 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/08 12:58:33 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ void	do_builtins(t_shell *elem, t_env **env)
 		{
 			str = getcwd(NULL,0);
 			temp = *env;
-			while (temp && ft_strncmp(temp->key, "OLDPWD", ft_strlen(temp->key)))
+			while (temp && ft_strncmp(temp->key, "OLDPWD", ft_strlen(temp->key)) != 0)
 				temp = temp->next;
 			oldpwd = temp->value;
 			i = chdir(oldpwd);
@@ -196,9 +196,9 @@ void	do_builtins(t_shell *elem, t_env **env)
 				while (temp)
 				{
 					if (!ft_strncmp(temp->key, "PWD", 3))
-						temp->value = str;
-					else if (!ft_strncmp(temp->key, "OLDPWD", ft_strlen(temp->key)))
 						temp->value = oldpwd;
+					else if (!ft_strncmp(temp->key, "OLDPWD", ft_strlen(temp->key)))
+						temp->value = str;
 					temp = temp->next;
 				}
 			}
@@ -270,7 +270,6 @@ void do_commands(t_shell *elem, t_env **env, int ac)
                 }
             }
 
-            // Set up output redirection
             if (elem->next != NULL) // Not last command
             {
                 if (dup2(p[count % 2][1], STDOUT_FILENO) == -1)
@@ -279,9 +278,6 @@ void do_commands(t_shell *elem, t_env **env, int ac)
                     exit(1);
                 }
             }
-            // Close all pipe ends - VERY IMPORTANT
-            //close_pipes(p, count, elem->next != NULL);
-            // Handle infile redirection
             if (elem->command->infile != NULL)
             {
                 fd = open(elem->command->infile, O_RDONLY);
@@ -292,8 +288,6 @@ void do_commands(t_shell *elem, t_env **env, int ac)
                 }
                 close(fd);
             }
-
-            // Handle outfile redirection
             if (elem->command->outfile != NULL)
             {
                 fd = elem->command->append ?
@@ -306,8 +300,6 @@ void do_commands(t_shell *elem, t_env **env, int ac)
                 }
                 close(fd);
             }
-
-            // Execute command or built-in
             if (!ft_strncmp(elem->type, "command", ft_strlen("command")))
             {
 				if (count > 0)
@@ -338,14 +330,10 @@ void do_commands(t_shell *elem, t_env **env, int ac)
         elem = elem->next;
     }
 
-    // Close remaining pipes in parent
     close_pipes(p, count, 0);
+    while (count--)
+        wait(NULL);
 
-    // Wait for all children
-    while (wait(NULL) > 0)
-        ;
-
-    // Restore stdout
     dup2(old_stdout, STDOUT_FILENO);
     close(old_stdout);
 }
