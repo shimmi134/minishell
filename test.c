@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/08 12:58:33 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/08 13:41:35 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int ft_lensplit(char **split){
 }
 
 
-void	do_builtins(t_shell *elem, t_env **env)
+int	do_builtins(t_shell *elem, t_env **env)
 {
 	char	*buf;
 	t_env	*nd;
@@ -41,7 +41,7 @@ void	do_builtins(t_shell *elem, t_env **env)
 	{
 		buf = getcwd(NULL, 0);
 		if (!buf)
-			perror("getcwd");
+			return (perror("getcwd"),1);
 		else
 			printf("%s\n", buf);
 		free(buf);
@@ -202,13 +202,14 @@ void	do_builtins(t_shell *elem, t_env **env)
 					temp = temp->next;
 				}
 			}
-			
-
 		}
 		if (i == -1)
+		{
 			printf("cd: %s: %s\n", strerror(errno), elem->command->args[0]);
-		// return (i);
+			return (1);
+		}
 	}
+	return (0);
 }
 
 void close_pipes(int p[2][2], int count, int has_next)
