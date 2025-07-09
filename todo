@@ -1,4 +1,1 @@
 echo $?
-export         a= ->funciona
-export a = -> Error
-export has to be alphabetical order

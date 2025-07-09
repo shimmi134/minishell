@@ -135,5 +135,7 @@ char **create_envp(t_env *env);
 int init_heredoc(t_cmd *hd_temp, t_env *env, char *line);
 int ft_lensplit(char **split);
 int	do_builtins(t_shell *elem, t_env **env);
+int	corr_input(t_shell *elem);
+t_env *sort_list(t_env **env);
 
 #endif

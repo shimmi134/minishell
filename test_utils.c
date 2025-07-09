@@ -106,3 +106,36 @@ void	exec_command(t_shell *elem, t_env **env, char **envp)
 	printf("Error: %s\n", strerror(errno));
 	exit(127);
 }
+
+int	corr_input(t_shell *elem)
+{
+	return !(ft_lensplit(elem->command->args) > 1);
+}
+t_env *sort_list(t_env **env)
+{
+    t_env *temp;
+    t_env *head;
+    int swapped;
+
+    if (env == NULL || *env == NULL)
+        return NULL;
+    head = *env;
+    swapped = 1;
+    while (swapped) {
+        swapped = 0;
+        temp = head;
+        while (temp && temp->next) {
+            if (ft_strncmp(temp->key, temp->next->key, ft_strlen(temp->key)) > 0) {
+                char *key = temp->key;
+                char *value = temp->value;
+                temp->key = temp->next->key;
+                temp->value = temp->next->value;
+                temp->next->key = key;
+                temp->next->value = value;
+                swapped = 1;
+            }
+            temp = temp->next;
+        }
+    }
+    return head;
+}
