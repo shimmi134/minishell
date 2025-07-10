@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/04 22:53:50 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/08 23:14:02 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,16 @@ typedef struct s_env
 	struct s_env		*next;
 }						t_env;
 
+typedef struct s_heredoc
+{
+	char				*cmd;
+	char				*heredoc_delim;
+	char				**args;
+	int					heredoc_fd;
+	int					heredoc_quoted;
+	struct s_heredoc	*next;
+}						t_heredoc;
+
 char					*ft_strdup(char *str);
 char					*ft_strdup_char(char c);
 char					*ft_strdup_char(char c);
@@ -123,5 +133,7 @@ int    check_quotes(t_token *token, char *str);
 int	read_heredoc(char *delimiter, int quoted, t_env *env);
 void	handle_sigint(int sig_num);
 void	free_env_list_tmp(t_env *env);
-int init_heredoc(t_cmd *hd_temp, t_env *env, char *line);
+int init_heredoc(t_heredoc *hd_temp, t_env *env, char *line);
+t_heredoc *init_heredoc_struct(t_cmd *cmd);
+void free_heredoc(t_heredoc *heredoc);
 #endif
