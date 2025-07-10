@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/08 13:41:35 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/10 15:49:52 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int	do_builtins(t_shell *elem, t_env **env)
 	int		newline;
 	char	**split;
 	t_env	*node;
-	t_env	*tmp;
 	char	*str;
 	t_env	*temp;
 	char	*oldpwd;
@@ -321,6 +320,7 @@ void do_commands(t_shell *elem, t_env **env, int ac)
 					close(p[(count-1)%2][1]);
 				if (elem->next != NULL)
 					close(p[count%2][0]);
+				close(p[count%2][1]);
                 exec_command(elem, env, penv);
                 perror("exec_command"); // Only reached if exec fails
                 exit(1);
@@ -329,28 +329,24 @@ void do_commands(t_shell *elem, t_env **env, int ac)
             {
                 do_builtins(elem, env);
                 dup2(old_stdout, STDOUT_FILENO);
+				close(p[count%2][1]);
             }
         }
-        // PARENT PROCESS (command case only)
         else
         {
-            // Close pipe ends that child is using
             if (count > 0)
                 close(p[(count - 1) % 2][0]);
             if (elem->next != NULL)
                 close(p[count % 2][1]);
         }
-
         count++;
         elem = elem->next;
     }
-
-    close_pipes(p, count, 0);
     while (count--)
         wait(NULL);
-
     dup2(old_stdout, STDOUT_FILENO);
     close(old_stdout);
+    close_pipes(p, count, 0);
 }
 
 int	env_len(t_env *env)
@@ -478,9 +474,7 @@ int	main(int argc, char *argv[], char *envp[])
 	t_token	*head;
 	t_cmd	*t_head;
 	t_env	*env;
-	pid_t	pid;
 	t_cmd	*hd_temp;
-	int		status;
 	int heredoc_exit_status;
 
 	env = copy_env(envp);
