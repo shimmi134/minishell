@@ -347,6 +347,8 @@ char *expand_var(char *str, t_env *env)
                 val = ft_strdup(env->value);
                 return(val);
         }
+        else if (str[0] == '?' && !str[1])
+                return(ft_strdup_char('?'));
         env = env->next;
         i++;
     }
