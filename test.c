@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/10 15:49:52 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/10 18:38:16 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,7 @@ int	do_builtins(t_shell *elem, t_env **env)
 	}
 	else if (!ft_strncmp(elem->command->cmd, "export", 6))
 	{
-		int check = corr_input(elem);
-		if (check)
+		if (!(ft_lensplit(elem->command->args) > 1))
 		{
 			split = ft_split(elem->command->args[0], '=');
 			node = create_node(elem->command->args[0]);
@@ -250,7 +249,6 @@ void do_commands(t_shell *elem, t_env **env, int ac)
 
     while (elem != NULL && elem->type != NULL)
     {
-        // Create pipe if not last command
         if (elem->next != NULL)
         {
             if (pipe(p[count % 2]) == -1)
@@ -259,8 +257,6 @@ void do_commands(t_shell *elem, t_env **env, int ac)
                 exit(1);
             }
         }
-
-        // Only fork for commands, not for built-ins
         if (!ft_strncmp(elem->type, "command", ft_strlen("command")))
         {
             id = fork();
@@ -270,11 +266,8 @@ void do_commands(t_shell *elem, t_env **env, int ac)
                 exit(1);
             }
         }
-
-        // CHILD PROCESS or BUILT-IN
         if (!ft_strncmp(elem->type, "built-in", ft_strlen("built-in")) || id == 0)
         {
-            // Set up input redirection
             if (count > 0) // Not first command
             {
                 if (dup2(p[(count - 1) % 2][0], STDIN_FILENO) == -1)
@@ -322,8 +315,6 @@ void do_commands(t_shell *elem, t_env **env, int ac)
 					close(p[count%2][0]);
 				close(p[count%2][1]);
                 exec_command(elem, env, penv);
-                perror("exec_command"); // Only reached if exec fails
-                exit(1);
             }
             else
             {
