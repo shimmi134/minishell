@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/10 18:38:16 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/10 19:03:22 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,81 +101,7 @@ int	do_builtins(t_shell *elem, t_env **env)
 	}
 	else if (!ft_strncmp(elem->command->cmd, "export", 6))
 	{
-		if (!(ft_lensplit(elem->command->args) > 1))
-		{
-			split = ft_split(elem->command->args[0], '=');
-			node = create_node(elem->command->args[0]);
-			if (split)
-			{
-				str = split[1];
-				for (int i = 2;  i < ft_lensplit(split); i++)
-				{
-					if (split[i])
-						str = ft_strjoin(str, "=");
-					str = ft_strjoin(str, split[i]); // leaks
-				}
-				if (split[0][(int)ft_strlen(split[0]) - 1] != '+')
-				{
-					nd = (*env);
-					while (nd)
-					{
-						if (!ft_strncmp(split[0], nd->key, ft_strlen(split[0])))
-						{
-							nd->value = str;
-							break ;
-						}
-						nd = nd->next;
-					}
-					if (!nd)
-					{
-						node->value = str;
-						addlast(env, node);
-					}
-				}
-				else
-				{
-					nd = (*env);
-					split[0] = ft_strtrim(split[0], "+");
-					while (nd != NULL)
-					{
-						if (!ft_strncmp(nd->key, split[0], ft_strlen(split[0])))
-						{
-							nd->value = ft_strjoin(nd->value, str);
-							free(str);
-							break ;
-						}
-						nd = nd->next;
-					}
-					if (nd == NULL)
-					{
-						node->key = split[0];
-						node->value = str;
-						addlast(env, node);
-					}
-				}
-			}
-			else
-			{
-				t_env *tmp = sort_list(env);
-				while (tmp)
-				{
-					printf("declare -x %s", tmp->key);
-					if (tmp->value)
-						printf("=\"%s\"", tmp->value);
-					printf("\n");
-					tmp = tmp->next;
-				}
-			}
-		}
-		else {
-			int i = 1;
-			while (i < ft_lensplit(elem->command->args))
-			{
-				printf("export: '%s': not a valid identifier\n", elem->command->args[i]);
-				i++;
-			}
-			return 1;
-		}
+		do_export(elem,env);
 	}
 	else if (!ft_strncmp(elem->command->cmd, "cd", 2))
 	{

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/08 13:35:15 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/10 19:03:41 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,5 +137,6 @@ int ft_lensplit(char **split);
 int	do_builtins(t_shell *elem, t_env **env);
 int	corr_input(t_shell *elem);
 t_env *sort_list(t_env **env);
+int do_export(t_shell *elem, t_env** env);
 
 #endif
