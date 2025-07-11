@@ -1,5 +1,78 @@
 # include "../minishell.h"
 
+
+char **ft_strdup_double(char **str)
+{
+	char **dup;
+	int i;
+	int j;
+
+	if (!str)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while(str[i])
+		i++;
+	dup = malloc(sizeof(char *) * (i + 1));
+
+	i = 0;
+	while (str[i])
+	{
+		dup[i] = ft_strdup(str[i]);
+		i++;
+	}
+	dup[i] = NULL;
+	return (dup);
+}
+t_heredoc *init_heredoc_struct(t_cmd *cmd)
+{
+	t_heredoc *heredoc;
+
+	heredoc = malloc(sizeof(t_heredoc));
+	if (!heredoc)
+		return (NULL);
+	if (cmd->cmd)
+			heredoc->cmd = ft_strdup(cmd->cmd);
+	if (cmd->args[0])
+	{
+		heredoc->args = ft_strdup_double(heredoc->args);
+		if (!heredoc->args)
+		{
+			printf("dup_double failed\n");
+			//exit(EXIT_FAILURE);
+		}
+	}
+	else
+		heredoc->args = NULL;
+	heredoc->heredoc_delim = ft_strdup(cmd->heredoc_delim);
+	heredoc->heredoc_fd = cmd->heredoc_fd;
+	heredoc->heredoc_quoted = cmd->heredoc_quoted;
+	heredoc->next = NULL;
+	return(heredoc);
+}
+
+void free_heredoc(t_heredoc *heredoc)
+{
+	if (!heredoc)
+		return ;
+	free(heredoc->heredoc_delim);
+	heredoc->heredoc_delim = NULL;
+//	if (heredoc->cmd)
+		free(heredoc->cmd);
+	heredoc->cmd = NULL;
+	if (heredoc->args)
+	{
+		int i;
+
+		i = 0;
+		while(heredoc->args[i])
+			free(heredoc->args[i++]);
+		free(heredoc->args);
+	}
+	free (heredoc);
+}
+
+
 void handle_sigint_heredoc(int sig_int)
 {
 	(void)sig_int;
@@ -76,15 +149,17 @@ char *heredoc_expand(char *str, t_env * env)
 	return (NULL);
 }
 
-int init_heredoc(t_cmd *hd_temp, t_env *env, char *line)
+int init_heredoc(t_heredoc *hd_temp, t_env *env, char *line)
 {
 	pid_t pid;
+	printf("reaches heredoc\n");
 			if (hd_temp->heredoc_delim)
 		{
 			hd_temp->heredoc_fd = read_heredoc(hd_temp->heredoc_delim, hd_temp->heredoc_quoted, env);
 			if (hd_temp->heredoc_fd == -1)
     		{
         		  free(line);
+				  free_heredoc(hd_temp);
             		return(0) ;
     		}
 		
@@ -118,6 +193,8 @@ int init_heredoc(t_cmd *hd_temp, t_env *env, char *line)
 				}
 				
 		}
+		free_heredoc(hd_temp);
+		
 		return (0);
 }
 int read_heredoc(char *delimiter, int quoted, t_env *env)
@@ -128,8 +205,6 @@ int read_heredoc(char *delimiter, int quoted, t_env *env)
 	pid_t pid;
 	int delimiter_found;
 	int pipefd[2];
-	t_token *token;
-	t_cmd *cmd;
 
 	delimiter_found = 0;
 

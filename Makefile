@@ -6,12 +6,12 @@
 #    By: shimi-be <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/11 11:53:14 by shimi-be          #+#    #+#              #
-#    Updated: 2025/07/02 09:14:59 by shimi-be         ###   ########.fr        #
+#    Updated: 2025/07/11 13:52:52 by shimi-be         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
-SRC = $(wildcard *.c) $(wildcard joe/*.c)
+SRC = $(wildcard joe/*.c) $(wildcard *.c) 
 LIB = libft.a
 FLAGS = -Wall -Werror -Wextra
 

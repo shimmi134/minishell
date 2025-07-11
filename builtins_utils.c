@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:56:30 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/10 19:04:12 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/11 13:48:29 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,4 +96,73 @@ int do_export(t_shell *elem, t_env** env)
 		return 1;
 	}
 	return 0;
+}
+
+int	do_cd(t_shell *elem, t_env **env)
+{
+	char	*oldpwd;
+	int		i;
+	char	*str;
+	t_env	*temp;
+	int		d;
+
+	oldpwd = getcwd(NULL, 0);
+	d = 0;
+	if (elem->command->args[0] == NULL || !ft_strncmp("~\0", elem->command->args[0], 2))
+	{
+		temp = *env;
+		while (temp && ft_strncmp(temp->key, "HOME", 4) != 0)
+			temp = temp->next;
+		if (temp == NULL)
+			return (printf("HOME is not set\n"), 1);
+		else
+		{
+			elem->command->args[0] = malloc(sizeof(temp->value)+1);
+			elem->command->args[0] = ft_strdup(temp->value);
+			elem->command->args[0][ft_strlen(temp->value)] = '\0';
+			d = 1;
+		}
+
+	}
+	i = chdir(elem->command->args[0]);
+	if (i != -1)
+	{
+		str = getcwd(NULL, 0);
+		temp = *env;
+		while (temp)
+		{
+			if (!ft_strncmp(temp->key, "PWD", 3))
+				temp->value = str;
+			else if (!ft_strncmp(temp->key, "OLDPWD", ft_strlen(temp->key)))
+				temp->value = oldpwd;
+			temp = temp->next;
+		}
+	}
+	else if (!ft_strncmp("-\0", elem->command->args[0], 2))
+	{
+		str = getcwd(NULL,0);
+		temp = *env;
+		while (temp && ft_strncmp(temp->key, "OLDPWD", ft_strlen(temp->key)) != 0)
+			temp = temp->next;
+		oldpwd = temp->value;
+		i = chdir(oldpwd);
+		if (i != -1)
+		{
+			temp = *env;
+			while (temp)
+			{
+				if (!ft_strncmp(temp->key, "PWD", 3))
+					temp->value = oldpwd;
+				else if (!ft_strncmp(temp->key, "OLDPWD", ft_strlen(temp->key)))
+					temp->value = str;
+				temp = temp->next;
+			}
+		}
+	}
+	if (i == -1)
+	{
+		printf("cd: %s: %s\n", strerror(errno), elem->command->args[0]);
+		return (1);
+	}
+	return (0);
 }

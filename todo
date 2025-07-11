@@ -1,1 +1,3 @@
 echo $?
+cd /home/shimi-be
+when home is unset, cd ~ should not work, same with cd 

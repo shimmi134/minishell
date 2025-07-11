@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/10 19:03:22 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/11 13:54:37 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,7 @@ int	do_builtins(t_shell *elem, t_env **env)
 	int		i;
 	t_env	*prev;
 	int		newline;
-	char	**split;
-	t_env	*node;
 	char	*str;
-	t_env	*temp;
-	char	*oldpwd;
 
 	i = 0;
 	if (!ft_strncmp(elem->command->cmd, "pwd", 3))
@@ -101,51 +97,11 @@ int	do_builtins(t_shell *elem, t_env **env)
 	}
 	else if (!ft_strncmp(elem->command->cmd, "export", 6))
 	{
-		do_export(elem,env);
+		return (do_export(elem,env));
 	}
 	else if (!ft_strncmp(elem->command->cmd, "cd", 2))
 	{
-		oldpwd = getcwd(NULL, 0);
-		i = chdir(elem->command->args[0]);
-		if (i != -1)
-		{
-			str = getcwd(NULL, 0);
-			temp = *env;
-			while (temp)
-			{
-				if (!ft_strncmp(temp->key, "PWD", 3))
-					temp->value = str;
-				else if (!ft_strncmp(temp->key, "OLDPWD", ft_strlen(temp->key)))
-					temp->value = oldpwd;
-				temp = temp->next;
-			}
-		}
-		else if (!ft_strncmp("-\0", elem->command->args[0], 2))
-		{
-			str = getcwd(NULL,0);
-			temp = *env;
-			while (temp && ft_strncmp(temp->key, "OLDPWD", ft_strlen(temp->key)) != 0)
-				temp = temp->next;
-			oldpwd = temp->value;
-			i = chdir(oldpwd);
-			if (i != -1)
-			{
-				temp = *env;
-				while (temp)
-				{
-					if (!ft_strncmp(temp->key, "PWD", 3))
-						temp->value = oldpwd;
-					else if (!ft_strncmp(temp->key, "OLDPWD", ft_strlen(temp->key)))
-						temp->value = str;
-					temp = temp->next;
-				}
-			}
-		}
-		if (i == -1)
-		{
-			printf("cd: %s: %s\n", strerror(errno), elem->command->args[0]);
-			return (1);
-		}
+		return do_cd(elem, env);
 	}
 	return (0);
 }
@@ -393,6 +349,8 @@ int	main(int argc, char *argv[], char *envp[])
 	t_env	*env;
 	t_cmd	*hd_temp;
 	int heredoc_exit_status;
+	int hd_res;
+	t_heredoc *heredoc;
 
 	env = copy_env(envp);
 	while (1)
@@ -409,6 +367,7 @@ int	main(int argc, char *argv[], char *envp[])
 		}
 		if (line != NULL && check_quotes(head, line))
 		{
+			t_env *temp = env;
 			node = lexer(line);
 			head = node;
 			if (check_tokens(head))
@@ -424,7 +383,14 @@ int	main(int argc, char *argv[], char *envp[])
 				while (hd_temp->next)
 					hd_temp = hd_temp->next;
 				if (hd_temp->heredoc_delim)
-					heredoc_exit_status = init_heredoc(hd_temp, env, line);
+				{
+					heredoc = init_heredoc_struct(hd_temp);
+					free_tokens(head);
+					free_cmds(t_head);
+					head = NULL;
+					t_head = NULL;
+					hd_res = init_heredoc(heredoc, env, line);
+				}
 				else
 				{
 					do_struct(&element, t_head);
