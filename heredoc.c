@@ -155,7 +155,7 @@ int init_heredoc(t_heredoc *hd_temp, t_env *env, char *line)
 	printf("reaches heredoc\n");
 			if (hd_temp->heredoc_delim)
 		{
-			hd_temp->heredoc_fd = read_heredoc(hd_temp->heredoc_delim, hd_temp->heredoc_quoted, env);
+			hd_temp->heredoc_fd = read_heredoc(hd_temp, env);
 			if (hd_temp->heredoc_fd == -1)
     		{
         		  free(line);
@@ -175,6 +175,7 @@ int init_heredoc(t_heredoc *hd_temp, t_env *env, char *line)
 					execvp(hd_temp->cmd, hd_temp->args);
 			
 					// perror("execvp");
+				free_heredoc(hd_temp);
 				exit(EXIT_FAILURE);
 				}
 				else if (pid > 0)
@@ -197,7 +198,7 @@ int init_heredoc(t_heredoc *hd_temp, t_env *env, char *line)
 		
 		return (0);
 }
-int read_heredoc(char *delimiter, int quoted, t_env *env)
+int read_heredoc(t_heredoc *hd_temp, t_env *env)
 {
 	int status;
 	char *line;
@@ -233,13 +234,13 @@ int read_heredoc(char *delimiter, int quoted, t_env *env)
 				break ;
 
 			}
-			if (ft_strcmp(line, delimiter) == 0)
+			if (ft_strcmp(line, hd_temp->heredoc_delim) == 0)
 			{
 				delimiter_found = 1;
 				free(line);
 				break;
 			}
-			if (strchr(line, '$') && !quoted)
+			if (strchr(line, '$') && !hd_temp->heredoc_quoted)
 			{
 				tmp = heredoc_expand(line, env);
                 if (tmp)
@@ -274,9 +275,11 @@ int read_heredoc(char *delimiter, int quoted, t_env *env)
 		}
 		if (!delimiter_found)
 		{
-			printf("bash: warning: here-document delimited by end-of-file (wanted `%s`)\n", delimiter);
+			printf("bash: warning: here-document delimited by end-of-file (wanted `%s`)\n", hd_temp->heredoc_delim);
 		}
 		close(pipefd[1]);
+		free_heredoc(hd_temp);
+		free_env_list_tmp(env);
 		exit (0);
 	}
 	close(pipefd[1]);

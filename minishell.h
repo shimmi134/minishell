@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/08 23:14:02 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/11 23:27:32 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ void free_cmds(t_cmd *head);
 char	*ft_strchr(const char *s, int c);
 char *expand_with_quotes(char *str, t_env *env);
 int    check_quotes(t_token *token, char *str);
-int	read_heredoc(char *delimiter, int quoted, t_env *env);
+int	read_heredoc(t_heredoc *hd_temp, t_env *env);
 void	handle_sigint(int sig_num);
 void	free_env_list_tmp(t_env *env);
 int init_heredoc(t_heredoc *hd_temp, t_env *env, char *line);
