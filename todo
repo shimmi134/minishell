@@ -1,1 +1,4 @@
 echo $?
+unset SHLVL then minishell should still show lvl 1
+do shell lvl 1000 reset to 1
+error message
