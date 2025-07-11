@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:56:30 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/11 13:48:29 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/11 13:59:40 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,21 +107,15 @@ int	do_cd(t_shell *elem, t_env **env)
 	int		d;
 
 	oldpwd = getcwd(NULL, 0);
-	d = 0;
 	if (elem->command->args[0] == NULL || !ft_strncmp("~\0", elem->command->args[0], 2))
 	{
 		temp = *env;
 		while (temp && ft_strncmp(temp->key, "HOME", 4) != 0)
 			temp = temp->next;
 		if (temp == NULL)
-			return (printf("HOME is not set\n"), 1);
+			return (printf("cd: HOME not set\n"), 1);
 		else
-		{
-			elem->command->args[0] = malloc(sizeof(temp->value)+1);
-			elem->command->args[0] = ft_strdup(temp->value);
-			elem->command->args[0][ft_strlen(temp->value)] = '\0';
-			d = 1;
-		}
+			elem->command->args[0] = ft_strdup(temp->value);//maybe leaks, should check
 
 	}
 	i = chdir(elem->command->args[0]);
