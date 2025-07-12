@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/12 20:05:24 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/12 22:20:32 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,14 +155,15 @@ void do_commands(t_shell *elem, t_env **env, int ac)
         }
         if (!ft_strncmp(elem->type, "command", ft_strlen("command")))
         {
-			if (penv)
-			{
-			 	free_penv(penv);
-			 	penv = NULL;
-			}
+			
             id = fork();
             if (id == -1)
             {
+				if (penv)
+				{
+			 		free_penv(penv);
+			 		penv = NULL;
+				}
                 perror("fork");
                 exit(1);
             }
