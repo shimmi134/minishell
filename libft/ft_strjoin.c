@@ -6,13 +6,14 @@
 /*   By: shimi-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 12:30:28 by shimi-be          #+#    #+#             */
-/*   Updated: 2024/09/19 17:11:29 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/12 19:35:05 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include <stdio.h>
 
+/*
 char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*joined;
@@ -40,6 +41,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	joined[i] = '\0';
 	return (joined);
 }
+*/
 /*
 int main(void){
 	char *s1 = "hello";

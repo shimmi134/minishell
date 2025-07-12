@@ -6,21 +6,21 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:28:54 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/04 13:32:23 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/12 19:37:04 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
 #include <stdlib.h>
-
-size_t	ft_strlen(const char *s)
+#include"../minishell.h"
+size_t  ft_strlen(const char    *s)
 {
-	size_t	i;
+	size_t i;
 
 	i = 0;
-	while (s && s[i])
+
+	while (s[i])
 		i++;
-	return (i);
+	return(i);
 }
 
 char	*ft_while(char *arr, char const *s1, char const *s2)
@@ -54,6 +54,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	if (!s2)
 		return (NULL);
+	// if (ft_strcmp((char *)s1, "<<"))
+	// 	return("<<");
 	total = ft_strlen(s1) + ft_strlen(s2);
 	i = 0;
 	arr = malloc(total + 1);
@@ -64,9 +66,9 @@ char	*ft_strjoin(char const *s1, char const *s2)
 /*int main()
   {
 // Test cases
-char	*str1 = "Hello, ";
-char	*str2 = "World!";
-char	*result;
+char *str1 = "Hello, ";
+char *str2 = "World!";
+char *result;
 
 // Test 1: Normal concatenation
 result = ft_strjoin(str1, str2);
@@ -119,5 +121,5 @@ if (!result)
 printf("Test 5: NULL + NULL = NULL (handled correctly)\n");
 }
 
-return (0);
+return 0;
 }*/

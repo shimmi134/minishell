@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/11 13:54:37 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/12 20:05:24 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,20 @@ void close_pipes(int p[2][2], int count, int has_next)
     }
 }
 
+void free_penv(char **penv)
+{
+	int i;
+
+	i = 0;
+
+	if (!penv)
+		return ;
+	while (penv[i])
+		free(penv[i++]);
+	//if (penv)
+		free(penv);
+}
+
 void do_commands(t_shell *elem, t_env **env, int ac)
 {
     int id = 0;
@@ -141,6 +155,11 @@ void do_commands(t_shell *elem, t_env **env, int ac)
         }
         if (!ft_strncmp(elem->type, "command", ft_strlen("command")))
         {
+			if (penv)
+			{
+			 	free_penv(penv);
+			 	penv = NULL;
+			}
             id = fork();
             if (id == -1)
             {
@@ -220,6 +239,8 @@ void do_commands(t_shell *elem, t_env **env, int ac)
     dup2(old_stdout, STDOUT_FILENO);
     close(old_stdout);
     close_pipes(p, count, 0);
+	if (penv)
+		free_penv(penv);
 }
 
 int	env_len(t_env *env)
@@ -235,6 +256,40 @@ int	env_len(t_env *env)
 	return (i);
 }
 
+// char **create_envp(t_env *env)
+// {
+// 	char	**penv;
+// 	char	*str;
+// 	char	*str2;
+// 	int		i;
+// 	int		len;
+	
+// 	i = 0;
+// 	len = env_len(env);
+// 	penv = malloc(sizeof(char *) * (len+1));
+// 	if (!penv)
+// 		return (NULL);
+// 	while (i < len)
+// 	{
+// 		str = ft_strjoin(env->key, "=");
+// 		if (!str)
+// 			return (NULL);
+// 		str2 = ft_strjoin(str, env->value);
+// 		if (!str2)
+// 			return (NULL);
+// 		free(str);
+// 		if (!str2)
+// 			return(NULL);
+// 	//	penv[i] = malloc(sizeof(ft_strlen(str2))+1);
+// 		//penv[i] = str2;
+// 	//	penv[i][ft_strlen(str2)] = '\0';
+// 		env = env->next;
+// 		i++;
+// 	}
+// 	penv[i] = NULL;
+// 	return (penv);
+// }
+
 char **create_envp(t_env *env)
 {
 	char	**penv;
@@ -245,21 +300,19 @@ char **create_envp(t_env *env)
 	
 	i = 0;
 	len = env_len(env);
-	penv = malloc(sizeof(char *) * (len+1));
+	penv = malloc(sizeof(char *) * (len + 1));
 	if (!penv)
 		return (NULL);
-	while (i < len)
+	while (i < len && env)
 	{
 		str = ft_strjoin(env->key, "=");
 		if (!str)
 			return (NULL);
 		str2 = ft_strjoin(str, env->value);
+		free(str);
 		if (!str2)
 			return (NULL);
-		free(str);
-		penv[i] = malloc(sizeof(ft_strlen(str2))+1);
 		penv[i] = str2;
-		penv[i][ft_strlen(str2)] = '\0';
 		env = env->next;
 		i++;
 	}
@@ -267,31 +320,33 @@ char **create_envp(t_env *env)
 	return (penv);
 }
 
-t_env	*copy_env(char *envp[])
-{
-	t_env	*head;
-	t_env	*node;
-	t_env	*nnode;
-	int		i;
 
-	head = create_node(envp[0]);
-	if (!head)
-		return (NULL);
-	i = 2;
-	node = create_node(envp[1]);
-	if (!node)
-		return (NULL);
-	head->next = node;
-	while (envp[i])
-	{
-		nnode = create_node(envp[i]);
-		if (!nnode)
-			return (NULL);
-		node->next = nnode;
-		node = node->next;
-		i++;
-	}
-	return (head);
+t_env   *copy_env(char *envp[])
+{
+
+    t_env   *head;
+    t_env   *node;
+    t_env   *nnode;
+    int     i;
+
+    head = create_node(envp[0]);
+    if (!head)
+        return (NULL);
+    i = 2;
+    node = create_node(envp[1]);
+    if (!node)
+        return (NULL);
+    head->next = node;
+    while (envp[i])
+    {
+        nnode = create_node(envp[i]);
+        if (!nnode)
+            return (NULL);
+        node->next = nnode;
+        node = node->next;
+        i++;
+    }
+    return (head);
 }
 
 char	*get_element(char *line)

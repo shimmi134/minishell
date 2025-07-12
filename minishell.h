@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/11 13:51:40 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/12 19:30:07 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int						arg_count(t_token *tokens);
 int						ft_strncmp(const char *s1, const char *s2, size_t n);
 int						ft_strcmp(char *s1, char *s2);
 int						check_quotes(t_token *token, char *str);
-int						read_heredoc(char *delimiter, int quoted, t_env *env);
+int 					read_heredoc(t_heredoc *hd_temp, t_env *env);
 int						count_len(char **av);
 int						count_commands(t_shell *sh);
 int						ft_strspn(char *str, char *sep);

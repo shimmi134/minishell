@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:26:05 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/10 18:37:24 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/12 19:32:36 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,30 +44,26 @@ void	addlast(t_env **env, t_env *add)
 	temp->next = add;
 }
 
-t_env	*create_node(char *env)
+t_env   *create_node(char *env)
 {
-	char	**split;
-	t_env	*node;
+    char    **split;
+    t_env   *node;
+    int i;
 
-	split = ft_split(env, '=');
-	if (!split)
-		return (NULL);
-	node = malloc(sizeof(t_env));
-	if (!node)
-		return (NULL);
-	if (!ft_strncmp("SHLVL", split[0], ft_strlen(split[0])))
-		split[1] = ft_itoa(ft_atoi(split[1])+1);
-	node->key = split[0];
-	char *str = split[1];
-	for (int i = 2; i < ft_lensplit(split);)
-	{
-		str = ft_strjoin(str, split[i]); // leaks
-		i++;
-		if (split[i])
-			str = ft_strjoin(str, "=");
-	}
-	node->value = str;
-	return (node);
+    i = 0;
+    split = ft_split(env, '=');
+    if (!split)
+        return (NULL);
+    node = malloc(sizeof(t_env));
+    if (!node)
+        return (NULL);
+    node->key = ft_strdup(split[0]);
+    node->value = ft_strdup(split[1]);
+    node->next = NULL;
+    while (split[i])
+        free(split[i++]);
+    free(split);
+    return (node);
 }
 
 int	ft_strspn(char *str, char *sep)
