@@ -261,40 +261,6 @@ int	env_len(t_env *env)
 	return (i);
 }
 
-// char **create_envp(t_env *env)
-// {
-// 	char	**penv;
-// 	char	*str;
-// 	char	*str2;
-// 	int		i;
-// 	int		len;
-	
-// 	i = 0;
-// 	len = env_len(env);
-// 	penv = malloc(sizeof(char *) * (len+1));
-// 	if (!penv)
-// 		return (NULL);
-// 	while (i < len)
-// 	{
-// 		str = ft_strjoin(env->key, "=");
-// 		if (!str)
-// 			return (NULL);
-// 		str2 = ft_strjoin(str, env->value);
-// 		if (!str2)
-// 			return (NULL);
-// 		free(str);
-// 		if (!str2)
-// 			return(NULL);
-// 	//	penv[i] = malloc(sizeof(ft_strlen(str2))+1);
-// 		//penv[i] = str2;
-// 	//	penv[i][ft_strlen(str2)] = '\0';
-// 		env = env->next;
-// 		i++;
-// 	}
-// 	penv[i] = NULL;
-// 	return (penv);
-// }
-
 char **create_envp(t_env *env)
 {
 	char	**penv;
@@ -312,11 +278,11 @@ char **create_envp(t_env *env)
 	{
 		if (!ft_strncmp(env->key, "SHLVL", 5))
 		{
-			printf("%s",env->value);
+			if (ft_atoi(env->value) >= 1000)
+				env->value = ft_itoa(1);
 			str2 = env->value;
 			env->value = ft_itoa(ft_atoi(env->value) + 1);
 			free(str2);
-			printf("%s",env->value);
 		}
 		str = ft_strjoin(env->key, "=");
 		if (!str)
@@ -483,6 +449,7 @@ int	main(int argc, char *argv[], char *envp[])
 	t_heredoc *heredoc;
 
 	env = copy_env(envp);
+	element = NULL;
 	while (1)
 	{
 		head = NULL;
@@ -497,7 +464,6 @@ int	main(int argc, char *argv[], char *envp[])
 		}
 		if (line != NULL && check_quotes(head, line))
 		{
-			t_env *temp = env;
 			node = lexer(line);
 			head = node;
 			if (check_tokens(head))
@@ -528,11 +494,12 @@ int	main(int argc, char *argv[], char *envp[])
 					do_commands(element, &env, argc);
 				}
 			}
+			rl_free(line);
 		}
-		free_shell(element);
+		if (element != NULL)
+			free_shell(element);
 		free_tokens(head);
 		free_cmds(t_head);
-		rl_free(line);
 	}
 	if (line)
 		rl_free(line);
