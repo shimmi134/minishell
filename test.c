@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <readline/readline.h>
 #include <stdio.h>
 #include "minishell.h"
 
@@ -130,8 +131,7 @@ void free_penv(char **penv)
 		return ;
 	while (penv[i])
 		free(penv[i++]);
-	//if (penv)
-		free(penv);
+	free(penv);
 }
 
 void do_commands(t_shell *elem, t_env **env, int ac)
@@ -215,14 +215,16 @@ void do_commands(t_shell *elem, t_env **env, int ac)
 					close(p[(count-1)%2][1]);
 				if (elem->next != NULL)
 					close(p[count%2][0]);
-				close(p[count%2][1]);
+				if (p[count%2][1] != -1)
+					close(p[count%2][1]);
                 exec_command(elem, env, penv);
             }
             else
             {
                 do_builtins(elem, env);
                 dup2(old_stdout, STDOUT_FILENO);
-				close(p[count%2][1]);
+				if (p[count%2][1] != -1)
+					close(p[count%2][1]);
             }
         }
         else
@@ -238,8 +240,8 @@ void do_commands(t_shell *elem, t_env **env, int ac)
     while (count--)
         wait(NULL);
     dup2(old_stdout, STDOUT_FILENO);
-    close(old_stdout);
-    close_pipes(p, count, 0);
+	   close(old_stdout); //not
+	   close_pipes(p, count, 0); //not
 	if (penv)
 		free_penv(penv);
 }
@@ -350,6 +352,19 @@ t_env   *copy_env(char *envp[])
     return (head);
 }
 
+void	free_split(char **sp)
+{
+	int	i;
+
+	i = 0;
+	while (sp[i])
+	{
+		free(sp[i]);
+		i++;
+	}
+	free(sp);
+}
+
 char	*get_element(char *line)
 {
 	char	**split;
@@ -361,11 +376,11 @@ char	*get_element(char *line)
 				"echo", 5) || !ft_strncmp(split[0], "export", 6)
 			|| !ft_strncmp(split[0], "cd", 2)))
 	{
-		return ("built-in");
+		return (free_split(split), "built-in");
 	}
 	else
 	{
-		return ("command");
+		return (free_split(split), "command");
 	}
 }
 
@@ -393,6 +408,18 @@ void do_struct(t_shell **element, t_cmd *command)
         last = new_node;
         command = command->next;
     }
+}
+
+void free_shell(t_shell *element)
+{
+	t_shell *temp;
+
+	while (element)
+	{
+		temp = element;
+		element = element->next;
+		free(temp);
+	}
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -455,9 +482,14 @@ int	main(int argc, char *argv[], char *envp[])
 				}
 			}
 		}
+		free_shell(element);
 		free_tokens(head);
 		free_cmds(t_head);
+		rl_free(line);
 	}
+	if (line)
+		rl_free(line);
 	free_env_list_tmp(env);
+	rl_clear_history();
 	return (0);
 }
