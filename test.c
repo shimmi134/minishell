@@ -141,8 +141,9 @@ void do_commands(t_shell *elem, t_env **env, int ac)
     int fd;
     int count = 0;
     int old_stdout = dup(STDOUT_FILENO);
-    char **penv = create_envp(*env);
+    char **penv;
 
+	penv = NULL;
     while (elem != NULL && elem->type != NULL)
     {
         if (elem->next != NULL)
@@ -217,6 +218,7 @@ void do_commands(t_shell *elem, t_env **env, int ac)
 					close(p[count%2][0]);
 				if (p[count%2][1] != -1)
 					close(p[count%2][1]);
+				penv = create_envp(*env);
                 exec_command(elem, env, penv);
             }
             else
@@ -308,6 +310,14 @@ char **create_envp(t_env *env)
 		return (NULL);
 	while (i < len && env)
 	{
+		if (!ft_strncmp(env->key, "SHLVL", 5))
+		{
+			printf("%s",env->value);
+			str2 = env->value;
+			env->value = ft_itoa(ft_atoi(env->value) + 1);
+			free(str2);
+			printf("%s",env->value);
+		}
 		str = ft_strjoin(env->key, "=");
 		if (!str)
 			return (NULL);
@@ -324,6 +334,41 @@ char **create_envp(t_env *env)
 }
 
 
+t_env *copy_env(char *envp[])
+{
+    t_env *head;
+    t_env *tail;
+    t_env *new_node;
+    int i;
+	int shlvl;
+
+	head = NULL;
+	i = 0;
+	shlvl = 0;
+    while (envp[i])
+    {
+		if (!ft_strncmp(envp[i], "SHLVL=", 5))
+			shlvl = 1;
+        new_node = create_node(envp[i]);
+        if (!new_node)
+            return (NULL);
+        if (!head)
+            head = new_node;
+        else
+            tail->next = new_node;
+        tail = new_node;
+        i++;
+    }
+	if (!shlvl)
+	{
+		new_node = create_node("SHLVL=2");
+		tail->next = new_node;
+		new_node->next = NULL;
+	}
+    return (head);
+}
+
+/*
 t_env   *copy_env(char *envp[])
 {
 
@@ -331,8 +376,10 @@ t_env   *copy_env(char *envp[])
     t_env   *node;
     t_env   *nnode;
     int     i;
+	int		shlvl;
 
     head = create_node(envp[0]);
+	shlvl = 0;
     if (!head)
         return (NULL);
     i = 2;
@@ -350,7 +397,7 @@ t_env   *copy_env(char *envp[])
         i++;
     }
     return (head);
-}
+}*/
 
 void	free_split(char **sp)
 {
