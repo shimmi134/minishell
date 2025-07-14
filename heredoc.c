@@ -33,6 +33,9 @@ t_heredoc *init_heredoc_struct(t_cmd *cmd)
 		return (NULL);
 		if (cmd->cmd)
 			heredoc->cmd = ft_strdup(cmd->cmd);
+		else
+			heredoc->cmd = NULL;
+
 	if (cmd->args[0])
 	{
 		heredoc->args = ft_strdup_double(heredoc->args);

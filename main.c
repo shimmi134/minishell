@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/14 02:36:35 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/14 04:19:21 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -339,14 +339,16 @@ int main(int argc, char *argv[], char *envp[])
 		 if (hd_temp->heredoc_delim)
 		 {
 			heredoc = init_heredoc_struct(hd_temp);
-			free_tokens(head);
-			free_cmds(t_head);
+			if (head)
+				free_tokens(head);
+			if (t_head)
+				free_cmds(t_head);
 			head = NULL;
 			t_head = NULL;
 		 	hd_res = init_heredoc(heredoc, env, line);
+			printf("reaches end of heredo\n");
 		 }
-		}
-			
+		}	
 			//printf("head: %s\n", head->value);
 			//printf("%s\n", expand_var(head->next, env));
 			//  free_tokens(head);
