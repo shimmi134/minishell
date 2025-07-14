@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/14 02:43:03 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/14 02:43:06 by joshapir         ###   ########.fr       */
+/*   Created: 2025/07/14 04:43:52 by joshapir          #+#    #+#             */
+/*   Updated: 2025/07/14 04:43:54 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,9 @@ t_heredoc *init_heredoc_struct(t_cmd *cmd)
 		return (NULL);
 		if (cmd->cmd)
 			heredoc->cmd = ft_strdup(cmd->cmd);
+		else
+			heredoc->cmd = NULL;
+
 	if (cmd->args[0])
 	{
 		heredoc->args = ft_strdup_double(heredoc->args);
