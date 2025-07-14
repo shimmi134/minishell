@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/06/30 22:21:30 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/14 02:42:36 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,7 @@ t_cmd *new_cmd_token(t_token *tokens, t_env *envp)
     cmd->append = 0;
     cmd->heredoc = 0;
     cmd->heredoc_fd = -1;
+	cmd->exit_status = 0;
     //cmd->args[0] = NULL;
     cmd->next = NULL;
     return (cmd);
@@ -222,7 +223,7 @@ char *expand_with_quotes(char *str, t_env *env)
     }
     tmp[i - 2] = '\0';
     
-    t_val = expand_var(tmp, env);
+    t_val = expand_var(tmp, NULL, env);
     if (!t_val)
         return (free(t_val), NULL);
       i = 0;
@@ -331,7 +332,7 @@ char *expand_var_in_str(t_token *token, t_env *env)
     return(NULL);
 }
 
-char *expand_var(char *str, t_env *env)
+char *expand_var(char *str, t_cmd *cmd, t_env *env)
 {
     char *val;
     int i;
@@ -347,6 +348,8 @@ char *expand_var(char *str, t_env *env)
                 val = ft_strdup(env->value);
                 return(val);
         }
+        else if (str[0] == '?' && !str[1])
+                cmd->exit_status = 1;
         env = env->next;
         i++;
     }
@@ -410,7 +413,7 @@ t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp)
                 if (i != 0 && !token->new_word)
                 { 
                     //token = token->next; 
-                    temp = expand_var(token->next->value, envp);
+                    temp = expand_var(token->next->value, cmd, envp);
                     if (temp)
                         cmd->args[i - 1] = ft_strjoin(cmd->args[i - 1], temp);
                     //free(temp);
@@ -435,7 +438,7 @@ t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp)
             */
             else
             {
-                cmd->args[i] = expand_var(token->next->value, envp); 
+                cmd->args[i] = expand_var(token->next->value, cmd, envp); 
                 
             }
         //    else
@@ -584,7 +587,7 @@ t_cmd *init_cmds(t_token *tokens, t_env *envp)
     //     cmds->cmd = cmds->args[0];
     //     // if (cmds->args[1])
     //     //     free(cmds->args[1]);
-    //         //cmds->args[1] = NULL; //come back to this
+
     //     shift_left(cmds->args);
         
     // }
@@ -626,6 +629,8 @@ void print_cmd_list(t_cmd *head)
 		 	printf("infile = %s\n", current->infile);
         if (current->outfile)
 			printf("outfile = %s\n", current->outfile);
+		if (current->exit_status)
+			printf("return exit status\n");
         if (current->args[i])
            printf("args = ");
        while(current->args[i])

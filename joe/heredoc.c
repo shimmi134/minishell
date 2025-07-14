@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/12 19:27:23 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/12 19:27:25 by joshapir         ###   ########.fr       */
+/*   Created: 2025/07/14 02:43:03 by joshapir          #+#    #+#             */
+/*   Updated: 2025/07/14 02:43:06 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,7 @@ char *heredoc_expand(char *str, t_env * env)
 			j++;
 		}
 		tmp2[i] = '\0';
-		expanded = expand_var(tmp2, env);
+		expanded = expand_var(tmp2, NULL, env);
 		if (tmp2)
 			free (tmp2);
 		if (expanded)

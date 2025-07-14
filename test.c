@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/12 22:20:32 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/14 02:45:52 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -494,16 +494,16 @@ int	main(int argc, char *argv[], char *envp[])
 					do_commands(element, &env, argc);
 				}
 			}
-			rl_free(line);
+//			rl_free(line);
 		}
-		if (element != NULL)
-			free_shell(element);
+//		if (element != NULL)
+//			free_shell(element);
 		free_tokens(head);
 		free_cmds(t_head);
 	}
-	if (line)
-		rl_free(line);
+//	if (line)
+//		rl_free(line);
 	free_env_list_tmp(env);
-	rl_clear_history();
+//	rl_clear_history();
 	return (0);
 }
