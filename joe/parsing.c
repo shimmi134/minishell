@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/14 02:42:36 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/14 14:04:35 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,7 @@ t_cmd *new_cmd_token(t_token *tokens, t_env *envp)
     cmd->heredoc = 0;
     cmd->heredoc_fd = -1;
 	cmd->exit_status = 0;
+	cmd->exit_status_code = 0;
     //cmd->args[0] = NULL;
     cmd->next = NULL;
     return (cmd);
