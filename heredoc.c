@@ -129,7 +129,7 @@ char *heredoc_expand(char *str, t_env * env)
 			j++;
 		}
 		tmp2[i] = '\0';
-		expanded = expand_var(tmp2, env);
+		expanded = expand_var(tmp2, NULL, env);
 		if (tmp2)
 			free (tmp2);
 		if (expanded)

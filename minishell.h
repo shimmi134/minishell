@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/11 23:27:32 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/14 02:33:56 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef struct s_command
 	char				*heredoc_delim;
 	int					heredoc_fd;
 	int					heredoc_quoted;
+	int					exit_status;
 	struct s_command	*next;
 }						t_cmd;
 
@@ -93,7 +94,7 @@ char					*ft_strdup(char *str);
 char					*ft_strdup_char(char c);
 char					*ft_strdup_char(char c);
 char					*add_quoted_word(char *str, int *i, int type, t_token **current);
-char					*expand_var(char *str, t_env *env);
+char					*expand_var(char *str, t_cmd *cmd, t_env *env);
 token_type				find_token_type(char *str);
 t_token					*new_token(token_type type, char *value, int flag,
 							int new_word);

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/11 23:11:21 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/14 02:36:35 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -329,7 +329,7 @@ int main(int argc, char *argv[], char *envp[])
 			 		free_cmds(t_head);
 					break ;
 				}
-			//	print_cmd_list(t_head);
+				print_cmd_list(t_head);
 				t_cmd *hd_temp;
 				hd_temp = t_head;
 				
