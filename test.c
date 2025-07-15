@@ -12,7 +12,10 @@
 
 #include <readline/readline.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "minishell.h"
+
+int exit_status_value = 0;
 
 int ft_lensplit(char **split){
 	int	i;
@@ -97,7 +100,7 @@ int	do_builtins(t_shell *elem, t_env **env)
 			}
 		}
 		else
-			printf("%i",elem->command->exit_status);
+			printf("%i",exit_status_value);
 		if (newline)
 			printf("\n");
 	}
@@ -141,15 +144,16 @@ void free_penv(char **penv)
 
 void do_commands(t_shell *elem, t_env **env, int ac)
 {
-    int id = 0;
+    int pid[ac];
     int p[2][2] = {{-1, -1}, {-1, -1}};
     int fd;
     int count = 0;
     int old_stdout = dup(STDOUT_FILENO);
     char **penv;
-	int exit
 
 	penv = NULL;
+	for (int i = 0; i < ac; i++)
+		pid[i] = -3;
     while (elem != NULL && elem->type != NULL)
     {
         if (elem->next != NULL)
@@ -163,8 +167,8 @@ void do_commands(t_shell *elem, t_env **env, int ac)
         if (!ft_strncmp(elem->type, "command", ft_strlen("command")))
         {
 			
-            id = fork();
-            if (id == -1)
+            pid[count] = fork();
+            if (pid[count] == -1)
             {
 				if (penv)
 				{
@@ -175,7 +179,7 @@ void do_commands(t_shell *elem, t_env **env, int ac)
                 exit(1);
             }
         }
-        if (!ft_strncmp(elem->type, "built-in", ft_strlen("built-in")) || id == 0)
+        if (!ft_strncmp(elem->type, "built-in", ft_strlen("built-in")) || pid[count] == 0)
         {
             if (count > 0) // Not first command
             {
@@ -229,7 +233,7 @@ void do_commands(t_shell *elem, t_env **env, int ac)
             }
             else
             {
-                do_builtins(elem, env);
+                exit_status_value = do_builtins(elem, env);
                 dup2(old_stdout, STDOUT_FILENO);
 				if (p[count%2][1] != -1)
 					close(p[count%2][1]);
@@ -245,8 +249,20 @@ void do_commands(t_shell *elem, t_env **env, int ac)
         count++;
         elem = elem->next;
     }
-    while (count--)
-        wait(NULL);
+	int i = 0;
+	int status;
+    while (i < count)
+	{
+		if (pid[i] != -3)
+		{
+			waitpid(pid[i],&status, 0);
+			if (WIFEXITED(status))
+				exit_status_value = WEXITSTATUS(status);
+			else 
+				exit_status_value = 127;
+		}
+		i++;
+	}
     dup2(old_stdout, STDOUT_FILENO);
    close(old_stdout); //not
    close_pipes(p, count, 0); //not
@@ -417,7 +433,6 @@ void do_struct(t_shell **element, t_cmd *command)
             exit(1);
         new_node->command = command;
         new_node->type = get_element(command->cmd);
-		printf("%i\n", command->exit_status);
         new_node->next = NULL;
 
         if (!*element)

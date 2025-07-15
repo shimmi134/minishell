@@ -1,4 +1,5 @@
 echo $?
-unset SHLVL then minishell should still show lvl 1
-do shell lvl 1000 reset to 1
+-----> This means changing the struct so that we have an int * that is stored globally between all of the structs, and save that value.
+-----> After each command execution, change that value for the status one in waitpid() function
 error message
+
