@@ -190,7 +190,6 @@ t_cmd *new_cmd_token(t_token *tokens, t_env *envp)
     cmd->heredoc = 0;
     cmd->heredoc_fd = -1;
 	cmd->exit_status = 0;
-	cmd->exit_status_code = 0;
     //cmd->args[0] = NULL;
     cmd->next = NULL;
     return (cmd);

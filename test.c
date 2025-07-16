@@ -15,8 +15,6 @@
 #include <stdlib.h>
 #include "minishell.h"
 
-int exit_status_value = 0;
-
 int ft_lensplit(char **split){
 	int	i;
 
@@ -100,7 +98,7 @@ int	do_builtins(t_shell *elem, t_env **env)
 			}
 		}
 		else
-			printf("%i",exit_status_value);
+			printf("%i", *(elem->exit_status_code));
 		if (newline)
 			printf("\n");
 	}
@@ -150,6 +148,7 @@ void do_commands(t_shell *elem, t_env **env, int ac)
     int count = 0;
     int old_stdout = dup(STDOUT_FILENO);
     char **penv;
+	int *result;
 
 	penv = NULL;
 	for (int i = 0; i < ac; i++)
@@ -181,7 +180,7 @@ void do_commands(t_shell *elem, t_env **env, int ac)
         }
         if (!ft_strncmp(elem->type, "built-in", ft_strlen("built-in")) || pid[count] == 0)
         {
-            if (count > 0) // Not first command
+            if (count > 0 && pid[count] == 0) // Not first command
             {
                 if (dup2(p[(count - 1) % 2][0], STDIN_FILENO) == -1)
                 {
@@ -198,6 +197,7 @@ void do_commands(t_shell *elem, t_env **env, int ac)
                     exit(1);
                 }
             }
+
             if (elem->command->infile != NULL)
             {
                 fd = open(elem->command->infile, O_RDONLY);
@@ -222,6 +222,8 @@ void do_commands(t_shell *elem, t_env **env, int ac)
             }
             if (!ft_strncmp(elem->type, "command", ft_strlen("command")))
             {
+				if (elem->command->outfile == NULL && elem->next == NULL)
+					dup2(old_stdout, STDOUT_FILENO);
 				if (count > 0)
 					close(p[(count-1)%2][1]);
 				if (elem->next != NULL)
@@ -233,8 +235,13 @@ void do_commands(t_shell *elem, t_env **env, int ac)
             }
             else
             {
-                exit_status_value = do_builtins(elem, env);
-                dup2(old_stdout, STDOUT_FILENO);
+				if (elem->command->outfile == NULL && elem->next == NULL)
+					dup2(old_stdout, STDOUT_FILENO);
+                *(elem->exit_status_code) = do_builtins(elem, env);
+				if (count > 0)
+					close(p[(count-1)%2][1]);
+				if (elem->next == NULL)
+					close(p[count%2][0]);
 				if (p[count%2][1] != -1)
 					close(p[count%2][1]);
             }
@@ -247,6 +254,7 @@ void do_commands(t_shell *elem, t_env **env, int ac)
                 close(p[count % 2][1]);
         }
         count++;
+		result = elem->exit_status_code;
         elem = elem->next;
     }
 	int i = 0;
@@ -257,15 +265,14 @@ void do_commands(t_shell *elem, t_env **env, int ac)
 		{
 			waitpid(pid[i],&status, 0);
 			if (WIFEXITED(status))
-				exit_status_value = WEXITSTATUS(status);
+				*(result) = WEXITSTATUS(status);
 			else 
-				exit_status_value = 127;
+				*(result) = 127;
 		}
 		i++;
 	}
     dup2(old_stdout, STDOUT_FILENO);
    close(old_stdout); //not
-   close_pipes(p, count, 0); //not
 	if (penv)
 		free_penv(penv);
 }
@@ -419,7 +426,7 @@ char	*get_element(char *line)
 	}
 }
 
-void do_struct(t_shell **element, t_cmd *command)
+void do_struct(t_shell **element, t_cmd *command, int *exit_status)
 {
     t_shell *new_node;
     t_shell *last;
@@ -433,14 +440,13 @@ void do_struct(t_shell **element, t_cmd *command)
             exit(1);
         new_node->command = command;
         new_node->type = get_element(command->cmd);
+		new_node->exit_status_code = exit_status;
         new_node->next = NULL;
-
         if (!*element)
             *element = new_node;
 
         if (last)
             last->next = new_node;
-
         last = new_node;
         command = command->next;
     }
@@ -460,19 +466,24 @@ void free_shell(t_shell *element)
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	char	*line;
-	t_shell	*element;
-	t_token	*node;
-	t_token	*head;
-	t_cmd	*t_head;
-	t_env	*env;
-	t_cmd	*hd_temp;
-	int heredoc_exit_status;
-	int hd_res;
-	t_heredoc *heredoc;
+	char		*line;
+	t_shell		*element;
+	t_token		*node;
+	t_token		*head;
+	t_cmd		*t_head;
+	t_env		*env;
+	t_cmd		*hd_temp;
+	int			heredoc_exit_status;
+	int			hd_res;
+	int			*exit_status;
+	t_heredoc	*heredoc;
 
+	if (!envp)
+		return (printf("Error, no env detected.\n"), 1);
 	env = copy_env(envp);
 	element = NULL;
+	exit_status = (int*)malloc(sizeof(int));
+	*exit_status = 0;
 	while (1)
 	{
 		head = NULL;
@@ -512,7 +523,7 @@ int	main(int argc, char *argv[], char *envp[])
 				}
 				else
 				{
-					do_struct(&element, t_head);
+					do_struct(&element, t_head, exit_status);
 					argc = count_commands(element);
 					do_commands(element, &env, argc);
 				}
@@ -524,6 +535,7 @@ int	main(int argc, char *argv[], char *envp[])
 		free_tokens(head);
 		free_cmds(t_head);
 	}
+	free(exit_status);
 	if (line)
 		rl_free(line);
 	free_env_list_tmp(env);

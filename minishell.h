@@ -62,7 +62,6 @@ typedef struct s_command
 	int					heredoc_fd;
 	int					heredoc_quoted;
 	int					exit_status;
-	int					exit_status_code;
 	struct s_command	*next;
 }						t_cmd;
 
@@ -70,6 +69,7 @@ typedef struct s_shell
 {
 	char				*type;
 	struct s_command	*command;
+	int					*exit_status_code;
 	struct s_shell		*next;
 }						t_shell;
 
