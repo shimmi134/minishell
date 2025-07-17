@@ -531,7 +531,10 @@ int	main(int argc, char *argv[], char *envp[])
 			rl_free(line);
 		}
 		if (element != NULL)
+		{
 			free_shell(element);
+			element = NULL;
+		}
 		free_tokens(head);
 		free_cmds(t_head);
 	}
