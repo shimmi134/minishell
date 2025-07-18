@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/14 14:03:51 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/18 14:02:19 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int						arg_count(t_token *tokens);
 int						ft_strncmp(const char *s1, const char *s2, size_t n);
 int						ft_strcmp(char *s1, char *s2);
 int						check_quotes(t_token *token, char *str);
-int 					read_heredoc(t_heredoc *hd_temp, t_env *env);
+int						read_heredoc(t_heredoc *hd_temp, t_env *env);
 int						count_len(char **av);
 int						count_commands(t_shell *sh);
 int						ft_strspn(char *str, char *sep);
@@ -111,6 +111,9 @@ int						do_export(t_shell *elem, t_env **env);
 int						do_cd(t_shell *elem, t_env **env);
 int						init_heredoc(t_heredoc *hd_temp, t_env *env,
 							char *line);
+int						do_echo(t_shell *elem, t_env **env);
+int						do_pwd(void);
+int						do_env(t_env **env);
 void					print_cmd_list(t_cmd *head);
 void					free_cmds(t_cmd *head);
 void					handle_sigint(int sig_num);
@@ -122,7 +125,7 @@ void					free_tokens(t_token *head);
 void					print_list(t_token *head);
 void					print_enum(t_token *list);
 void					free_heredoc(t_heredoc *heredoc);
-void	free_cmds(t_cmd *head);
+void					free_cmds(t_cmd *head);
 char					*ft_strdup(char *str);
 char					*ft_strdup_char(char c);
 char					*ft_strdup_char(char c);

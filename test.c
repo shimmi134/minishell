@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/18 12:45:46 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/18 13:50:45 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,37 +27,20 @@ int ft_lensplit(char **split){
 
 int	do_builtins(t_shell *elem, t_env **env)
 {
-	char	*buf;
 	t_env	*nd;
-	int		i;
 	t_env	*prev;
-	int		newline;
-	char	*str;
 
-	i = 0;
 	if (!ft_strncmp(elem->command->cmd, "pwd", 3))
 	{
-		buf = getcwd(NULL, 0);
-		if (!buf)
-			return (perror("getcwd"),1);
-		else
-			printf("%s\n", buf);
-		free(buf);
+		return(do_pwd());
 	}
 	else if (!ft_strncmp(elem->command->cmd, "kill", 4))
 	{
-		// kill(t_pid val_of_child, signal) MOst likely need to do in loop or smth
 		exit(0);
 	}
 	else if (!ft_strncmp(elem->command->cmd, "env", 3))
 	{
-		nd = (*env);
-		while (nd)
-		{
-			if (nd->value != NULL)
-				printf("%s=%s\n", nd->key, nd->value);
-			nd = nd->next;
-		}
+		return (do_env(env));
 	}
 	else if (!ft_strncmp(elem->command->cmd, "unset", 5))
 	{
@@ -77,30 +60,7 @@ int	do_builtins(t_shell *elem, t_env **env)
 	}
 	else if (!ft_strncmp(elem->command->cmd, "echo", 4))
 	{
-		newline = 1;
-		i = 0;
-		while (i < count_len(elem->command->args)
-			&& !ft_strncmp(elem->command->args[i], "-n", 2)
-			&& ft_strlen(elem->command->args[i]) == ft_strspn(elem->command->args[i],
-				"-n"))
-		{
-			newline = 0;
-			i++;
-		}
-		if (elem->command->exit_status == 0)
-		{
-			while (i < count_len(elem->command->args))
-			{
-				printf("%s", elem->command->args[i]);
-				if (i < count_len(elem->command->args) - 1)
-					printf(" ");
-				i++;
-			}
-		}
-		else
-			printf("%i", *(elem->exit_status_code));
-		if (newline)
-			printf("\n");
+		return (do_echo(elem, env));
 	}
 	else if (!ft_strncmp(elem->command->cmd, "export", 6))
 	{
