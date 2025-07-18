@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/14 14:22:51 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/18 12:45:46 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,7 +281,7 @@ void do_commands(t_shell *elem, t_env **env, int ac)
 */
 void do_commands(t_shell *elem, t_env **env, int ac)
 {
-    int *pids = calloc(ac, sizeof(int));
+    int *pids = calloc(ac+1, sizeof(int));
     int prev_fd = -1;
     int old_stdout = dup(STDOUT_FILENO);
     char **penv = NULL;
