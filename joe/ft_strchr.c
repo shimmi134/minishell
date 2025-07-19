@@ -6,21 +6,22 @@
 /*   By: fcela-ga <fcela-ga@student.42barcelona.com +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 11:40:00 by fcela-ga          #+#    #+#             */
-/*   Updated: 2025/07/04 13:34:24 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/19 14:49:20 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+/*
 char	*ft_strchr(const char *s, int c)
 {
 	while (*s != '\0')
 	{
 		if (*s == (char)c)
-			return ((char *)s);
+			return ((char *)s++);
 		s++;
 	}
 	if ((char)c == '\0')
 		return ((char *)s);
 	return (NULL);
-}
+}*/

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/18 13:50:45 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/19 13:25:39 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,49 +27,18 @@ int ft_lensplit(char **split){
 
 int	do_builtins(t_shell *elem, t_env **env)
 {
-	t_env	*nd;
-	t_env	*prev;
-
 	if (!ft_strncmp(elem->command->cmd, "pwd", 3))
-	{
 		return(do_pwd());
-	}
-	else if (!ft_strncmp(elem->command->cmd, "kill", 4))
-	{
-		exit(0);
-	}
 	else if (!ft_strncmp(elem->command->cmd, "env", 3))
-	{
 		return (do_env(env));
-	}
 	else if (!ft_strncmp(elem->command->cmd, "unset", 5))
-	{
-		nd = (*env);
-		prev = nd;
-		while (nd)
-		{
-			if (!ft_strncmp(elem->command->args[0], nd->key,
-					ft_strlen(elem->command->args[0])))
-			{
-				delete_node(env, nd, prev);
-				break ;
-			}
-			prev = nd;
-			nd = nd->next;
-		}
-	}
+		return (do_unset(elem, env));
 	else if (!ft_strncmp(elem->command->cmd, "echo", 4))
-	{
 		return (do_echo(elem, env));
-	}
 	else if (!ft_strncmp(elem->command->cmd, "export", 6))
-	{
 		return (do_export(elem,env));
-	}
 	else if (!ft_strncmp(elem->command->cmd, "cd", 2))
-	{
 		return do_cd(elem, env);
-	}
 	return (0);
 }
 
@@ -492,8 +461,7 @@ char	*get_element(char *line)
 	char	**split;
 
 	split = ft_split(line, ' '); //Free this split
-	if (split && (!ft_strncmp(split[0], "pwd", 4) || !ft_strncmp(split[0],
-				"kill", 5) || !ft_strncmp(split[0], "env", 4)
+	if (split && (!ft_strncmp(split[0], "pwd", 4) || !ft_strncmp(split[0], "env", 4)
 			|| !ft_strncmp(split[0], "unset", 6) || !ft_strncmp(split[0],
 				"echo", 5) || !ft_strncmp(split[0], "export", 6)
 			|| !ft_strncmp(split[0], "cd", 2)))

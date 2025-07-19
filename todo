@@ -1,2 +1,1 @@
-export a= then env should get a= on env
-redo the export function. use strchr to make it easier for me to take into account double = or even more, and easier error checking. THis will also make less leaks i think
+think if need to add export += ...
