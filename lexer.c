@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/06/09 22:00:54 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/20 18:13:33 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,7 @@ int skip (char *str, int i)
                 i++;
 	return (i);
 }
-/*
-void add_token(t_token *lst, char c)
-{
-	token_type type;
 
-}
-	*/
 char *add_quoted_word(char *str, int *i, int type, t_token **current)
 {
 	int j;

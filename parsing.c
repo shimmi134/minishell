@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/14 02:34:28 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/20 18:18:27 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,20 @@ int arg_count(t_token *tokens)
     }
     return(count);
 }
+
+// int arg_count(t_token *tokens)
+// {
+//     int count = 0;
+
+//     while (tokens && tokens->type != TOKEN_PIPE)
+//     {
+//         if (tokens->type == TOKEN_WORD)
+//             count++;
+//         tokens = tokens->next;
+//     }
+//     return count;
+// }
+
 
 t_cmd *new_cmd_token(t_token *tokens, t_env *envp)
 {
