@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/11 13:52:07 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/20 19:55:35 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,10 +171,12 @@ void handle_sigint(int sig_num)
     rl_redisplay();
 }
 
-void free_env_list_tmp(t_env *env)
+t_env *free_env_list_tmp(t_env *env)
 {
     t_env *tmp;
 
+	if (!env)
+		return (NULL);
     while (env)
     {
         tmp = env->next;
@@ -187,6 +189,7 @@ void free_env_list_tmp(t_env *env)
         free(env);
         env = tmp;
     }
+	return (NULL);
 }
 
 // int init_heredoc(t_cmd *hd_temp, t_env *env, char *line)

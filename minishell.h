@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/19 16:22:42 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/20 19:55:46 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ int						ft_isdigit(int c);
 void					print_cmd_list(t_cmd *head);
 void					free_cmds(t_cmd *head);
 void					handle_sigint(int sig_num);
-void					free_env_list_tmp(t_env *env);
+t_env					*free_env_list_tmp(t_env *env);
 void					exec_command(t_shell *elem, t_env **env, char **envp);
 void					delete_node(t_env **env, t_env *target, t_env *prev);
 void					addlast(t_env **env, t_env *add);

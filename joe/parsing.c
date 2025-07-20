@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/14 14:04:35 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/20 18:32:57 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,23 +149,36 @@ if (tokens->type == TOKEN_PIPE)
     return (1);
 }
 
+// int arg_count(t_token *tokens)
+// {
+//     int count;
+
+//     count = 0;
+//     // if (tokens->type == TOKEN_PIPE)
+//     //     tokens = tokens->next;
+//     while (tokens && tokens-> type == TOKEN_WORD)
+//     {
+//           count++; 
+//           tokens = tokens->next;
+//           if (tokens && tokens->type == TOKEN_PIPE)
+//                 break ;
+//           if (tokens && tokens->type != TOKEN_WORD)
+//                 tokens = tokens->next;
+//     }
+//     return(count);
+// }
+
 int arg_count(t_token *tokens)
 {
-    int count;
+    int count = 0;
 
-    count = 0;
-    // if (tokens->type == TOKEN_PIPE)
-    //     tokens = tokens->next;
-    while (tokens && tokens-> type == TOKEN_WORD)
+    while (tokens && tokens->type != TOKEN_PIPE)
     {
-          count++; 
-          tokens = tokens->next;
-          if (tokens && tokens->type == TOKEN_PIPE)
-                break ;
-          if (tokens && tokens->type != TOKEN_WORD)
-                tokens = tokens->next;
+        if (tokens->type == TOKEN_WORD)
+            count++;
+        tokens = tokens->next;
     }
-    return(count);
+    return count;
 }
 
 t_cmd *new_cmd_token(t_token *tokens, t_env *envp)
@@ -239,8 +252,6 @@ char *expand_with_quotes(char *str, t_env *env)
     }
     new[i] = '\'';
     new[i + 1] ='\0';
-    //free(tmp);
-   // free(t_val);
     return(new);
 }
 

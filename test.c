@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/20 17:39:01 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/20 20:00:05 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -535,6 +535,8 @@ int	main(int argc, char *argv[], char *envp[])
 	*exit_status = 0;
 	while (1)
 	{
+        // if (!env)
+        //     env = copy_env(envp);
 		head = NULL;
 		t_head = NULL;
 		signal(SIGINT, handle_sigint);
@@ -569,10 +571,14 @@ int	main(int argc, char *argv[], char *envp[])
 					heredoc = init_heredoc_struct(hd_temp);
 					free_tokens(head);
 					free_cmds(t_head);
+                    free(exit_status);
+                    clear_history();
+                    hd_res = init_heredoc(heredoc, env, line);
 					head = NULL;
 					t_head = NULL;
                     line = NULL;
-					hd_res = init_heredoc(heredoc, env, line);
+                    exit_status = NULL;
+                    env = copy_env(envp);
 				}
 				else
 				{
@@ -590,12 +596,18 @@ int	main(int argc, char *argv[], char *envp[])
 			free_shell(element);
 			element = NULL;
 		}
-		free_tokens(head);
-		free_cmds(t_head);
+        if (head)
+		    free_tokens(head);
+        if (t_head)
+		    free_cmds(t_head);
 	}
-	free(exit_status);
+    if (exit_status)
+	    free(exit_status);
 	if (line)
 		rl_free(line);
-	free_env_list_tmp(env);
+        if (env)
+	     env = free_env_list_tmp(env);
+    clear_history();
+
 	return (0);
 }

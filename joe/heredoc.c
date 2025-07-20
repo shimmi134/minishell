@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 04:43:52 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/14 04:43:54 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/20 19:57:02 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,6 +191,7 @@ int init_heredoc(t_heredoc *hd_temp, t_env *env, char *line)
 			
 					// perror("execvp");
 				free_heredoc(hd_temp);
+				env = free_env_list_tmp(env);
 				exit(EXIT_FAILURE);
 				}
 				else if (pid > 0)
@@ -210,7 +211,7 @@ int init_heredoc(t_heredoc *hd_temp, t_env *env, char *line)
 				
 		}
 		free_heredoc(hd_temp);
-		
+		env = free_env_list_tmp(env);
 		return (0);
 }
 int read_heredoc(t_heredoc *hd_temp, t_env *env)
@@ -294,7 +295,7 @@ int read_heredoc(t_heredoc *hd_temp, t_env *env)
 		}
 		close(pipefd[1]);
 		free_heredoc(hd_temp);
-		free_env_list_tmp(env);
+		env = free_env_list_tmp(env);
 		exit (0);
 	}
 	close(pipefd[1]);
