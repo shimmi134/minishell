@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/19 13:25:39 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/20 17:28:18 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -567,6 +567,7 @@ int	main(int argc, char *argv[], char *envp[])
 					free_cmds(t_head);
 					head = NULL;
 					t_head = NULL;
+                    line = NULL;
 					hd_res = init_heredoc(heredoc, env, line);
 				}
 				else
@@ -576,7 +577,9 @@ int	main(int argc, char *argv[], char *envp[])
 					do_commands(element, &env, argc);
 				}
 			}
-			rl_free(line);
+
+            if (line)
+			    rl_free(line);
 		}
 		if (element != NULL)
 		{
