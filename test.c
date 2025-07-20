@@ -6,11 +6,12 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/20 17:28:18 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/20 17:39:01 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <readline/readline.h>
+#include <readline/history.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "minishell.h"
@@ -544,6 +545,9 @@ int	main(int argc, char *argv[], char *envp[])
 			printf("exit\n");
 			break ;
 		}
+        if (line && *line)
+                add_history(line);
+
 		if (line != NULL && check_quotes(head, line))
 		{
 			node = lexer(line);
