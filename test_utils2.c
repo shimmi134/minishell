@@ -47,10 +47,12 @@ void	addlast(t_env **env, t_env *add)
 t_env   *create_node(char *env)
 {
     char    **split;
+	char	*equal;
     t_env   *node;
     int i;
 
     i = 0;
+	equal = ft_strchr(env, '=');
     split = ft_split(env, '=');
     if (!split)
         return (NULL);

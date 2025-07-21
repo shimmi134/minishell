@@ -527,7 +527,7 @@ int	main(int argc, char *argv[], char *envp[])
 	int			*exit_status;
 	t_heredoc	*heredoc;
 
-	if (!envp)
+	if (!envp || envp[0] == NULL)
 		return (printf("Error, no env detected.\n"), 1);
 	env = copy_env(envp);
 	element = NULL;
@@ -571,13 +571,13 @@ int	main(int argc, char *argv[], char *envp[])
 					heredoc = init_heredoc_struct(hd_temp);
 					free_tokens(head);
 					free_cmds(t_head);
-                    free(exit_status);
+                    //free(exit_status);
                     clear_history();
                     hd_res = init_heredoc(heredoc, env, line);
 					head = NULL;
 					t_head = NULL;
                     line = NULL;
-                    exit_status = NULL;
+                    //exit_status = NULL;
                     env = copy_env(envp);
 				}
 				else
