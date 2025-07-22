@@ -53,12 +53,17 @@ char *join_split(char **split)
 	char	*str2;
 
 	i = 1;
-	str = split[0];
+	str = "";
 	first = 1;
 	while (i < ft_lensplit(split))
 	{
-		str2 = split[i];
+		str2 = str;
+		if (!first)
+			str = ft_strjoin(str, "=");
+		if (!first)
+			free(str2);
 		temp = str;
+		str2 = split[i];
 		str = ft_strjoin(str, str2);
 		if (first)
 			first = 0;
@@ -72,7 +77,7 @@ char *join_split(char **split)
 t_env   *create_node(char *env)
 {
     char    **split;
-	//char	*equal;
+	char	*equal;
     t_env   *node;
     int i;
 

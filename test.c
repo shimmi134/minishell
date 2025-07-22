@@ -418,12 +418,13 @@ void	free_split(char **sp)
 	int	i;
 
 	i = 0;
-	while (sp[i])
+	while (sp && sp[i])
 	{
 		free(sp[i]);
 		i++;
 	}
-	free(sp);
+	if (sp)
+		free(sp);
 }
 
 char	*get_element(char *line)
