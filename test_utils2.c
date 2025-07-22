@@ -18,6 +18,8 @@ void	delete_node(t_env **env, t_env *target, t_env *prev)
 		*env = target->next;
 	else
 		prev->next = target->next;
+	free(target->key);
+	free(target->value);
 	free(target);
 }
 
