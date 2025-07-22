@@ -192,8 +192,8 @@ t_cmd *new_cmd_token(t_token *tokens, t_env *envp)
         cmd->args = calloc(101, sizeof(char *));
     if (!cmd->args)
         return(NULL);
-        cmd->args[count] = NULL;    
-        cmd->cmd = NULL;
+	cmd->args[count] = NULL;    
+	cmd->cmd = NULL;
     cmd->args[0] = NULL;
     cmd->infile = NULL;
     cmd->outfile = NULL;
@@ -203,7 +203,6 @@ t_cmd *new_cmd_token(t_token *tokens, t_env *envp)
     cmd->heredoc = 0;
     cmd->heredoc_fd = -1;
 	cmd->exit_status = 0;
-    //cmd->args[0] = NULL;
     cmd->next = NULL;
     return (cmd);
 }

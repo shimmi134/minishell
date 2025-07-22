@@ -413,37 +413,6 @@ t_env *copy_env(char *envp[])
     return (head);
 }
 
-/*
-t_env   *copy_env(char *envp[])
-{
-
-    t_env   *head;
-    t_env   *node;
-    t_env   *nnode;
-    int     i;
-	int		shlvl;
-
-    head = create_node(envp[0]);
-	shlvl = 0;
-    if (!head)
-        return (NULL);
-    i = 2;
-    node = create_node(envp[1]);
-    if (!node)
-        return (NULL);
-    head->next = node;
-    while (envp[i])
-    {
-        nnode = create_node(envp[i]);
-        if (!nnode)
-            return (NULL);
-        node->next = nnode;
-        node = node->next;
-        i++;
-    }
-    return (head);
-}*/
-
 void	free_split(char **sp)
 {
 	int	i;
@@ -493,7 +462,6 @@ void do_struct(t_shell **element, t_cmd *command, int *exit_status)
         new_node->next = NULL;
         if (!*element)
             *element = new_node;
-
         if (last)
             last->next = new_node;
         last = new_node;
@@ -530,13 +498,13 @@ int	main(int argc, char *argv[], char *envp[])
 	if (!envp || envp[0] == NULL)
 		return (printf("Error, no env detected.\n"), 1);
 	env = copy_env(envp);
+	if (!env)
+		return (printf("Error, copying the env.\n"), 1);
 	element = NULL;
 	exit_status = (int*)malloc(sizeof(int));
 	*exit_status = 0;
 	while (1)
 	{
-        // if (!env)
-        //     env = copy_env(envp);
 		head = NULL;
 		t_head = NULL;
 		signal(SIGINT, handle_sigint);
@@ -564,20 +532,21 @@ int	main(int argc, char *argv[], char *envp[])
 					break ;
 				}
 				hd_temp = t_head;
-				while (hd_temp->next)
-					hd_temp = hd_temp->next;
+				//while (hd_temp->next)
+				//	hd_temp = hd_temp->next;
 				if (hd_temp->heredoc_delim)
 				{
 					heredoc = init_heredoc_struct(hd_temp);
 					free_tokens(head);
-					free_cmds(t_head);
-                    free(exit_status);
                     clear_history();
-                    hd_res = init_heredoc(heredoc, env, line);
+					do_struct(&element, t_head, exit_status);
+                    hd_res = init_heredoc(heredoc, env, line, element);
+                    free(exit_status);
 					exit_status = malloc(sizeof(int));
 					if (!exit_status)
 						return 1;
 					*exit_status = hd_res;
+					free_cmds(t_head);
 					head = NULL;
 					t_head = NULL;
                     line = NULL;
@@ -590,7 +559,6 @@ int	main(int argc, char *argv[], char *envp[])
 					do_commands(element, &env, argc);
 				}
 			}
-
             if (line)
 			    rl_free(line);
 		}

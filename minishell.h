@@ -110,7 +110,7 @@ int						corr_input(t_shell *elem);
 int						do_export(t_shell *elem, t_env **env);
 int						do_cd(t_shell *elem, t_env **env);
 int						init_heredoc(t_heredoc *hd_temp, t_env *env,
-							char *line);
+							char *line, t_shell* element);
 int						do_echo(t_shell *elem, t_env **env);
 int						do_pwd(void);
 int						do_env(t_env **env);
@@ -129,6 +129,7 @@ void					print_list(t_token *head);
 void					print_enum(t_token *list);
 void					free_heredoc(t_heredoc *heredoc);
 void					free_cmds(t_cmd *head);
+void do_commands(t_shell *elem, t_env **env, int ac);
 char					*ft_strdup(char *str);
 char					*ft_strdup_char(char c);
 char					*ft_strdup_char(char c);

@@ -43,18 +43,17 @@ t_heredoc *init_heredoc_struct(t_cmd *cmd)
 	heredoc = malloc(sizeof(t_heredoc));
 	if (!heredoc)
 		return (NULL);
-		if (cmd->cmd)
-			heredoc->cmd = ft_strdup(cmd->cmd);
-		else
-			heredoc->cmd = NULL;
+	if (cmd->cmd)
+		heredoc->cmd = ft_strdup(cmd->cmd);
+	else
+		heredoc->cmd = NULL;
 
 	if (cmd->args[0])
 	{
-		heredoc->args = ft_strdup_double(heredoc->args);
+		heredoc->args = ft_strdup_double(cmd->args);
 		if (!heredoc->args)
 		{
 			printf("dup_double failed\n");
-			//exit(EXIT_FAILURE);
 		}
 	}
 	else
@@ -164,11 +163,11 @@ char *heredoc_expand(char *str, t_env * env)
 	return (NULL);
 }
 
-int init_heredoc(t_heredoc *hd_temp, t_env *env, char *line)
+int init_heredoc(t_heredoc *hd_temp, t_env *env, char *line, t_shell *element)
 {
 	pid_t pid;
 	printf("reaches heredoc\n");
-			if (hd_temp->heredoc_delim)
+		if (hd_temp->heredoc_delim)
 		{
 			hd_temp->heredoc_fd = read_heredoc(hd_temp, env);
 			if (hd_temp->heredoc_fd == -1)
@@ -177,29 +176,26 @@ int init_heredoc(t_heredoc *hd_temp, t_env *env, char *line)
 				  free_heredoc(hd_temp);
             		return(0) ;
     		}
-		
 				pid = fork();
 				if (pid == 0)
 				{
 					if (hd_temp->heredoc_fd != -1)
-				{
-    				dup2(hd_temp->heredoc_fd, STDIN_FILENO);
-    				close(hd_temp->heredoc_fd);
-				}
-				if (hd_temp->cmd)
-					execvp(hd_temp->cmd, hd_temp->args);
-			
-					// perror("execvp");
-				free_heredoc(hd_temp);
-				env = free_env_list_tmp(env);
-				exit(EXIT_FAILURE);
+					{
+						dup2(hd_temp->heredoc_fd, STDIN_FILENO);
+						close(hd_temp->heredoc_fd);
+					}
+					if (hd_temp->cmd)
+						do_commands(element, &env, count_commands(element));
+					free_heredoc(hd_temp);
+					env = free_env_list_tmp(env);
+					exit(EXIT_FAILURE);
 				}
 				else if (pid > 0)
 				{
 					if (hd_temp->heredoc_fd != -1)
 						close(hd_temp->heredoc_fd);
 						    int status;
-					signal(SIGINT, SIG_IGN);
+					 signal(SIGINT, SIG_IGN);
    					 waitpid(pid, &status, 0);
 					 free(line);
 				}
