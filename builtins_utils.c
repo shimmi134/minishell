@@ -119,30 +119,6 @@ int	do_export(t_shell *elem, t_env **env)
 			}
 			i++;
 		}
-		/*
-			else
-			{
-				nd = (*env);
-				split[0] = ft_strtrim(split[0], "+");
-				while (nd != NULL)
-				{
-					if (!ft_strncmp(nd->key, split[0], ft_strlen(split[0])))
-					{
-						nd->value = ft_strjoin(nd->value, str);
-						free(str);
-						break ;
-					}
-					nd = nd->next;
-				}
-				if (nd == NULL)
-				{
-					node->key = split[0];
-					node->value = str;
-					addlast(env, node);
-				}
-			}
-		}
-		*/
 	}
 	else
 	{

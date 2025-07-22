@@ -355,7 +355,7 @@ char **create_envp(t_env *env)
 		return (NULL);
 	while (i < len && env)
 	{
-		if (!ft_strncmp(env->key, "SHLVL", 5))
+		if (!ft_strncmp(env->key, "SHLVL=", 6))
 		{
 			if (ft_atoi(env->value) >= 1000)
 				env->value = ft_itoa(1);
@@ -392,7 +392,7 @@ t_env *copy_env(char *envp[])
 	shlvl = 0;
     while (envp[i])
     {
-		if (!ft_strncmp(envp[i], "SHLVL=", 5))
+		if (!ft_strncmp(envp[i], "SHLVL=", 6))
 			shlvl = 1;
         new_node = create_node(envp[i]);
         if (!new_node)
@@ -571,13 +571,16 @@ int	main(int argc, char *argv[], char *envp[])
 					heredoc = init_heredoc_struct(hd_temp);
 					free_tokens(head);
 					free_cmds(t_head);
-                    //free(exit_status);
+                    free(exit_status);
                     clear_history();
                     hd_res = init_heredoc(heredoc, env, line);
+					exit_status = malloc(sizeof(int));
+					if (!exit_status)
+						return 1;
+					*exit_status = hd_res;
 					head = NULL;
 					t_head = NULL;
                     line = NULL;
-                    //exit_status = NULL;
                     env = copy_env(envp);
 				}
 				else

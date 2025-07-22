@@ -44,15 +44,40 @@ void	addlast(t_env **env, t_env *add)
 	temp->next = add;
 }
 
+char *join_split(char **split)
+{
+	int		i;
+	int		first;
+	char	*str;
+	char	*temp;
+	char	*str2;
+
+	i = 1;
+	str = split[0];
+	first = 1;
+	while (i < ft_lensplit(split))
+	{
+		str2 = split[i];
+		temp = str;
+		str = ft_strjoin(str, str2);
+		if (first)
+			first = 0;
+		else
+		 free(temp);
+		i++;
+	}
+	return (str);
+}
+
 t_env   *create_node(char *env)
 {
     char    **split;
-	char	*equal;
+	//char	*equal;
     t_env   *node;
     int i;
 
     i = 0;
-	equal = ft_strchr(env, '=');
+	//equal = ft_strchr(env, '=');
     split = ft_split(env, '=');
     if (!split)
         return (NULL);
@@ -60,7 +85,7 @@ t_env   *create_node(char *env)
     if (!node)
         return (NULL);
     node->key = ft_strdup(split[0]);
-    node->value = ft_strdup(split[1]);
+    node->value = join_split(split);
     node->next = NULL;
     while (split[i])
         free(split[i++]);
