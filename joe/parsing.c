@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/23 23:29:08 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/23 23:31:48 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,53 +82,10 @@ if (tokens->type == TOKEN_PIPE)
            return(printf("Syntax error, invalid token at start\n"),0);
         if (tokens->type == TOKEN_VARIABLE && !tokens->next)
                 return (printf("Syntax error, invalid token at start\n"), 0);    
-    // while (tokens)
-    // {
-    //     prev_type = tokens->type;
-    //     if (tokens->type == TOKEN_PIPE)
-    //     {
-    //         prev_type = tokens->type;
-    //         if (!tokens->next || tokens->next->value[0] == '\0')
-    //             return (printf("Syntax error: pipe without command\n"), 0);
-    //         if (tokens->next->type != TOKEN_WORD && tokens->next->type != TOKEN_VARIABLE)
-    //                 return (printf("Syntax error: pipe without command\n"), 0);
-    //     }
-    //      else if(tokens->type == TOKEN_HEREDOC || tokens->type == TOKEN_APPEND)
-    //      {
-    //         if (!tokens->next || tokens->next->type != TOKEN_WORD)
-    //                 return (printf("Syntax error near unexpected token\n"), 0);
-    //      }
-    //     else if (tokens->type == TOKEN_REDIRECT_IN || tokens->type == TOKEN_REDIRECT_OUT)
-    //     {
-    //         if (!tokens->next)
-    //                 return (printf("Syntax error: expected filename\n"), 0);
-    //         else if ((tokens->next->type) && tokens->next->type != TOKEN_WORD)
-    //                 return (printf("Syntax error: expected filename\n"), 0);
-    //     }
-    //     tokens = tokens->next;
     if (!token_loop(tokens))
         return (0);
     return (1);
 }
-
-// int arg_count(t_token *tokens)
-// {
-//     int count;
-
-//     count = 0;
-//     // if (tokens->type == TOKEN_PIPE)
-//     //     tokens = tokens->next;
-//     while (tokens && tokens-> type == TOKEN_WORD)
-//     {
-//           count++; 
-//           tokens = tokens->next;
-//           if (tokens && tokens->type == TOKEN_PIPE)
-//                 break ;
-//           if (tokens && tokens->type != TOKEN_WORD)
-//                 tokens = tokens->next;
-//     }
-//     return(count);
-// }
 
 int arg_count(t_token *tokens)
 {
