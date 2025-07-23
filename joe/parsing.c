@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/20 18:32:57 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/23 23:08:53 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,71 +14,30 @@
 
 int    check_quotes(t_token *token, char *str)
 {
-    int s_quote;
-    int d_quote;
     int i;
 
-    s_quote = 0;
-    d_quote = 0;
     i = 0;
 
     while (str[i])
     {
         if (str[i] == '"')
         {
-          //  if (str[i + 1])
                 i++;
             while (str[i] && str[i] != '"')
-            {
-                
-                // if (s_quote == 1)
-                // s_quote = 0;
-                // else
-                //     s_quote = 1;
-                i++;
-            }
+                   i++;
             if (str[i] != '"' || i == 0)
-            {
-                 printf("Error: no closing quotes\n");
-                return (0);
-            }
+                  return(printf("Error: no closing quotes\n"), 0);
         }
         else if (str[i] == '\'')
         {
-       //     if (str[i + 1])
                 i++;
             while (str[i] && str[i] != '\'')
-            {
-            //     if (d_quote == 1)
-            //         d_quote = 0;
-            // else
-            //     s_quote = 1;
-                i++;
-            }
+                    i++;
             if (str[i] != '\'' || i == 0)
-            {
-                 printf("Error: no closing quotes\n");
-                return (0);
-            }
+                    return(printf("Error: no closing quotes\n"), 0);
         }
         i++;
     }
-    //     while (token)
-    // {
-    //     if (token->value[0] == '\'')
-    //     {
-    //         if (s_quote == 1)
-    //             s_quote = 0;
-    //         else
-    //             s_quote = 1;
-    //     }
-    //     token = token->next;
-    // }
-    // if (s_quote != 0 || d_quote != 0)
-    // {
-    //     printf("Error: no closing quotes\n");
-    //     return(0);
-    // }
     return (1);
 }
 
@@ -91,10 +50,7 @@ int check_tokens (t_token *tokens)
     if (!tokens)
         return (0);
 if (tokens->type == TOKEN_PIPE)
-        {
-            printf("Syntax error, invalid token at start\n");
-            return (0);
-        }
+           return(printf("Syntax error, invalid token at start\n"),0);
         if (tokens->type == TOKEN_VARIABLE && !tokens->next)
         {
             printf("Syntax error, invalid token at start\n");
