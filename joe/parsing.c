@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/24 21:01:16 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/24 21:55:42 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -353,6 +353,12 @@ t_cmd *handle_pipes(t_cmd *cmds, t_token *tokens, t_env *envp)
             cmds = cmds->next;
         return (cmds);
 }
+
+void handle_join (t_cmd *cmds, int i)
+{
+            cmds->args[i - 1] = ft_strjoin(cmds->args[i - 1], cmds->args[i]);
+            cmds->args[i] = NULL;
+}
 t_token *cmd_loop(t_token *tokens, t_cmd *cmds, int type, t_env *envp)
 { 
     int i;
@@ -372,10 +378,7 @@ t_token *cmd_loop(t_token *tokens, t_cmd *cmds, int type, t_env *envp)
             i++;
        i = i - 1;
         if (i > 0 && !tokens->new_word && type != TOKEN_VARIABLE)
-        {
-            cmds->args[i - 1] = ft_strjoin(cmds->args[i - 1], cmds->args[i]);
-            cmds->args[i] = NULL;
-        }
+                handle_join(cmds, i);
         if (tokens->type == TOKEN_VARIABLE)
             tokens= tokens->next;
         tokens = tokens->next;
