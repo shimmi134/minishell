@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/24 21:55:42 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/24 22:39:01 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,14 +89,17 @@ int arg_count(t_token *tokens)
 {
     int count = 0;
 
+    if (tokens)
+        count = 1;
     while (tokens && tokens->type != TOKEN_PIPE)
     {
-        if (tokens->type == TOKEN_WORD)
-            count++;
+        if (tokens->next && tokens->type == TOKEN_WORD && tokens->next->new_word == 1)
+                count++;
         tokens = tokens->next;
     }
     return count;
 }
+
 
 t_cmd *new_cmd_token(t_token *tokens, t_env *envp)
 {
@@ -106,7 +109,8 @@ t_cmd *new_cmd_token(t_token *tokens, t_env *envp)
     i = 0;
     t_cmd *cmd = malloc(sizeof(t_cmd));
     count = arg_count(tokens);
-        cmd->args = calloc(101 + 1, sizeof(char *));
+    printf("count = %d\n", count);
+        cmd->args = calloc((count + 2), sizeof(char *));
     if (!cmd->args)
         return(NULL);
 	cmd->args[count] = NULL;    
