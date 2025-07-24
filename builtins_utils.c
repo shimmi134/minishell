@@ -143,18 +143,31 @@ int	do_cd(t_shell *elem, t_env **env)
 	t_env	*temp;
 	int		d;
 
-	if (elem->command->args[0] == NULL || !ft_strncmp("~\0",
-			elem->command->args[0], 2))
+	if (elem->command->args[0] == NULL || !ft_strncmp("~",
+			elem->command->args[0], 1))
 	{
 		temp = *env;
-		if (!ft_strncmp("~\0", elem->command->args[0], 2))
-			free(elem->command->args[0]);
 		while (temp && ft_strncmp(temp->key, "HOME", 4) != 0)
 			temp = temp->next;
 		if (temp == NULL)
 			return (printf("cd: HOME not set\n"), 1);
 		else
-			elem->command->args[0] = ft_strdup(temp->value);
+		{
+			if (!ft_strncmp("~", elem->command->args[0], 1))
+			{
+				str = elem->command->args[0];
+				if (ft_strchr(elem->command->args[0], '/') != NULL)
+				{
+					oldpwd = ft_strchr(elem->command->args[0], '/');
+					elem->command->args[0] = ft_strjoin(temp->value, oldpwd);
+					free(str);
+				}
+			}
+			else {
+				elem->command->args[0] = ft_strdup(temp->value);
+			}
+			
+		}
 	}
 	oldpwd = getcwd(NULL, 0);
 	i = chdir(elem->command->args[0]);

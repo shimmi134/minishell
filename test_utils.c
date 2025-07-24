@@ -107,10 +107,6 @@ void	exec_command(t_shell *elem, t_env **env, char **envp)
 	exit(127);
 }
 
-int	corr_input(t_shell *elem)
-{
-	return !(ft_lensplit(elem->command->args) > 1);
-}
 t_env *sort_list(t_env **env)
 {
     t_env *temp;

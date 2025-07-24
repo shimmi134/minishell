@@ -69,146 +69,7 @@ void free_penv(char **penv)
 		free(penv[i++]);
 	free(penv);
 }
-/*
-void do_commands(t_shell *elem, t_env **env, int ac)
-{
-    int pid[ac];
-    int p[2][2] = {{-1, -1}, {-1, -1}};
-    int fd;
-    int count = 0;
-    int old_stdout = dup(STDOUT_FILENO);
-    char **penv;
-	int *result;
 
-	penv = NULL;
-	for (int i = 0; i < ac; i++)
-		pid[i] = -3;
-    while (elem != NULL && elem->type != NULL)
-    {
-        if (elem->next != NULL)
-        {
-            if (pipe(p[count % 2]) == -1)
-            {
-                perror("pipe");
-                exit(1);
-            }
-        }
-        if (!ft_strncmp(elem->type, "command", ft_strlen("command")))
-        {
-			
-            pid[count] = fork();
-            if (pid[count] == -1)
-            {
-				if (penv)
-				{
-			 		free_penv(penv);
-			 		penv = NULL;
-				}
-                perror("fork");
-                exit(1);
-            }
-        }
-        if (!ft_strncmp(elem->type, "built-in", ft_strlen("built-in")) || pid[count] == 0)
-        {
-            if (count > 0 && pid[count] == 0) // Not first command
-            {
-                if (dup2(p[(count - 1) % 2][0], STDIN_FILENO) == -1)
-                {
-                    perror("dup2 stdin");
-                    exit(1);
-                }
-            }
-
-            if (elem->next != NULL) // Not last command
-            {
-                if (dup2(p[count % 2][1], STDOUT_FILENO) == -1)
-                {
-                    perror("dup2 stdout");
-                    exit(1);
-                }
-            }
-
-            if (elem->command->infile != NULL)
-            {
-                fd = open(elem->command->infile, O_RDONLY);
-                if (fd == -1 || dup2(fd, STDIN_FILENO) == -1)
-                {
-                    perror(elem->command->infile);
-                    exit(1);
-                }
-                close(fd);
-            }
-            if (elem->command->outfile != NULL)
-            {
-                fd = elem->command->append ?
-                    open(elem->command->outfile, O_WRONLY | O_CREAT | O_APPEND, 0644) :
-                    open(elem->command->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-                if (fd == -1 || dup2(fd, STDOUT_FILENO) == -1)
-                {
-                    perror(elem->command->outfile);
-                    exit(1);
-                }
-                close(fd);
-            }
-            if (!ft_strncmp(elem->type, "command", ft_strlen("command")))
-            {
-				if (elem->command->outfile == NULL && elem->next == NULL)
-					dup2(old_stdout, STDOUT_FILENO);
-				if (count > 0)
-					close(p[(count-1)%2][1]);
-				if (elem->next != NULL)
-					close(p[count%2][0]);
-				if (p[count%2][1] != -1)
-					close(p[count%2][1]);
-				penv = create_envp(*env);
-                exec_command(elem, env, penv);
-            }
-            else
-            {
-				if (elem->command->outfile == NULL && elem->next == NULL)
-					dup2(old_stdout, STDOUT_FILENO);
-                *(elem->exit_status_code) = do_builtins(elem, env);
-				if (count > 0)
-					close(p[(count-1)%2][1]);
-				if (elem->next == NULL)
-					close(p[count%2][0]);
-				if (p[count%2][1] != -1)
-					close(p[count%2][1]);
-            }
-        }
-        else
-        {
-            if (count > 0)
-                close(p[(count - 1) % 2][0]);
-            if (elem->next != NULL)
-                close(p[count % 2][1]);
-			if (p[count%2][1] != -1)
-				close(p[count%2][1]);
-        }
-        count++;
-		result = elem->exit_status_code;
-        elem = elem->next;
-    }
-	int i = 0;
-	int status;
-    while (i < count)
-	{
-		if (pid[i] != -3)
-		{
-			waitpid(pid[i],&status, 0);
-			if (WIFEXITED(status))
-				*(result) = WEXITSTATUS(status);
-			else 
-				*(result) = 127;
-		}
-		i++;
-	}
-    dup2(old_stdout, STDOUT_FILENO);
-	close(old_stdout); //not
-	if (penv)
-		free_penv(penv);
-}
-*/
 void do_commands(t_shell *elem, t_env **env, int ac)
 {
     int *pids = calloc(ac+1, sizeof(int));
@@ -227,6 +88,15 @@ void do_commands(t_shell *elem, t_env **env, int ac)
         // Handle standalone built-in without forking
         if (is_builtin && !has_next)
         {
+            if (elem->command->outfile)
+            {
+                int flags = elem->command->append ? (O_WRONLY|O_CREAT|O_APPEND)
+                                                  : (O_WRONLY|O_CREAT|O_TRUNC);
+                int fd = open(elem->command->outfile, flags, 0644);
+                if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
+                    perror(elem->command->outfile), exit(1);
+                close(fd);
+            }
             int code = do_builtins(elem, env);
             *(elem->exit_status_code) = code;
             last_status_ptr = elem->exit_status_code;
@@ -277,7 +147,7 @@ void do_commands(t_shell *elem, t_env **env, int ac)
                 close(fd);
             }
 
-            if (is_cmd)
+            if (is_cmd && elem->command->cmd != NULL)
             {
                 penv = create_envp(*env);
                 exec_command(elem, env, penv);
@@ -378,6 +248,15 @@ char **create_envp(t_env *env)
 	return (penv);
 }
 
+void create_shlvl(t_env *tail)
+{
+    t_env *new_node;
+
+	new_node = create_node("SHLVL=2");
+	tail->next = new_node;
+	new_node->next = NULL;
+
+}
 
 t_env *copy_env(char *envp[])
 {
@@ -405,11 +284,7 @@ t_env *copy_env(char *envp[])
         i++;
     }
 	if (!shlvl)
-	{
-		new_node = create_node("SHLVL=2");
-		tail->next = new_node;
-		new_node->next = NULL;
-	}
+		create_shlvl(tail);
     return (head);
 }
 
@@ -533,8 +408,6 @@ int	main(int argc, char *argv[], char *envp[])
 					break ;
 				}
 				hd_temp = t_head;
-				//while (hd_temp->next)
-				//	hd_temp = hd_temp->next;
 				if (hd_temp->heredoc_delim)
 				{
 					heredoc = init_heredoc_struct(hd_temp);
@@ -577,9 +450,8 @@ int	main(int argc, char *argv[], char *envp[])
 	    free(exit_status);
 	if (line)
 		rl_free(line);
-        if (env)
-	     env = free_env_list_tmp(env);
+	if (env)
+		env = free_env_list_tmp(env);
     clear_history();
-
 	return (0);
 }
