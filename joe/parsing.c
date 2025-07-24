@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/24 22:39:01 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/24 22:41:38 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ t_cmd *new_cmd_token(t_token *tokens, t_env *envp)
     i = 0;
     t_cmd *cmd = malloc(sizeof(t_cmd));
     count = arg_count(tokens);
-    printf("count = %d\n", count);
+   // printf("count = %d\n", count);
         cmd->args = calloc((count + 2), sizeof(char *));
     if (!cmd->args)
         return(NULL);
@@ -408,7 +408,7 @@ t_cmd *init_cmds(t_token *tokens, t_env *envp)
         cmds->cmd = cmds->args[0];
         shift_left(cmds->args);
     }
-     print_cmd_list(head);
+ //    print_cmd_list(head);
     return (head);
 }
 
