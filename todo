@@ -1,1 +1,9 @@
 norme!
+
+minishell> cd ~
+minishell> ls
+Error: Permission denied
+minishell> 
+(on 42 pcs)
+
+env leaks with >a

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/20 20:00:05 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/24 22:41:52 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -371,6 +371,9 @@ int	main(int argc, char *argv[], char *envp[])
 	int			*exit_status;
 	t_heredoc	*heredoc;
 
+    head = NULL;
+    t_head = NULL;
+    
 	if (!envp || envp[0] == NULL)
 		return (printf("Error, no env detected.\n"), 1);
 	env = copy_env(envp);
@@ -398,6 +401,7 @@ int	main(int argc, char *argv[], char *envp[])
 		{
 			node = lexer(line);
 			head = node;
+        //    print_list(head);
 			if (check_tokens(head))
 			{
 				t_head = init_cmds(node, env);
@@ -446,12 +450,12 @@ int	main(int argc, char *argv[], char *envp[])
         if (t_head)
 		    free_cmds(t_head);
 	}
-    if (exit_status)
-	    free(exit_status);
+   if (exit_status)
+	   free(exit_status);
 	if (line)
 		rl_free(line);
-	if (env)
-		env = free_env_list_tmp(env);
+    if (env)
+	      env = free_env_list_tmp(env); // causes seg on ctrl + D **sobs**
     clear_history();
 	return (0);
 }
