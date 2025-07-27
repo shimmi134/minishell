@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/24 22:04:42 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/26 20:02:35 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 			{
 				if ((*current))
 				{
-					(*current)->next = new_token(TOKEN_WORD, ft_strdup(arr), 1, 0);
+					(*current)->next = new_token(TOKEN_WORD, ft_strdup(arr), 1, new_word);
 					(*current) = (*current)->next;
 				}
 				new_word = 0;	
@@ -156,6 +156,18 @@ else
 }
 return (arr) ;
 }
+
+int init_quote_vars(char **arr, int *quote, int type, int *i)
+{
+	*arr = NULL;
+	*quote = 0;
+	if (type == TOKEN_QUOTE_DOUBLE)
+			*quote = 1;
+	else if (type == TOKEN_QUOTE_SINGLE)
+			*quote = 2;	
+			return ((*i));
+
+}
 t_token	*handle_quote(char *str, int *i, int type, t_token **current)
 {
 	char *arr;
@@ -164,17 +176,8 @@ t_token	*handle_quote(char *str, int *i, int type, t_token **current)
 	int quote;
 	int j;
 	int new_word;
-
-	arr = NULL;
-	new_word = 0;
-	quote = 0;
-	j = 0;
-	c = str[*i];
-	if (type == TOKEN_QUOTE_DOUBLE)
-			quote = 1;
-	else if (type == TOKEN_QUOTE_SINGLE)
-			quote = 2;	
-	j = *i;
+	
+	j = init_quote_vars(&arr, &quote, type, i);
 	if (str[j - 1] == ' ')
 			new_word = 1;
 	if (str[j + 1] == str[j])
