@@ -51,6 +51,8 @@ t_heredoc *init_heredoc_struct(t_cmd *cmd)
 	if (cmd->args[0])
 	{
 		heredoc->args = ft_strdup_double(cmd->args);
+		for(int i = 0; i < ft_lensplit(heredoc->args);i++)
+			printf("Heredoc args: [%s]\n", heredoc->args[i]);
 		if (!heredoc->args)
 		{
 			printf("dup_double failed\n");

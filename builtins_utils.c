@@ -143,7 +143,7 @@ int	do_cd(t_shell *elem, t_env **env)
 	t_env	*temp;
 	int		d;
 
-	if (elem->command->args[0] == NULL || !ft_strncmp("~",
+	if (elem->command->args[0] == NULL || !ft_strncmp("~\0",
 			elem->command->args[0], 1))
 	{
 		temp = *env;
@@ -153,7 +153,7 @@ int	do_cd(t_shell *elem, t_env **env)
 			return (printf("cd: HOME not set\n"), 1);
 		else
 		{
-			if (!ft_strncmp("~", elem->command->args[0], 1))
+			if (!ft_strncmp("~\0", elem->command->args[0], 1))
 			{
 				str = elem->command->args[0];
 				if (ft_strchr(elem->command->args[0], '/') != NULL)
@@ -162,10 +162,11 @@ int	do_cd(t_shell *elem, t_env **env)
 					elem->command->args[0] = ft_strjoin(temp->value, oldpwd);
 					free(str);
 				}
+				else
+					elem->command->args[0] = ft_strdup(temp->value);
 			}
-			else {
+			else 
 				elem->command->args[0] = ft_strdup(temp->value);
-			}
 			
 		}
 	}
