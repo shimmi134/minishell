@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/26 20:03:51 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/07/28 21:04:29 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,8 +179,9 @@ t_token *assign_args(t_token *tokens, t_cmd *cmds, t_env *env)
     i = 0;
     while(cmds->args[i])
         i++;
-    if (tokens && tokens->type == TOKEN_WORD)
+    if (tokens && tokens->value && tokens->type == TOKEN_WORD)
     {
+        printf("args[i] = %s\n", tokens->value);
         cmds->args[i] = ft_strdup(tokens->value); 
         i++;
     }
@@ -275,7 +276,7 @@ void handle_redirect (t_cmd *cmd, t_token *token, int type)
     }
 }
 
-void handle_heredoc (t_cmd * cmd, t_token * token)
+t_token *handle_heredoc (t_cmd * cmd, t_token * token)
 {
         cmd->heredoc = 1;
         if (token->next)
@@ -283,6 +284,7 @@ void handle_heredoc (t_cmd * cmd, t_token * token)
             cmd->heredoc_delim = ft_strdup(token->value);
         if (token->inside_single || token->inside_double)
             cmd->heredoc_quoted = 1;
+            return (token);
 }
 
 void handle_varible (t_cmd *cmd, t_token *token, t_env *envp)
@@ -320,7 +322,7 @@ t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp)
     if (type == TOKEN_REDIRECT_IN || type == TOKEN_REDIRECT_OUT)
         handle_redirect(cmd, token, type);
     else if (type == TOKEN_HEREDOC)
-        handle_heredoc(cmd, token);
+      token = handle_heredoc(cmd, token);
     else if (type == TOKEN_APPEND)
     {
         cmd->append = 1;
@@ -340,6 +342,7 @@ void shift_left(char **arr)
     
     while (arr[i + 1])
     {
+        printf("arr[i] in shift = %s\n", arr[i + 1]);
             arr[i] = arr[i + 1];
         i++;
     }
@@ -358,11 +361,30 @@ t_cmd *handle_pipes(t_cmd *cmds, t_token *tokens, t_env *envp)
         return (cmds);
 }
 
-void handle_join (t_cmd *cmds, int i)
+// void handle_join (t_cmd *cmds, int i)
+// {
+//             cmds->args[i - 1] = ft_strjoin(cmds->args[i - 1], cmds->args[i]);
+//             cmds->args[i] = NULL;
+// }
+
+void handle_join(t_cmd *cmds, int i)
 {
-            cmds->args[i - 1] = ft_strjoin(cmds->args[i - 1], cmds->args[i]);
-            cmds->args[i] = NULL;
+    char *joined;
+
+    if (!cmds->args[i - 1] || !cmds->args[i])
+        return;
+
+    char *tmp = ft_strjoin(cmds->args[i - 1], cmds->args[i]);
+free(cmds->args[i - 1]);
+cmds->args[i - 1] = tmp;
+free(cmds->args[i]);
+cmds->args[i] = NULL;
+
+printf("After join: args[%d] = %s, args[%d] = %p\n", i - 1, cmds->args[i - 1], i, cmds->args[i]);
+
+
 }
+
 t_token *cmd_loop(t_token *tokens, t_cmd *cmds, int type, t_env *envp)
 { 
     int i;
@@ -403,12 +425,13 @@ t_cmd *init_cmds(t_token *tokens, t_env *envp)
     tokens = cmd_loop(tokens, cmds, type, envp);
     if (!tokens || tokens->new_word)
     {
+        printf("enter if\n");
         while (cmds->next)
             cmds = cmds->next;
         cmds->cmd = cmds->args[0];
         shift_left(cmds->args);
     }
- //    print_cmd_list(head);
+     print_cmd_list(head);
     return (head);
 }
 
