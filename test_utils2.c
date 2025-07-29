@@ -59,16 +59,12 @@ char *join_split(char **split)
 	first = 1;
 	while (i < ft_lensplit(split))
 	{
-		//free(str);
-		//Meter =
 		str2 = str;
 		if (!first)
 			str = ft_strjoin(str, "=");
 		if (!first)
 			free(str2);
 		temp = str;
-
-		//Unir con lo de antes
 		str2 = split[i];
 		str = ft_strjoin(str, str2);
 		free(temp);
@@ -80,7 +76,7 @@ char *join_split(char **split)
 t_env   *create_node(char *env)
 {
     char    **split;
-	char	*equal;
+	char	*str;
     t_env   *node;
     int i;
 
@@ -88,6 +84,12 @@ t_env   *create_node(char *env)
     split = ft_split(env, '=');
     if (!split)
         return (NULL);
+	if (ft_strncmp(split[0], "SHLVL", 5) == 0)
+	{
+		str = split[1];
+		split[1] = ft_itoa(ft_atoi(split[1])+1);
+		free(str);
+	}
     node = malloc(sizeof(t_env));
     if (!node)
         return (NULL);

@@ -200,6 +200,8 @@ t_env *free_env_list_tmp(t_env *env)
 	return (NULL);
 }
 
+
+
 // int init_heredoc(t_cmd *hd_temp, t_env *env, char *line)
 // {
 // 	pid_t pid;

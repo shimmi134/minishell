@@ -134,13 +134,29 @@ t_env *duplicate_env(t_env* env)
 	return head;
 }
 
+int swap(t_env *temp)
+{
+	char *key;
+	char *value;
+
+	if (ft_strncmp(temp->key, temp->next->key, ft_strlen(temp->key)) > 0)
+	{
+		key = temp->key;
+		value = temp->value;
+		temp->key = temp->next->key;
+		temp->value = temp->next->value;
+		temp->next->key = key;
+		temp->next->value = value;
+		return (1);
+	}
+	return (0);
+}
+
 void sort_list(t_env *env)
 {
     t_env *temp;
     t_env *head;
     int swapped;
-	char *key;
-	char *value;
 
     if (env == NULL)
         return ;
@@ -152,15 +168,7 @@ void sort_list(t_env *env)
         temp = head;
         while (temp && temp->next) 
 		{
-            if (ft_strncmp(temp->key, temp->next->key, ft_strlen(temp->key)) > 0) {
-                key = temp->key;
-                value = temp->value;
-                temp->key = temp->next->key;
-                temp->value = temp->next->value;
-                temp->next->key = key;
-                temp->next->value = value;
-                swapped = 1;
-            }
+			swapped = swap(temp);
             temp = temp->next;
         }
     }

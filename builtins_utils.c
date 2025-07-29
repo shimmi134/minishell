@@ -221,13 +221,36 @@ int cd_back(t_shell *elem, t_env **env, char *oldpwd)
 		return (printf("OLDPWD not set correctly.\n"), 1);
 }
 
+int cd_correct(t_env **env, char *oldpwd)
+{
+	char *str;
+	t_env *temp;
+
+	str = getcwd(NULL, 0);
+	temp = in_env("PWD", env);
+	if (temp != NULL)
+	{
+		free(temp->value);
+		temp->value = str;
+	}
+	else
+		free(str);
+	temp = in_env("OLDPWD", env);
+	if (temp != NULL)
+	{
+		free(temp->value);
+		temp->value = oldpwd;
+	}
+	else
+		free(oldpwd);
+	return (0);
+}
+
 
 int	do_cd(t_shell *elem, t_env **env)
 {
 	char	*oldpwd;
 	int		i;
-	char	*str;
-	t_env	*temp;
 
 	if (elem->command->args[0] == NULL || !ft_strncmp("~\0",
 			elem->command->args[0], 1))
@@ -239,29 +262,12 @@ int	do_cd(t_shell *elem, t_env **env)
 	oldpwd = getcwd(NULL, 0);
 	i = chdir(elem->command->args[0]);
 	if (i != -1)
-	{
-		str = getcwd(NULL, 0);
-		temp = *env;
-		while (temp)
-		{
-			if (!ft_strncmp(temp->key, "PWD", 3))
-			{
-				free(temp->value);
-				temp->value = str;
-			}
-			else if (!ft_strncmp(temp->key, "OLDPWD", ft_strlen(temp->key)))
-			{
-				free(temp->value);
-				temp->value = oldpwd;
-			}
-			temp = temp->next;
-		}
-	}
+		i = cd_correct(env, oldpwd);
 	else if (!ft_strncmp("-\0", elem->command->args[0], 2))
 		i = cd_back(elem, env, oldpwd);
 	if (i == -1)
 		return (printf("cd: %s: %s\n", strerror(errno), elem->command->args[0]), 1);
-	return (0);
+	return (i);
 }
 
 int *find_newline(t_shell *elem)
@@ -321,7 +327,7 @@ int	do_pwd(void)
 	if (!buf)
 		return (perror("getcwd"), 1);
 	else if (printf("%s\n", buf) == -1)
-		return (-1);
+		return (1);
 	free(buf);
 	return (0);
 }

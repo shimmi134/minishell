@@ -210,11 +210,35 @@ int	env_len(t_env *env)
 	return (i);
 }
 
+void do_shlvl(t_env *env)
+{
+	char *str;
+
+		if (ft_atoi(env->value) >= 1000)
+			env->value = ft_itoa(1);
+		str = env->value;
+		env->value = ft_itoa(ft_atoi(env->value) + 1);
+		free(str);
+}
+
+char *create_pair(t_env *env)
+{
+	char *temp;
+	char *str;
+
+	temp = ft_strjoin(env->key, "=");
+	if (!temp)
+		return (NULL);
+	str = ft_strjoin(temp, env->value);
+	free(temp);
+	if (!str)
+		return (NULL);
+	return (str);
+}
+
 char **create_envp(t_env *env)
 {
 	char	**penv;
-	char	*str;
-	char	*str2;
 	int		i;
 	int		len;
 	
@@ -226,24 +250,12 @@ char **create_envp(t_env *env)
 	while (i < len && env)
 	{
 		if (!ft_strncmp(env->key, "SHLVL=", 6))
-		{
-			if (ft_atoi(env->value) >= 1000)
-				env->value = ft_itoa(1);
-			str2 = env->value;
-			env->value = ft_itoa(ft_atoi(env->value) + 1);
-			free(str2);
-		}
-		str = ft_strjoin(env->key, "=");
-		if (!str)
-			return (NULL);
-		str2 = ft_strjoin(str, env->value);
-		free(str);
-		if (!str2)
-			return (NULL);
-		penv[i] = str2;
+			do_shlvl(env);
+		penv[i] = create_pair(env);
 		env = env->next;
 		i++;
 	}
+
 	penv[i] = NULL;
 	return (penv);
 }
@@ -258,6 +270,13 @@ void create_shlvl(t_env *tail)
 
 }
 
+void init_env_vals(t_env **head, int *i, int *shlvl)
+{
+	*head = NULL;
+	*i = 0;
+	*shlvl = 0;
+}
+
 t_env *copy_env(char *envp[])
 {
     t_env *head;
@@ -266,12 +285,10 @@ t_env *copy_env(char *envp[])
     int i;
 	int shlvl;
 
-	head = NULL;
-	i = 0;
-	shlvl = 0;
+	init_env_vals(&head, &i, &shlvl);
     while (envp[i])
     {
-		if (!ft_strncmp(envp[i], "SHLVL=", 6))
+		if (ft_strncmp(envp[i], "SHLVL=", 6) == 0)
 			shlvl = 1;
         new_node = create_node(envp[i]);
         if (!new_node)
