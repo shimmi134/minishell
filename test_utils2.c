@@ -55,22 +55,23 @@ char *join_split(char **split)
 	char	*str2;
 
 	i = 1;
-	str = "";
+	str = ft_strdup("");
 	first = 1;
 	while (i < ft_lensplit(split))
 	{
+		//free(str);
+		//Meter =
 		str2 = str;
 		if (!first)
 			str = ft_strjoin(str, "=");
 		if (!first)
 			free(str2);
 		temp = str;
+
+		//Unir con lo de antes
 		str2 = split[i];
 		str = ft_strjoin(str, str2);
-		if (first)
-			first = 0;
-		else
-		 free(temp);
+		free(temp);
 		i++;
 	}
 	return (str);
@@ -84,7 +85,6 @@ t_env   *create_node(char *env)
     int i;
 
     i = 0;
-	//equal = ft_strchr(env, '=');
     split = ft_split(env, '=');
     if (!split)
         return (NULL);

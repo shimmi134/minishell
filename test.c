@@ -454,8 +454,8 @@ int	main(int argc, char *argv[], char *envp[])
 	   free(exit_status);
 	if (line)
 		rl_free(line);
-  //  if (env)
-//	      env = free_env_list_tmp(env); // causes seg on ctrl + D **sobs**
+    if (env)
+	      env = free_env_list_tmp(env); // causes seg on ctrl + D **sobs**
    // clear_history();
 	return (0);
 }

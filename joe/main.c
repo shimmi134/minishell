@@ -181,18 +181,19 @@ void handle_sigint(int sig_num)
 t_env *free_env_list_tmp(t_env *env)
 {
     t_env *tmp;
+	char *str;
 
 	if (!env)
 		return (NULL);
     while (env)
     {
         tmp = env->next;
-
         if (env->key)
             free(env->key);
         if (env->value)
+		{
             free(env->value);
-
+		}
         free(env);
         env = tmp;
     }
