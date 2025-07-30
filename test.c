@@ -70,101 +70,46 @@ void do_commands(t_shell *elem, t_env **env, int ac)
         bool has_next = (elem->next != NULL);
         bool is_cmd = (strncmp(elem->type, "command", 7) == 0);
         bool is_builtin = (strncmp(elem->type, "built-in", 9) == 0);
-
-        // Handle standalone built-in without forking
         if (is_builtin && !has_next)
         {
-            if (elem->command->outfile)
-            {
-                int flags = elem->command->append ? (O_WRONLY|O_CREAT|O_APPEND)
-                                                  : (O_WRONLY|O_CREAT|O_TRUNC);
-                int fd = open(elem->command->outfile, flags, 0644);
-                if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
-                    perror(elem->command->outfile), exit(1);
-                close(fd);
-            }
+			do_outfile(elem->command->outfile, elem->command->append);
             int code = do_builtins(elem, env);
             *(elem->exit_status_code) = code;
             last_status_ptr = elem->exit_status_code;
             elem = elem->next;
             continue;
         }
-
         int next_pipe[2] = {-1, -1};
         if (has_next)
         {
             if (pipe(next_pipe) < 0)
                 perror("pipe"), exit(1);
         }
-
-        // Fork for external commands or built-ins in pipeline
         int pid = fork();
         if (pid < 0)
             perror("fork"), exit(1);
-
         if (pid == 0)
         {
-            // Child
-            if (prev_fd != -1)
-                dup2(prev_fd, STDIN_FILENO);
-            if (has_next)
-                dup2(next_pipe[1], STDOUT_FILENO);
-
-            // Close fds in child
-            if (prev_fd != -1) close(prev_fd);
-            if (next_pipe[0] != -1) close(next_pipe[0]);
-            if (next_pipe[1] != -1) close(next_pipe[1]);
-
-            // File redirections
-            if (elem->command->infile)
-            {
-                int fd = open(elem->command->infile, O_RDONLY);
-                if (fd < 0 || dup2(fd, STDIN_FILENO) < 0)
-                    perror(elem->command->infile), exit(1);
-                close(fd);
-            }
-            if (elem->command->outfile)
-            {
-                int flags = elem->command->append ? (O_WRONLY|O_CREAT|O_APPEND)
-                                                  : (O_WRONLY|O_CREAT|O_TRUNC);
-                int fd = open(elem->command->outfile, flags, 0644);
-                if (fd < 0 || dup2(fd, STDOUT_FILENO) < 0)
-                    perror(elem->command->outfile), exit(1);
-                close(fd);
-            }
-            if (elem->command->cmd != NULL && is_cmd)
+			close_and_open_child(prev_fd, has_next, next_pipe);
+			do_infile(elem->command->infile);
+            do_outfile(elem->command->outfile, elem->command->append);
+            if (elem->command->cmd != NULL && is_cmd) // Have to use execute_command function in exec utils
             {
                 penv = create_envp(*env);
                 exec_command(elem, env, penv);
-                perror("exec");
-                exit(1);
             }
             else if (is_builtin)// built-in in pipeline
-            {
-                int code = do_builtins(elem, env);
-                exit(code);
-            }
+                exit(do_builtins(elem, env));
         }
         else
         {
-            // Parent
             pids[count++] = pid;
-            // Close old read end
-            if (prev_fd != -1) close(prev_fd);
-            // Close write end of new pipe
-            if (has_next) close(next_pipe[1]);
-            // Next prev_fd is read end of new pipe
-            prev_fd = has_next ? next_pipe[0] : -1;
+			prev_fd = close_parent(prev_fd, has_next, next_pipe);
         }
-
         last_status_ptr = elem->exit_status_code;
         elem = elem->next;
     }
-
-    // Close any leftover
     if (prev_fd != -1) close(prev_fd);
-
-    // Wait for children
     for (int i = 0; i < count; i++)
     {
         int status;
@@ -174,7 +119,6 @@ void do_commands(t_shell *elem, t_env **env, int ac)
         else
             *last_status_ptr = 127;
     }
-
     dup2(old_stdout, STDOUT_FILENO);
     close(old_stdout);
     free(pids);
