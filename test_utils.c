@@ -86,7 +86,9 @@ void	exec_command(t_shell *elem, t_env **env, char **envp)
 	char	**args;
 	char	**split;
 
-	if (access(elem->command->cmd, F_OK) != 0)
+	if (access(elem->command->cmd, F_OK) == 0 && ft_strchr(elem->command->cmd, '/') != NULL)
+		path = elem->command->cmd;
+	else
 	{
 		paths = get_paths(env);
 		if (!paths)
@@ -99,8 +101,6 @@ void	exec_command(t_shell *elem, t_env **env, char **envp)
 			exit(errno);
 		}
 	}
-	else
-		path = elem->command->cmd;
 	args = join_args(elem->command->cmd, elem->command->args);
 	execve(path, args, envp);
 	printf("Error: %s\n", strerror(errno));

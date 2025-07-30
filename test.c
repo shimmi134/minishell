@@ -43,20 +43,6 @@ int	do_builtins(t_shell *elem, t_env **env)
 	return (0);
 }
 
-void close_pipes(int p[2][2], int count, int has_next)
-{
-    if (count > 0)
-    {
-        close(p[(count - 1) % 2][0]);
-        close(p[(count - 1) % 2][1]);
-    }
-    if (!has_next && count >= 0)
-    {
-        close(p[count % 2][0]);
-        close(p[count % 2][1]);
-    }
-}
-
 void free_penv(char **penv)
 {
 	int i;
@@ -146,15 +132,14 @@ void do_commands(t_shell *elem, t_env **env, int ac)
                     perror(elem->command->outfile), exit(1);
                 close(fd);
             }
-
-            if (is_cmd && elem->command->cmd != NULL)
+            if (elem->command->cmd != NULL && is_cmd)
             {
                 penv = create_envp(*env);
                 exec_command(elem, env, penv);
                 perror("exec");
                 exit(1);
             }
-            else // built-in in pipeline
+            else if (is_builtin)// built-in in pipeline
             {
                 int code = do_builtins(elem, env);
                 exit(code);
