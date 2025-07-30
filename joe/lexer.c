@@ -55,6 +55,7 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 	if (!arr)
 		exit(EXIT_FAILURE);
 	j = 0;
+	printf("str[i] in aqw = %c\n", str[(*i)]);
 	if ((*i) > 1 && str[(*i) - 2] == ' ')
 			new_word = 1;
 	// else if ((*i) > 1 && str[(*i) - 2] == ' ')
@@ -183,6 +184,7 @@ int	ft_isascii(int c)
 }
 int assign_concat_flag(char *str, int j)
 {
+	j++;
 	// if ()
 	// if (j > 0 && str[j] == str[j + 1])
 	// 	return (0)
@@ -198,11 +200,11 @@ printf("enters??\n");
 		printf("j in flag  assign = %c\n val of j = %d\n", str[j], j);
 	if (j > 0 && str[j - 1] == ' ')
 		return (1);
-	else if (j > 0 && (str[j - 1] == '"' || str[j - 1] == '"'))
-	{
-		if (j > 0 && str[j - 2] == ' ')
-			return (1);
-	}
+	// else if (j > 0 && (str[j - 1] == '"')
+	// {
+	// 	if (j > 0 && str[j - 2] == ' ')
+	// 		return (1);
+	// }
 		return (0);
 }
 t_token	*handle_quote(char *str, int *i, int type, t_token **current)
@@ -217,6 +219,7 @@ t_token	*handle_quote(char *str, int *i, int type, t_token **current)
 	new_word = 0;
 	j = init_quote_vars(&arr, &quote, type, i);
 	printf("val of i in hq = %d\n val of j in hq = %d\n", (*i), j);
+	j = *i;
 	if (j > 0 && str[j - 1] == ' ')
 			new_word = 1;
 	if (str[j + 1] == str[j])
@@ -227,7 +230,7 @@ t_token	*handle_quote(char *str, int *i, int type, t_token **current)
 	}
 	
 		arr = add_quoted_word(str, &j , type, current);
-		printf("val of j before flag assign = %d\n", j);
+		printf("val of j before flag assign = %d\n", (*i));
 		new_word = assign_concat_flag(str, (*i));
 	if (arr)
 		token = new_token(TOKEN_WORD, arr, quote, new_word);
