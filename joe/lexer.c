@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/28 22:33:01 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/01 21:00:46 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,24 +42,18 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 	j = 0;
 	(*i)++;
 	j = (*i);
-	printf("str[i] = %c\n", str[(*i)]);
-	printf("type = %d\n", type);
 	if (type == TOKEN_QUOTE_SINGLE)
 		quote = '\'';
 	else
 		quote = '"';
 	while (str[j] && (str[j] != '\'' && str[j] != '"' && str[j] != '$'))
 				j++;
-	printf("val of j for malloc = %d\n", j);
 	arr = malloc(sizeof(char) * (j + 1));
 	if (!arr)
 		exit(EXIT_FAILURE);
 	j = 0;
-	printf("str[i] in aqw = %c\n", str[(*i)]);
 	if ((*i) > 1 && str[(*i) - 2] == ' ')
 			new_word = 1;
-	// else if ((*i) > 1 && str[(*i) - 2] == ' ')
-	// 		new_word = 1;
 	if (type == 8)
 {
 	while (str[(*i)] && str[(*i)] != '"')
@@ -71,21 +65,26 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 				arr[j] ='\0';
 				if ((*current))
 				{
-					(*current)->next = new_token(TOKEN_WORD, arr, 1, new_word);
+					if (ft_strlen(arr) == 1)
+						(*current)->next = new_token(TOKEN_WORD, ft_strdup_char(arr[0]), 1, new_word);
+					else
+						(*current)->next = new_token(TOKEN_WORD, arr, 1, new_word);
+					
+					if (arr && arr[1])
+						free(arr);
+					
 					*current = (*current)->next;
 				}
 				new_word = 0;
 			}
 			if ((*current))
 			{
-				printf("str(*i)] = %c\n", str[(*i)]);
 				(*current)->next = new_token(TOKEN_WORD, ft_strdup_char('\''), 1, new_word);
 				*current = (*current)->next;
-				printf("current = %s\n", (*current)->value);
 			}
 			new_word = 0;
-			if (arr)
-				free(arr);
+			// if (arr && arr[1])
+			// 	free(arr);
 			if (str[(*i) + 1])
 				(*i)++;
 			j = (*i);
@@ -97,6 +96,8 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 			}
 			 if (j == (*i) && str[j] != '$' && str[j] != '\'') //should work
 			 	return (NULL);
+				if (arr)
+					free(arr);
 			arr = malloc(sizeof(char) * (k + 1));
 			arr [k] = '\0';
 			j = 0;
@@ -114,6 +115,7 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 				if ((*current))
 				{
 					(*current)->next = new_token(TOKEN_WORD, arr, 1, new_word);
+					arr = NULL;
 					(*current) = (*current)->next;
 				}
 				new_word = 0;	
@@ -151,6 +153,7 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 		}
 		if (arr)
 			arr[j] = '\0';
+	//	printf("arr to be freed = %s\n", arr);
 	}
 }
 else
@@ -184,29 +187,19 @@ int	ft_isascii(int c)
 }
 int assign_concat_flag(char *str, int j)
 {
-	j++;
-	// if ()
-	// if (j > 0 && str[j] == str[j + 1])
-	// 	return (0)
-	// if (str[j] == '"' || str[j] == '\'')
-	// 	j++;
-	// if (str[j] && str[j] == ' ')
-	// 	return(1);
-	// return (0);
-//	ft_isascii
-printf("enters??\n");
-	// while (!ft_isascii(str[j]))
-	// 	j++;
-		printf("j in flag  assign = %c\n val of j = %d\n", str[j], j);
-	if (j > 0 && str[j - 1] == ' ')
-		return (1);
-	// else if (j > 0 && (str[j - 1] == '"')
-	// {
-	// 	if (j > 0 && str[j - 2] == ' ')
-	// 		return (1);
-	// }
-		return (0);
+			j--;
+		while (j >= 0 && str[j] && str[j] != '"' && str[j] != '\'' && str[j] != '$')
+				j--;
+				if (j > 0 && str[j - 1] == ' ')
+				return (1);
+			else
+				return (0);
 }
+int	ft_isalpha(int c)
+{
+	return ((c >= 65 && c <= 90) || (c >= 97 && c <= 122));
+}
+
 t_token	*handle_quote(char *str, int *i, int type, t_token **current)
 {
 	char *arr;
@@ -218,7 +211,6 @@ t_token	*handle_quote(char *str, int *i, int type, t_token **current)
 
 	new_word = 0;
 	j = init_quote_vars(&arr, &quote, type, i);
-	printf("val of i in hq = %d\n val of j in hq = %d\n", (*i), j);
 	j = *i;
 	if (j > 0 && str[j - 1] == ' ')
 			new_word = 1;
@@ -228,18 +220,38 @@ t_token	*handle_quote(char *str, int *i, int type, t_token **current)
 		*i += 1;
 		return(token);	
 	}
-	
 		arr = add_quoted_word(str, &j , type, current);
-		printf("val of j before flag assign = %d\n", (*i));
-		new_word = assign_concat_flag(str, (*i));
+	//new_word = assign_concat_flag(str, j);
+			(*i) = j;
+		//	if ((*i) > 0)
+				//(*i)--;
+		// while ((*i) >= 0 && str[(*i)] && str[(*i)] != '"' && str[(*i)] != '\'' && str[(*i)] != '$')
+		// 		(*i)--;
+		int k;
+
+		k = ft_strlen((*current)->value);
+		while (str[(*i)] != (*current)->value[k - 1])
+			(*i)--;
+	//	printf("str[i] == %c\nstr[k] == %c\n", str[(*i)], str[k]);
+	//	printf("current value = %s\nvalue of k = %d\n", (*current)->value, k);
+			// if (str[(*i) + 1] == ' ')
+			// 	new_word = 1;
+			// else
+			// new_word = 0;
+		if ((*i) > 0 && str[(*i) + 1] == ' ')
+			new_word = 1;
+		else
+			new_word = 0;
+	//	}
 	if (arr)
+	{
 		token = new_token(TOKEN_WORD, arr, quote, new_word);
+//		free(arr);
+	}
 	else
 		token = NULL;
-	
 	if (arr)
 		free(arr);
-	
 	(*i) = j;
 	return(token);
 }

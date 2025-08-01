@@ -6,7 +6,7 @@
 #    By: shimi-be <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/11 11:53:14 by shimi-be          #+#    #+#              #
-#    Updated: 2025/07/11 13:52:52 by shimi-be         ###   ########.fr        #
+#    Updated: 2025/08/01 20:58:04 by joshapir         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ OBJ = $(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIB)
-	cc $(OBJ) -L/usr/include -lreadline -lhistory $(LIB) -g -o $(NAME)
+	cc $(OBJ) -L/usr/include -lreadline -lhistory $(LIB) -g -o $(NAME) $(FLAGS)
 
 %.o: %.c $(INCLUDE) Makefile
 	cc -g -c $< -o $@

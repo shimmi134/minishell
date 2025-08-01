@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/28 21:04:29 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/01 21:05:32 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -260,6 +260,11 @@ char *expand_var(char *str, t_cmd *cmd, t_env *env)
 }
 void handle_redirect (t_cmd *cmd, t_token *token, int type)
 {
+    int token_len;
+
+    token_len = 0;
+
+    
      if (type == TOKEN_REDIRECT_IN)
     {
          if (token->next)
@@ -274,6 +279,7 @@ void handle_redirect (t_cmd *cmd, t_token *token, int type)
             free(cmd->outfile);
         cmd->outfile = ft_strdup(token->value);
     }
+   // if (!token->)
 }
 
 t_token *handle_heredoc (t_cmd * cmd, t_token * token)
@@ -291,25 +297,29 @@ void handle_varible (t_cmd *cmd, t_token *token, t_env *envp)
 {
     char *temp;
     int i;
+    char *joined;
     
     i = 0;
         while (cmd->args[i])
                 i++;
-        if (!token->inside_single)
-        {
-                if (i != 0 && !token->new_word)
+                if (!token->inside_single && i != 0 && !token->new_word)
                 { 
-                    temp = expand_var(token->next->value, cmd, envp);
-                    if (temp)
-                        cmd->args[i - 1] = ft_strjoin(cmd->args[i - 1], temp);
-            }
-            else
+                        temp = expand_var(token->next->value, cmd, envp);
+                        if (temp)
+                        {
+                            joined = ft_strjoin(cmd->args[i - 1], temp);
+                            free(cmd->args[i - 1]);
+                            cmd->args[i - 1] = joined;
+                            free(temp);
+                        }
+                }
+            else if (!token->inside_single)
                 cmd->args[i] = expand_var(token->next->value, cmd, envp);         
-        }
         else
             cmd->args[i] = token->value;
         i = 0;    
 }
+
 t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp)
 {
     int type;

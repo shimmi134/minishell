@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:03 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/28 22:33:12 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/01 20:44:40 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,7 @@ t_token *new_token(token_type type, char *value, int quote, int new_word)
 
 	if (value && value[0] != '\0' && value[1] == '\0')
 	{
+        printf("value being freed in new_token = %s\n", value);
 			 if (value)
 			 	free(value);
 	//			*value = NULL;
