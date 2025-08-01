@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/28 20:32:32 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/01 22:40:52 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,8 +124,8 @@ void free_cmds(t_cmd *head)
 		i = 0;
         if (head->cmd)
 		{
-			printf("freeing head: %s\n", head->cmd);
-
+	//		printf("freeing head: %s\n", head->cmd);
+	//printf("Freeing cmds->cmd: %p, content: %s\n", (void *)head->cmd, head->cmd);
            free(head->cmd);
 		}
 		if (head->heredoc_delim)
@@ -136,7 +136,7 @@ void free_cmds(t_cmd *head)
 			free(head->outfile);
 		while (head->args[i])
 		{
-			printf("freeing arg: %s\n", head->args[i]);
+		//	printf("freeing arg: %s\n", head->args[i]);
 
 			free(head->args[i++]);
 		}

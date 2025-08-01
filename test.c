@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/28 22:17:01 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/01 22:39:17 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -347,7 +347,7 @@ int	main(int argc, char *argv[], char *envp[])
 		{
 			node = lexer(line);
 			head = node;
-            print_list(head);
+      //      print_list(head);
 			if (check_tokens(head))
 			{
 				t_head = init_cmds(node, env);

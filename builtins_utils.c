@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shimi-be <shimi-be@student.42barcelon      +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:56:30 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/19 16:51:42 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/01 22:32:53 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,10 @@ int cd_home(t_shell *elem, t_env **env)
 				free(str);
 			}
 			else
+			{
+				free(elem->command->args[0]);
 				elem->command->args[0] = ft_strdup(temp->value);
+			}
 		}
 		else 
 			elem->command->args[0] = ft_strdup(temp->value);

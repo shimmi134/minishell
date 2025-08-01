@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/01 21:05:32 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/01 22:41:08 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,7 +181,6 @@ t_token *assign_args(t_token *tokens, t_cmd *cmds, t_env *env)
         i++;
     if (tokens && tokens->value && tokens->type == TOKEN_WORD)
     {
-        printf("args[i] = %s\n", tokens->value);
         cmds->args[i] = ft_strdup(tokens->value); 
         i++;
     }
@@ -352,7 +351,7 @@ void shift_left(char **arr)
     
     while (arr[i + 1])
     {
-        printf("arr[i] in shift = %s\n", arr[i + 1]);
+    //    printf("arr[i] in shift = %s\n", arr[i + 1]);
             arr[i] = arr[i + 1];
         i++;
     }
@@ -435,13 +434,12 @@ t_cmd *init_cmds(t_token *tokens, t_env *envp)
     tokens = cmd_loop(tokens, cmds, type, envp);
     if (!tokens || tokens->new_word)
     {
-        printf("enter if\n");
         while (cmds->next)
             cmds = cmds->next;
         cmds->cmd = cmds->args[0];
         shift_left(cmds->args);
     }
-     print_cmd_list(head);
+   //  print_cmd_list(head);
     return (head);
 }
 
