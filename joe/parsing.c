@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/01 22:41:08 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/02 00:50:08 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,7 +250,7 @@ char *expand_var(char *str, t_cmd *cmd, t_env *env)
                 val = ft_strdup(env->value);
                 return(val);
         }
-        else if (str[0] == '?' && !str[1])
+        else if (cmd && str[0] == '?' && !str[1])
                 cmd->exit_status = 1;
         env = env->next;
         i++;
@@ -379,7 +379,7 @@ t_cmd *handle_pipes(t_cmd *cmds, t_token *tokens, t_env *envp)
 void handle_join(t_cmd *cmds, int i)
 {
     char *joined;
-
+printf("Before join: args[%d] = %s, args[%d] = %s\n", i - 1, cmds->args[i - 1], i, cmds->args[i]);
     if (!cmds->args[i - 1] || !cmds->args[i])
         return;
 

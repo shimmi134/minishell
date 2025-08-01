@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/01 21:00:46 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/02 00:59:43 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 			 if (j == (*i) && str[j] != '$' && str[j] != '\'') //should work
 			 	return (NULL);
 			arr = malloc(sizeof(char) * (k + 1));
-			arr [k + 1] = '\0';
+			arr [k] = '\0';
 			j = 0;
 			k = 0;
 		}
@@ -474,7 +474,29 @@ t_token *lexer_loop (char *str, t_token *head, t_token **current, int *i)
 	return (head);
 }
 
-t_token *lexer (char *str)
+t_token *check_flags(t_token *token, t_env *env)
+{
+	t_token *head;
+	char *tmp;
+	
+	head = token;
+	tmp = NULL;
+	while (token)
+	{
+		if (token->type == TOKEN_VARIABLE && token->next)
+		{
+			tmp = expand_var(token->next->value, NULL, env);
+			if (!tmp && token->next->next)
+				token->next->next->new_word = 1;
+		}
+		token = token->next;
+	}
+	if (tmp)
+		free (tmp);
+	return (head);
+}
+
+t_token *lexer (char *str, t_env *env)
 {
 	int 	i;
 	int 	j;
@@ -492,5 +514,6 @@ t_token *lexer (char *str)
 	
 	head = NULL;
 	head = lexer_loop(str, head, &current, &i);
+	head = check_flags(head, env);
 	return(head);
 }

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/27 04:30:08 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/02 00:51:36 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,8 +160,7 @@ t_env					*create_node(char *env);
 t_env					*create_env_node(char *arg, t_env **env, int flag, char *str);
 t_token					*new_token(token_type type, char *value, int flag,
 							int new_word);
-t_token					*lexer(char *str);
-t_token					*lexer(char *str);
+t_token					*lexer(char *str, t_env *env);
 t_token					*add_word(char *str, int *i);
 t_token					*handle_quote(char *str, int *i, int type,
 							t_token **current);
