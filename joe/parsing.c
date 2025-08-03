@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/02 00:50:08 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/04 01:16:11 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ int token_loop (t_token *tokens)
                     return (printf("Syntax error: expected filename\n"), 0);
             else if ((tokens->next->type) && tokens->next->type != TOKEN_WORD)
                     return (printf("Syntax error: expected filename\n"), 0);
+            if (tokens->next->next)
+                return ((printf("Syntax error: unexpected token `%s'\n", tokens->next->next->value), 0));
         }
         tokens = tokens->next;
 }
@@ -257,7 +259,7 @@ char *expand_var(char *str, t_cmd *cmd, t_env *env)
     }
     return(NULL);
 }
-void handle_redirect (t_cmd *cmd, t_token *token, int type)
+t_token *handle_redirect (t_cmd *cmd, t_token *token, int type)
 {
     int token_len;
 
@@ -278,7 +280,8 @@ void handle_redirect (t_cmd *cmd, t_token *token, int type)
             free(cmd->outfile);
         cmd->outfile = ft_strdup(token->value);
     }
-   // if (!token->)
+ //  token = token->next;
+   return (token);
 }
 
 t_token *handle_heredoc (t_cmd * cmd, t_token * token)
@@ -329,7 +332,7 @@ t_token *assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp)
 
     type = token->type;
     if (type == TOKEN_REDIRECT_IN || type == TOKEN_REDIRECT_OUT)
-        handle_redirect(cmd, token, type);
+       token =  handle_redirect(cmd, token, type);
     else if (type == TOKEN_HEREDOC)
       token = handle_heredoc(cmd, token);
     else if (type == TOKEN_APPEND)
@@ -394,6 +397,7 @@ t_token *cmd_loop(t_token *tokens, t_cmd *cmds, int type, t_env *envp)
     int i;
     while (tokens)
     {
+        printf("token in while loop = %s\n", tokens->value);
         i = 0;
          type = tokens->type;
          if (type == TOKEN_PIPE)
@@ -434,7 +438,7 @@ t_cmd *init_cmds(t_token *tokens, t_env *envp)
         cmds->cmd = cmds->args[0];
         shift_left(cmds->args);
     }
-   //  print_cmd_list(head);
+     print_cmd_list(head);
     return (head);
 }
 
