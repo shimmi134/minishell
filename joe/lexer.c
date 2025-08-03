@@ -244,10 +244,7 @@ t_token	*handle_quote(char *str, int *i, int type, t_token **current)
 			new_word = 0;
 	//	}
 	if (arr)
-	{
 		token = new_token(TOKEN_WORD, arr, quote, new_word);
-//		free(arr);
-	}
 	else
 		token = NULL;
 	if (arr)

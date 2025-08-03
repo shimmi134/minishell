@@ -379,7 +379,6 @@ t_cmd *handle_pipes(t_cmd *cmds, t_token *tokens, t_env *envp)
 void handle_join(t_cmd *cmds, int i)
 {
     char *joined;
-printf("Before join: args[%d] = %s, args[%d] = %s\n", i - 1, cmds->args[i - 1], i, cmds->args[i]);
     if (!cmds->args[i - 1] || !cmds->args[i])
         return;
 
@@ -388,10 +387,6 @@ free(cmds->args[i - 1]);
 cmds->args[i - 1] = tmp;
 free(cmds->args[i]);
 cmds->args[i] = NULL;
-
-printf("After join: args[%d] = %s, args[%d] = %p\n", i - 1, cmds->args[i - 1], i, cmds->args[i]);
-
-
 }
 
 t_token *cmd_loop(t_token *tokens, t_cmd *cmds, int type, t_env *envp)

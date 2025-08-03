@@ -95,7 +95,7 @@ t_token *new_token(token_type type, char *value, int quote, int new_word)
      //   return(token);
 //    }
     token->type = type;
-    if (value[0] == '$' && !value[1] || value[1] =='"' || value[1] == '"')
+    if (value[0] == '$' && (!value[1] || value[1] =='"' || value[1] == '"'))
         token->value = ft_strdup_char('$');
     else if (type == TOKEN_WORD)
         token->value = ft_strdup(value);
@@ -127,7 +127,7 @@ t_token *new_token(token_type type, char *value, int quote, int new_word)
     //else
     //  token->type = TOKEN_WORD;
     token->next = NULL;
-
+   
 	if (value && value[0] != '\0' && value[1] == '\0')
 	{
   //      printf("value being freed in new_token = %s\n", value);
@@ -135,6 +135,6 @@ t_token *new_token(token_type type, char *value, int quote, int new_word)
 			 	free(value);
 	//			*value = NULL;
 	}
-	
+    
     return (token);
 }
