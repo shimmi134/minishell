@@ -1,3 +1,5 @@
 echo "$USE'"
 
 echo ' "test"'
+
+echo "$U"
