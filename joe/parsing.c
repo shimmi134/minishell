@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/04 01:16:11 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/04 04:11:20 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -397,7 +397,6 @@ t_token *cmd_loop(t_token *tokens, t_cmd *cmds, int type, t_env *envp)
     int i;
     while (tokens)
     {
-        printf("token in while loop = %s\n", tokens->value);
         i = 0;
          type = tokens->type;
          if (type == TOKEN_PIPE)
@@ -438,7 +437,7 @@ t_cmd *init_cmds(t_token *tokens, t_env *envp)
         cmds->cmd = cmds->args[0];
         shift_left(cmds->args);
     }
-     print_cmd_list(head);
+    // print_cmd_list(head);
     return (head);
 }
 
