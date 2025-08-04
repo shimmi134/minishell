@@ -19,3 +19,10 @@ minishell>
 
 env leaks with >a
 need to correct ls -la > out taking out as a parameter
+
+
+
+
+cd /home/$USER/Documents/
+
+bash expands the var in paths
