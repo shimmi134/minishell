@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/04 05:29:37 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/07 01:02:15 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,8 +243,13 @@ t_token	*handle_quote(char *str, int *i, int type, t_token **current)
 		else
 			new_word = 0;
 	//	}
-	if (arr)
+	if (arr && arr[1])
+		token = new_token(TOKEN_WORD, ft_strdup(arr), quote, new_word);
+	else if (arr)
+	{
 		token = new_token(TOKEN_WORD, arr, quote, new_word);
+		arr = NULL;
+	}
 	else
 		token = NULL;
 	if (arr)
