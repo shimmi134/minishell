@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/01 22:40:52 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/07 07:39:08 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,13 @@ void free_tokens(t_token *head)
     while (head)
     {
         if (head->value)
+		{
+//			printf("freeing: %s\n", head->value);
+	//		printf("address = %p\n", head->value);
             free(head->value);
+		}
 		tmp = head->next;
+		//printf("freeing head: %p\n", head);
 		free(head);
         head = tmp;
     }

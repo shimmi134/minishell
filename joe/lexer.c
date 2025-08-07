@@ -6,19 +6,31 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/07 01:02:15 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/07 07:40:53 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 
-int skip (char *str, int i)
+int skip(char *str, int i)
 {
-	while ((str[i]) && (str[i] == ' '))
-                i++;
+	int len;
+
+	if (!str)
+		return (i);
+
+	len = ft_strlen(str);
+	if (i >= len)
+		return (i);
+
+	while (i < len && str[i] == ' ')
+		i++;
+
 	return (i);
 }
+
+
 /*
 void add_token(t_token *lst, char c)
 {
@@ -48,9 +60,16 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 		quote = '"';
 	while (str[j] && (str[j] != '\'' && str[j] != '"' && str[j] != '$'))
 				j++;
-	arr = malloc(sizeof(char) * (j + 1));
-	if (!arr)
-		exit(EXIT_FAILURE);
+	if (j > (*i))
+	{
+		
+		arr = malloc(sizeof(char) * (j + 1));
+		if (!arr)
+			exit(EXIT_FAILURE);
+//		printf("address after mallloc = %p\n", arr);
+	}
+	else 
+		arr = NULL;
 	j = 0;
 	if ((*i) > 1 && str[(*i) - 2] == ' ')
 			new_word = 1;
@@ -151,20 +170,28 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 			j++;
 			(*i)++;
 		}
+	//	printf("val of j = %d\n", j);
 		if (arr)
+		{
+	//		printf("goes here\n");
 			arr[j] = '\0';
-	//	printf("arr to be freed = %s\n", arr);
+		}
+//		printf("arr to be freed = %s\n", arr);
 	}
 }
 else
 {
-	while ((str[(*i)]) && str[(*i)] != quote)
+	if (arr)
 	{
+		while ((str[(*i)]) && str[(*i)] != quote)
+		{
 			arr[j] = str[(*i)];
 			(*i)++;
 			j++;
+		}
+		printf("val of j = %d\n", j);
+		arr[j] = '\0';
 	}
-	arr[j] = '\0';
 }
 return (arr) ;
 }
@@ -185,21 +212,62 @@ int	ft_isascii(int c)
 {
 	return (c >= 0 && c <= 127);
 }
-int assign_concat_flag(char *str, int j)
+int assign_concat_flag(char *str, int *i, t_token **current)
 {
-			j--;
-		while (j >= 0 && str[j] && str[j] != '"' && str[j] != '\'' && str[j] != '$')
-				j--;
-				if (j > 0 && str[j - 1] == ' ')
-				return (1);
-			else
-				return (0);
+	int k;
+	int new_word;
+
+	new_word = 0;
+		k = ft_strlen((*current)->value);
+		if (!str || !i || !current || !(*current) || !(*current)->value)
+			return (0);
+		while (str[(*i)] != (*current)->value[k - 1])
+			(*i)--;
+		if ((*i) > 0 && str[(*i) + 1] == ' ')
+			new_word = 1;
+		else
+			new_word = 0;
+	return (new_word);
 }
+/*
+int assign_concat_flag(char *str, int *i, t_token **current)
+{
+    int k;
+    int new_word;
+    int len;
+
+    if (!str || !i || !current || !(*current) || !(*current)->value)
+        return 0;
+    len = ft_strlen(str);
+    k = ft_strlen((*current)->value);
+    if (k == 0)
+        k = 1;
+    if (*i >= len)
+        *i = len - 1;
+    while (*i >= 0 && str[*i] != (*current)->value[k - 1])
+        (*i)--;
+    if (*i >= 0 && (*i + 1) < len && str[*i + 1] == ' ')
+        new_word = 1;
+    else
+        new_word = 0;
+
+    return new_word;
+}
+*/
+
 int	ft_isalpha(int c)
 {
 	return ((c >= 65 && c <= 90) || (c >= 97 && c <= 122));
 }
 
+t_token *handle_empty_quotes(int *i, int new_word)
+{
+	t_token *token;
+
+	token = new_token(TOKEN_WORD, ft_strdup_char('\0'), 1, new_word);
+	*i += 1;
+	return(token);
+}
 t_token	*handle_quote(char *str, int *i, int type, t_token **current)
 {
 	char *arr;
@@ -215,41 +283,15 @@ t_token	*handle_quote(char *str, int *i, int type, t_token **current)
 	if (j > 0 && str[j - 1] == ' ')
 			new_word = 1;
 	if (str[j + 1] == str[j])
-	{
-		token = new_token(TOKEN_WORD, ft_strdup_char('\0'), 1, new_word);
-		*i += 1;
-		return(token);	
-	}
+		return(handle_empty_quotes(i, new_word));	
 		arr = add_quoted_word(str, &j , type, current);
-	//new_word = assign_concat_flag(str, j);
+	//	printf("arr = %s\n", arr);
 			(*i) = j;
-		//	if ((*i) > 0)
-				//(*i)--;
-		// while ((*i) >= 0 && str[(*i)] && str[(*i)] != '"' && str[(*i)] != '\'' && str[(*i)] != '$')
-		// 		(*i)--;
-		int k;
-
-		k = ft_strlen((*current)->value);
-		while (str[(*i)] != (*current)->value[k - 1])
-			(*i)--;
-	//	printf("str[i] == %c\nstr[k] == %c\n", str[(*i)], str[k]);
-	//	printf("current value = %s\nvalue of k = %d\n", (*current)->value, k);
-			// if (str[(*i) + 1] == ' ')
-			// 	new_word = 1;
-			// else
-			// new_word = 0;
-		if ((*i) > 0 && str[(*i) + 1] == ' ')
-			new_word = 1;
-		else
-			new_word = 0;
-	//	}
+			new_word = assign_concat_flag(str, i, current);
 	if (arr && arr[1])
-		token = new_token(TOKEN_WORD, ft_strdup(arr), quote, new_word);
-	else if (arr)
-	{
 		token = new_token(TOKEN_WORD, arr, quote, new_word);
-		arr = NULL;
-	}
+	else if (arr)
+		token = new_token(TOKEN_WORD, ft_strdup(arr), quote, new_word);
 	else
 		token = NULL;
 	if (arr)
@@ -455,10 +497,14 @@ t_token *lexer_loop (char *str, t_token *head, t_token **current, int *i)
 {
 	int type;
 	int quote;
+	int len;
 	t_token *tmp;
 	
+	len = ft_strlen(str);
+//	printf("value of *i before while = %d\n", (*i));
 	while (str[(*i)])
 	{
+	//	printf("lexer_loop: *i = %d, str[*i] = %c\n", *i, str[*i]);
 		(*i) = skip(str, (*i));
 		if (is_token(str[(*i)]))
 		{
@@ -467,11 +513,16 @@ t_token *lexer_loop (char *str, t_token *head, t_token **current, int *i)
 				head = quote_if(str, head, current, i);
 			else if (type != TOKEN_QUOTE_SINGLE && type != TOKEN_QUOTE_DOUBLE)
 				head = handle_no_quote(str, head, current, i);
-			(*i)++;
+				
+			if (*i + 1 < len)
+				(*i)++;
+	//		printf("value of *i before in whilee = %d\n", (*i));
 		}
+		
 		(*i) = skip(str, (*i));
 		if((str[(*i)]) && !is_token(str[(*i)]))
 			head = if_not_token(str, head, current, i);
+	//		printf("value of *i at end of while loop = %d\n", (*i));
 	}
 	return (head);
 }
