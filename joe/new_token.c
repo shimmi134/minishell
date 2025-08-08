@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:03 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/07 07:40:43 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/08 21:09:17 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ t_token *new_token(token_type type, char *value, int quote, int new_word)
     //  token->type = TOKEN_WORD;
     token->next = NULL;
    
-	if (value && value[1] == '\0' && type == TOKEN_WORD)
+	if ((value && value[1] == '\0' || !value[0]) && type == TOKEN_WORD)
 	{
   //      printf("value being freed in new_token = %s\n", value);
 			 if (value)
