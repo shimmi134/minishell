@@ -154,35 +154,39 @@ t_env* create_env_node(char *arg, t_env **env, int flag, char *str)
 	return (node);
 }
 
+void change_path(t_env* temp, t_shell* elem)
+{
+	char *str;
+	char *oldpwd;
+
+	if (!ft_strncmp("~\0", elem->command->args[0], 1))
+	{
+		str = elem->command->args[0];
+		if (ft_strchr(elem->command->args[0], '/') != NULL)
+		{
+			oldpwd = ft_strchr(elem->command->args[0], '/');
+			elem->command->args[0] = ft_strjoin(temp->value, oldpwd);
+			free(str);
+		}
+		else
+		{
+			free(elem->command->args[0]);
+			elem->command->args[0] = ft_strdup(temp->value);
+		}
+	}
+	else 
+		elem->command->args[0] = ft_strdup(temp->value);
+}
+
 int cd_home(t_shell *elem, t_env **env)
 {
 	t_env *temp;
-	char *str;
-	char *oldpwd;
 
 	temp = in_env("HOME", env);
 	if (temp == NULL)
 		return (printf("cd: HOME not set\n"), 1);
 	else
-	{
-		if (!ft_strncmp("~\0", elem->command->args[0], 1))
-		{
-			str = elem->command->args[0];
-			if (ft_strchr(elem->command->args[0], '/') != NULL)
-			{
-				oldpwd = ft_strchr(elem->command->args[0], '/');
-				elem->command->args[0] = ft_strjoin(temp->value, oldpwd);
-				free(str);
-			}
-			else
-			{
-				free(elem->command->args[0]);
-				elem->command->args[0] = ft_strdup(temp->value);
-			}
-		}
-		else 
-			elem->command->args[0] = ft_strdup(temp->value);
-	}
+		change_path(temp, elem);
 	return (0);
 }
 
