@@ -79,6 +79,12 @@ char	**join_args(char *cmd, char **args)
 	return (final_args);
 }
 
+
+void perr_exit(int errnum, char *cmd)
+{
+	perror(cmd);
+	exit(errnum);
+}
 void	exec_command(t_shell *elem, t_env **env, char **envp)
 {
 	char	*path;
@@ -86,7 +92,7 @@ void	exec_command(t_shell *elem, t_env **env, char **envp)
 	char	**args;
 	char	**split;
 
-	if (access(elem->command->cmd, F_OK) == 0 && ft_strchr(elem->command->cmd, '/') != NULL)
+	if ((access(elem->command->cmd, F_OK) == 0 && ft_strchr(elem->command->cmd, '/') != NULL) || ft_strncmp(elem->command->cmd, "", 1) == 0)
 		path = elem->command->cmd;
 	else
 	{
@@ -96,10 +102,7 @@ void	exec_command(t_shell *elem, t_env **env, char **envp)
 		split = ft_split(paths, ':');
 		path = try_paths(split, elem->command->cmd);
 		if (!path)
-		{
-			perror(elem->command->cmd);
-			exit(errno);
-		}
+			perr_exit(errno, elem->command->cmd);
 	}
 	args = join_args(elem->command->cmd, elem->command->args);
 	execve(path, args, envp);
