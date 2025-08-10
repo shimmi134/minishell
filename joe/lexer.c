@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/07 07:40:53 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/10 06:39:49 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,19 +212,26 @@ int	ft_isascii(int c)
 {
 	return (c >= 0 && c <= 127);
 }
-int assign_concat_flag(char *str, int *i, t_token **current)
+int assign_concat_flag(char *str, int i, t_token **current)
 {
 	int k;
+	int len;
 	int new_word;
 
+if (!str[i])
+	return (0);
 	new_word = 0;
 		k = ft_strlen((*current)->value);
+		len = ft_strlen(str);
 		if (!str || !i || !current || !(*current) || !(*current)->value)
 			return (0);
-		while (str[(*i)] != (*current)->value[k - 1])
-			(*i)--;
-		if ((*i) > 0 && str[(*i) + 1] == ' ')
+		while (i < len && str[i] != (*current)->value[k - 1])
+			i--;
+		if (i > 0)
+		{
+			if (str[i + 1] == ' ')
 			new_word = 1;
+		}
 		else
 			new_word = 0;
 	return (new_word);
@@ -287,7 +294,7 @@ t_token	*handle_quote(char *str, int *i, int type, t_token **current)
 		arr = add_quoted_word(str, &j , type, current);
 	//	printf("arr = %s\n", arr);
 			(*i) = j;
-			new_word = assign_concat_flag(str, i, current);
+			new_word = assign_concat_flag(str, *i, current);
 	if (arr && arr[1])
 		token = new_token(TOKEN_WORD, arr, quote, new_word);
 	else if (arr)

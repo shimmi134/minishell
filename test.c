@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/07 00:52:43 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/10 05:11:14 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -303,6 +303,24 @@ void free_shell(t_shell *element)
 	}
 }
 
+int if_valid(char *str)
+{
+	int len;
+
+	len = ft_strlen(str);
+	if (len == 3) 
+	{
+		if (str[0] == '\"' || str[0] == '\'' && (str[2] == '\"' ||  str[2] == '\'' && str[2] == '\''))
+				return(printf("%c: command not found\n", str[1]), 0);
+	}
+	else if (len == 2)
+	{
+		if (str[0] == '\"' || str[0] == '\'' && (str[1] == '\"' ||  str[1] == '\'' && str[1] == '\''))
+							return(0);
+	}
+	return (1);
+}
+
 int	main(int argc, char *argv[], char *envp[])
 {
 	char		*line;
@@ -340,6 +358,11 @@ int	main(int argc, char *argv[], char *envp[])
 			printf("exit\n");
 			break ;
 		}
+		// if (!if_valid(line))
+		// {
+		// 	free(line);
+		// 	continue;
+		// }
         if (line && *line)
                 add_history(line);
 

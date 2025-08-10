@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:03 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/08 21:09:17 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/10 06:38:35 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,3 +138,131 @@ t_token *new_token(token_type type, char *value, int quote, int new_word)
     
     return (token);
 }
+
+// void quote_loop(char *str, t_token **current, int *i, char **arr)
+// {
+// 	int j;
+// 	int new_word;
+// 	int k;
+	
+// 	new_word = 0;
+// 	j = 0;
+// 	k = 0;
+
+// 	if ((*i) > 1 && str[(*i) - 2] == ' ')
+// 			new_word = 1;
+// 	while (str[(*i)] && str[(*i)] != '"')
+// 	{
+// 		if (str[(*i)] == '\'')
+// 		{
+// 			if (j > 0)
+// 			{
+// 				*arr[j] ='\0';
+// 				if ((*current))
+// 				{
+// 					if (ft_strlen(*arr) == 1)
+// 						(*current)->next = new_token(TOKEN_WORD, ft_strdup_char(*arr[0]), 1, new_word);
+// 					else
+// 						(*current)->next = new_token(TOKEN_WORD, *arr, 1, new_word);
+					
+// 					if (*arr && *arr[1])
+// 					{
+// 						free(*arr);
+// 						*arr = NULL;
+// 					}
+// 					*current = (*current)->next;
+// 				}
+// 				new_word = 0;
+// 			}
+// 			if ((*current))
+// 			{
+// 				(*current)->next = new_token(TOKEN_WORD, ft_strdup_char('\''), 1, new_word);
+// 				*current = (*current)->next;
+// 			}
+// 			new_word = 0;
+// 			// if (arr && arr[1])
+// 			// 	free(arr);
+// 			if (str[(*i) + 1])
+// 				(*i)++;
+// 			j = (*i);
+			
+// 			while (str[j] && str[j] != '"' && str[(*i)] != '\'' && str[j] != '$') //new
+// 			{
+// 				k++;
+// 				j++;
+// 			}
+// 			 if (j == (*i) && str[j] != '$' && str[j] != '\'') //should work
+// 			 {
+// 				*arr = NULL;
+// 			 	return ;
+// 			 }
+// 				if (*arr)
+// 				{
+// 					free(*arr);
+// 					*arr = NULL;
+// 				}
+// 			*arr = malloc(sizeof(char) * (k + 1));
+// 			*arr [k] = '\0';
+// 			j = 0;
+// 			k = 0;
+// 		}
+// 		if (str[(*i)] == '$')
+// 		{
+// 		//	if (first != 0)
+// 	//		{
+// 				new_word = 0;
+// 	//			first = 1;
+// 	//		}
+// 			if (j > 0)
+// 			{
+// 				if ((*current))
+// 				{
+// 					(*current)->next = new_token(TOKEN_WORD, *arr, 1, new_word);
+// 					*arr = NULL;
+// 					(*current) = (*current)->next;
+// 				}
+// 				new_word = 0;	
+// 			}
+// 			if (*current)
+// 			{
+// 				(*current)->next = new_token(TOKEN_WORD, &str[(*i)], 1, new_word);
+// 				(*current) = (*current)->next;
+// 			}
+// 			new_word = 0;
+// 			if (*arr)
+// 				free(*arr);
+// 			if (str[(*i) + 1])
+// 				(*i)++;
+// 			j = (*i);
+// 			while (str[j] && str[j] != '"' && str[(*i)] != '\'' && str[j] != '$') //new
+// 			{
+// 				k++;
+// 				j++;
+// 			}
+			
+// 			 if (j == (*i) && str[j] != '$' && str[j] != '\'') //should work
+// 			 {
+// 				*arr = NULL;
+// 			 	return ;
+// 			 }
+// 			*arr = malloc(sizeof(char) * (k + 1));
+// 			*arr [k] = '\0';
+// 			j = 0;
+// 			k = 0;
+// 		}
+// 		j = 0;
+// 	while (str[(*i)] && str[(*i)] != '"' && str[(*i)] != '\'' && str[(*i)] != '$')
+// 		{
+// 			*arr[j] = str[(*i)];
+// 			j++;
+// 			(*i)++;
+// 		}
+// 		if (*arr)
+// 		{
+// 			printf("goes here\n");
+// 			*arr[j] = '\0';
+// 		}
+// 		printf("arr to be freed = %s\n", *arr);
+// 	}
+// //	return (*arr);
+// }
