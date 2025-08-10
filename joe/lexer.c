@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/10 16:10:38 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/10 16:28:47 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -534,10 +534,8 @@ void lexer_loop(char *str, t_token **head, t_token **current, int *i)
 	*head = NULL;
 	len = ft_strlen(str);
 	//	printf("value of *i before while = %d\n", (*i));
-	ndl("HOLA");
 	while (str[(*i)])
 	{
-		counter++;
 		//	printf("lexer_loop: *i = %d, str[*i] = %c\n", *i, str[*i]);
 		(*i) = skip(str, (*i));
 		if (is_token(str[(*i)]))
@@ -556,9 +554,6 @@ void lexer_loop(char *str, t_token **head, t_token **current, int *i)
 		(*i) = skip(str, (*i));
 		if ((str[(*i)]) && !is_token(str[(*i)]))
 			if_not_token(str, head, current, i);
-		ndl("aaaa");
-		if (counter == 10000)
-			exit(0);
 		//	printf("head in loop = %s\n", (*head)->value);
 		//		printf("value of *i at end of while loop = %d\n", (*i));
 	}
