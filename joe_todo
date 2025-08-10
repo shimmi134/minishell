@@ -3,3 +3,13 @@ echo "$USE'"
 echo ' "test"'
 
 echo "$U"
+
+<< ''""
+
+|
+
+cat -e
+^C
+
+echo "$''"
+echo '$USER'

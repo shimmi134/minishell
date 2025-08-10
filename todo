@@ -26,3 +26,16 @@ need to correct ls -la > out taking out as a parameter
 cd /home/$USER/Documents/
 
 bash expands the var in paths
+
+echo -nnnnnn-n a
+
+env | a a a 
+
+cat <-- test writing something
+
+< 
+
+export sami="hola mundo"
+export COMMAND=/usr/bin/ls
+
+expr $? + $?
