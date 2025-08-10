@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/04 04:11:20 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/10 08:37:16 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -437,7 +437,7 @@ t_cmd *init_cmds(t_token *tokens, t_env *envp)
         cmds->cmd = cmds->args[0];
         shift_left(cmds->args);
     }
-    // print_cmd_list(head);
+  //   print_cmd_list(head);
     return (head);
 }
 

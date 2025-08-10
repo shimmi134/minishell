@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/10 06:39:49 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/10 08:36:43 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,16 +217,29 @@ int assign_concat_flag(char *str, int i, t_token **current)
 	int k;
 	int len;
 	int new_word;
-
+	char quote;
 if (!str[i])
 	return (0);
 	new_word = 0;
+	if (!*current)
+		return (0);
 		k = ft_strlen((*current)->value);
 		len = ft_strlen(str);
 		if (!str || !i || !current || !(*current) || !(*current)->value)
 			return (0);
-		while (i < len && str[i] != (*current)->value[k - 1])
-			i--;
+		if (str[i] == '"' || str[i] == '\'')
+		{
+			quote = str[i];
+			if (i > 0)
+				i--;
+			while (i <= len && str[i] != (*current)->value[k - 1] && str[i] != quote)
+				i--;
+		}
+		else
+			{
+			while (i <= len && str[i] != (*current)->value[k - 1])
+				i--;
+			}
 		if (i > 0)
 		{
 			if (str[i + 1] == ' ')
@@ -291,10 +304,9 @@ t_token	*handle_quote(char *str, int *i, int type, t_token **current)
 			new_word = 1;
 	if (str[j + 1] == str[j])
 		return(handle_empty_quotes(i, new_word));	
-		arr = add_quoted_word(str, &j , type, current);
-	//	printf("arr = %s\n", arr);
-			(*i) = j;
+		arr = add_quoted_word(str, &j , type, current);	
 			new_word = assign_concat_flag(str, *i, current);
+			(*i) = j;
 	if (arr && arr[1])
 		token = new_token(TOKEN_WORD, arr, quote, new_word);
 	else if (arr)
@@ -302,7 +314,10 @@ t_token	*handle_quote(char *str, int *i, int type, t_token **current)
 	else
 		token = NULL;
 	if (arr)
+	{
+	//	printf("freeing again\n");
 		free(arr);
+	}
 	(*i) = j;
 	return(token);
 }
@@ -408,16 +423,19 @@ t_token *add_word(char *str, int *i)
 // 		return (head);
 // }
 
-t_token *handle_head(char *str, t_token **current, int *i, int type)
+void	handle_head(char *str, t_token **current, int *i, t_token **head)
 {
-	t_token *head;
+	//t_token *head;
 	t_token *tmp;
+	int type;
 
+	type = find_token_type(&str[(*i)]);
 	head = NULL;
 	tmp = NULL;
-	head = new_token(TOKEN_WORD, str, 0, 1);
-	free(head->value);
-	*current = head;
+	*head = new_token(TOKEN_WORD, str, 0, 1);
+	printf("val of head in handle_head = %s\n", (*head)->value);
+	//free(head->value);
+	*current = *head;
 	tmp = handle_quote(str, i, type, current);
 	//printf("currentt = %s\n", head->value);
 	while ((*current)->next)
@@ -428,14 +446,14 @@ t_token *handle_head(char *str, t_token **current, int *i, int type)
 		if ((*current)->next)
 			*current = (*current)->next;
 	}
-	tmp = head;
-	head = head->next;
+	//tmp = head;
+	//head = head->next;
 	//free(tmp->value);
 	free(tmp);
-	return (head);
+	//return (head);
 }
 
-t_token *quote_if(char *str, t_token *head, t_token **current, int *i)
+void	quote_if(char *str, t_token **head, t_token **current, int *i)
 {
 	t_token *tmp;
 	int new_word;
@@ -449,18 +467,23 @@ t_token *quote_if(char *str, t_token *head, t_token **current, int *i)
 					quote = 2;
 				if ((*i) > 0 && str[(*i) - 1] == ' ')
 					new_word = 1;
-				if (!head)
-					head = handle_head(str, current, i, type);
-				else
-				{
+			//	if (!head)
+				//	handle_head(str, current, i, head);
+			//	else
+		//		{
 					tmp = handle_quote(str, i, type, current);
-					if (tmp)
+					if (tmp && *head)
 					{
 						(*current)->next = tmp;
 						*current = (*current)->next;
 					}
-				}
-		return (head);
+					else if (tmp)
+					{
+						*head = tmp;
+						*current = *head;
+					}
+		//		}
+		//return (head);
 }
 
 t_token *handle_no_quote(char *str, t_token *head, t_token **current, int *i)
@@ -486,27 +509,31 @@ t_token *handle_no_quote(char *str, t_token *head, t_token **current, int *i)
 							(*i)++;
 		return (head);
 }
-t_token *if_not_token(char *str, t_token *head, t_token **current, int *i)
+void	if_not_token(char *str, t_token **head, t_token **current, int *i)
 {
-				if (!head)
+//	printf("address of head in if not token = %p\n", (*head));
+	
+				if (!*head)
 				{
-					head = add_word(str, i);
-					*current = head;
+				//	printf("reaches\n");
+					*head = add_word(str, i);
+					*current = *head;
 				}
 			else
 			{	
 				(*current)->next = add_word(str, i);
 				*current = (*current)->next;
 			}
-			return (head);
+		//	return (head);
 }
-t_token *lexer_loop (char *str, t_token *head, t_token **current, int *i)
+void	lexer_loop (char *str, t_token **head, t_token **current, int *i)
 {
 	int type;
 	int quote;
 	int len;
 	t_token *tmp;
 	
+	*head = NULL;
 	len = ft_strlen(str);
 //	printf("value of *i before while = %d\n", (*i));
 	while (str[(*i)])
@@ -517,9 +544,9 @@ t_token *lexer_loop (char *str, t_token *head, t_token **current, int *i)
 		{
 			type = find_token_type(&str[(*i)]);
 			if (type == TOKEN_QUOTE_SINGLE || type == TOKEN_QUOTE_DOUBLE)
-				head = quote_if(str, head, current, i);
+				quote_if(str, head, current, i);
 			else if (type != TOKEN_QUOTE_SINGLE && type != TOKEN_QUOTE_DOUBLE)
-				head = handle_no_quote(str, head, current, i);
+				*head = handle_no_quote(str, *head, current, i);
 				
 			if (*i + 1 < len)
 				(*i)++;
@@ -528,32 +555,34 @@ t_token *lexer_loop (char *str, t_token *head, t_token **current, int *i)
 		
 		(*i) = skip(str, (*i));
 		if((str[(*i)]) && !is_token(str[(*i)]))
-			head = if_not_token(str, head, current, i);
+			if_not_token(str, head, current, i);
+		//	printf("head in loop = %s\n", (*head)->value);
 	//		printf("value of *i at end of while loop = %d\n", (*i));
 	}
-	return (head);
+	//return (head);
 }
 
-t_token *check_flags(t_token *token, t_env *env)
+void	check_flags(t_token **token, t_env *env)
 {
 	t_token *head;
 	char *tmp;
 	
-	head = token;
+	head = *token;
 	tmp = NULL;
 	while (token)
 	{
-		if (token->type == TOKEN_VARIABLE && token->next)
+		if ((*token)->type == TOKEN_VARIABLE && (*token)->next)
 		{
-			tmp = expand_var(token->next->value, NULL, env);
-			if (!tmp && token->next->next)
-				token->next->next->new_word = 1;
+			tmp = expand_var((*token)->next->value, NULL, env);
+			if (!tmp && (*token)->next->next)
+				(*token)->next->next->new_word = 1;
 		}
-		token = token->next;
+		*token = (*token)->next;
 	}
 	if (tmp)
 		free (tmp);
-	return (head);
+		
+//	return (head);
 }
 
 t_token *lexer (char *str, t_env *env)
@@ -573,7 +602,8 @@ t_token *lexer (char *str, t_env *env)
 	j = 0;
 	
 	head = NULL;
-	head = lexer_loop(str, head, &current, &i);
-	head = check_flags(head, env);
+	current = NULL;
+	lexer_loop(str, &head, &current, &i);
+	//check_flags(&head, env);
 	return(head);
 }

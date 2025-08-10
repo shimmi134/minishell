@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/10 05:11:14 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/10 08:37:23 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -370,7 +370,7 @@ int	main(int argc, char *argv[], char *envp[])
 		{
 			node = lexer(line, env);
 			head = node;
-         //   print_list(head);
+        //    print_list(head);
 			if (check_tokens(head))
 			{
 				t_head = init_cmds(node, env);
@@ -414,11 +414,11 @@ int	main(int argc, char *argv[], char *envp[])
 			free_shell(element);
 			element = NULL;
 		}
-        if (head)
+     //   if (head)
 		    free_tokens(head);
         if (t_head)
 		    free_cmds(t_head);
-		rl_free_undo_list(); //Fixes direct leaks from readline but not sure of we can use it
+		rl_free_undo_list(); //Fixes some direct leaks from readline but not sure of we can use it
 	}
    if (exit_status)
 	   free(exit_status);
