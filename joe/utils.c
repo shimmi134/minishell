@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:07:16 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/28 20:54:46 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/11 15:01:36 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,10 @@ char	*ft_strdup(char *str)
 		return (NULL);
 	while (str[i])
 		i++;
+	//printf("val of i = %d\n)", str[i]);
 	dup = malloc(sizeof(char) * (i + 1));
-
+	if (!dup)
+		exit(0);
 	i = 0;
 	while (str[i])
 	{

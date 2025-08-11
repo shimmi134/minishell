@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/10 16:28:47 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/11 15:02:52 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,8 +179,17 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 	}
 	else
 	{
+		if (!arr)
+		{
+			printf("goes here\n");
+			j = (*i);
+			while(str[j] && str[j] != type)
+				j++;
+			arr = malloc(sizeof(char) * (j + 1));
+		}
 		if (arr)
 		{
+			j = 0;
 			while ((str[(*i)]) && str[(*i)] != quote)
 			{
 				arr[j] = str[(*i)];
@@ -229,7 +238,7 @@ int assign_concat_flag(char *str, int i, t_token **current)
 		quote = str[i];
 		if (i > 0)
 			i--;
-		while (i <= len && str[i] != (*current)->value[k - 1] && str[i] != quote)
+		while (i <= len && (k - 1) > 0 && str[i] != (*current)->value[k - 1] && str[i] != quote)
 			i--;
 	}
 	else
@@ -312,7 +321,6 @@ t_token *handle_quote(char *str, int *i, int type, t_token **current)
 		token = NULL;
 	if (arr)
 	{
-		//	printf("freeing again\n");
 		free(arr);
 	}
 	(*i) = j;
