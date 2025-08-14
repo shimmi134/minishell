@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/11 14:23:04 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/14 23:02:39 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -353,7 +353,7 @@ int	main(int argc, char *argv[], char *envp[])
 		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN);
 		line = readline("\033[1;34mminishell>\033[0m ");
-		//line = "|";
+	//	line = " \"echo\" \"$USER 'test\'\"";
 		if (line == NULL)
 		{
 			printf("exit\n");
@@ -371,42 +371,41 @@ int	main(int argc, char *argv[], char *envp[])
 		{
 			node = lexer(line, env);
 			head = node;
-            print_list(head);
+          //  print_list(head);
 			if (check_tokens(head))
 			{ 
-				;
-				// t_head = init_cmds(node, env);
-				// if (ft_strcmp(t_head->cmd, "exit") == 0)
-				// {
-				// 	free_tokens(head);
-				// 	free_cmds(t_head);
-				// 	break ;
-				// }
-				// hd_temp = t_head;
-				// if (hd_temp->heredoc_delim)
-				// {
-				// 	heredoc = init_heredoc_struct(hd_temp);
-				// 	free_tokens(head);
-                //     clear_history();
-				// 	do_struct(&element, t_head, exit_status);
-                //     hd_res = init_heredoc(heredoc, env, line, element);
-                //     free(exit_status);
-				// 	exit_status = malloc(sizeof(int));
-				// 	if (!exit_status)
-				// 		return 1;
-				// 	*exit_status = hd_res;
-				// 	free_cmds(t_head);
-				// 	head = NULL;
-				// 	t_head = NULL;
-                //     line = NULL;
-                //     env = copy_env(envp);
-				// }
-				// else
-				// {
-				// 	do_struct(&element, t_head, exit_status);
-				// 	argc = count_commands(element);
-				// 	do_commands(element, &env, argc);
-				// }
+				t_head = init_cmds(node, env);
+				if (ft_strcmp(t_head->cmd, "exit") == 0)
+				{
+					free_tokens(head);
+					free_cmds(t_head);
+					break ;
+				}
+				hd_temp = t_head;
+				if (hd_temp->heredoc_delim)
+				{
+					heredoc = init_heredoc_struct(hd_temp);
+					free_tokens(head);
+                    clear_history();
+					do_struct(&element, t_head, exit_status);
+                    hd_res = init_heredoc(heredoc, env, line, element);
+                    free(exit_status);
+					exit_status = malloc(sizeof(int));
+					if (!exit_status)
+						return 1;
+					*exit_status = hd_res;
+					free_cmds(t_head);
+					head = NULL;
+					t_head = NULL;
+                    line = NULL;
+                    env = copy_env(envp);
+				}
+				else
+				{
+					do_struct(&element, t_head, exit_status);
+					argc = count_commands(element);
+					do_commands(element, &env, argc);
+				}
 			}
             if (line)
 			    rl_free(line);

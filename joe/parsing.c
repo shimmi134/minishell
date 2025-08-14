@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/10 08:37:16 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/14 23:02:25 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int token_loop (t_token *tokens)
         }
          else if(tokens->type == TOKEN_HEREDOC || tokens->type == TOKEN_APPEND)
          {
-            if (!tokens->next || tokens->next->type != TOKEN_WORD)
+            if (!tokens->next || (tokens->next->type != TOKEN_WORD && tokens->next->type != TOKEN_VARIABLE))
                     return (printf("Syntax error near unexpected token\n"), 0);
          }
         else if (tokens->type == TOKEN_REDIRECT_IN || tokens->type == TOKEN_REDIRECT_OUT)
@@ -437,7 +437,7 @@ t_cmd *init_cmds(t_token *tokens, t_env *envp)
         cmds->cmd = cmds->args[0];
         shift_left(cmds->args);
     }
-  //   print_cmd_list(head);
+   //  print_cmd_list(head);
     return (head);
 }
 

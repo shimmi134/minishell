@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/02 00:51:36 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/13 23:20:28 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,25 @@ typedef struct s_heredoc
 	struct s_heredoc	*next;
 }						t_heredoc;
 
+typedef struct s_quote_vars
+{
+	int j;
+	int k;
+	char quote;
+	char *arr;
+	int new_word;
+	int first;
+	int type;
+	int quote_flag;
+	struct s_token		**head;
+}						t_quote_vars;
+
+typedef struct s_struct_var
+{
+	t_token **head;
+	t_token **current;
+}						t_struct_var;
+
 int						has_token(char *str);
 int						skip(char *str, int i);
 int						is_word(char *str);
@@ -162,11 +181,12 @@ t_token					*new_token(token_type type, char *value, int flag,
 							int new_word);
 t_token					*lexer(char *str, t_env *env);
 t_token					*add_word(char *str, int *i);
-t_token					*handle_quote(char *str, int *i, int type,
-							t_token **current);
+void					handle_quote(char *str, int *i, int type, t_struct_var *structs);
 t_token					*assign_args(t_token *tokens, t_cmd *cmds, t_env *env);
 t_token					*assign_ctl_tokens(t_token *token, t_cmd *cmd,
 							t_env *envp);
 token_type				find_token_type(char *str);
 t_heredoc				*init_heredoc_struct(t_cmd *cmd);
+int						assign_concat_flag(char *str, int i, t_token **current);
+void 					add_arr(t_quote_vars *vars, t_struct_var *structs, int *i);
 #endif

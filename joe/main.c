@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/07 07:39:08 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/13 18:41:48 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void print_list(t_token *head)
 			printf("[inside single quotes]");
 		if ((current != head) && !current->new_word)
 			printf("[part of prev word]");
-		if (current->value[0] == '\0')
+		if (current->value && current->value[0] == '\0')
 			printf("[empty]\n");
 		else
         	printf("-> %s\n", current->value);

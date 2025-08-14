@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/11 15:02:52 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/14 23:04:34 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,36 @@ void add_token(t_token *lst, char c)
 
 }
 	*/
+
+void init_quoted_vars(t_quote_vars *vars)
+{
+	vars->arr = NULL;
+	vars->first = 0;
+	vars->j = 0;
+	vars->k = 0;
+	vars->new_word = 0;
+	vars->quote = 0;
+	vars->type = 0;
+	vars->quote_flag = 0;
+}
+
+void free_quoted_vars(t_quote_vars *vars)
+{
+	if (!vars)
+		return;
+	if (vars->arr)
+	{
+		free(vars->arr);
+		vars->arr = NULL;
+	}
+	vars->first = 0;
+	vars->j = 0;
+	vars->k = 0;
+	vars->new_word = 0;
+	vars->quote = 0;
+	vars->type = 0;
+}
+
 char *add_quoted_word(char *str, int *i, int type, t_token **current)
 {
 	int j;
@@ -183,7 +213,7 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 		{
 			printf("goes here\n");
 			j = (*i);
-			while(str[j] && str[j] != type)
+			while (str[j] && str[j] != type)
 				j++;
 			arr = malloc(sizeof(char) * (j + 1));
 		}
@@ -201,6 +231,381 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 		}
 	}
 	return (arr);
+}
+
+void free_and_null(char **str)
+{
+	if (*str)
+		free(*str);
+	*str = NULL;
+}
+
+void flush_to_head(t_struct_var *structs, t_quote_vars *vars)
+{
+	if (ft_strlen(vars->arr) == 1)
+		*structs->head = new_token(TOKEN_WORD, ft_strdup_char(vars->arr[0]), 1, vars->new_word);
+	else
+		*structs->head = new_token(TOKEN_WORD, vars->arr, 1, vars->new_word);
+	if (vars->arr && vars->arr[1])
+	{
+		free_and_null(&vars->arr);
+	}
+	*structs->current = *structs->head;
+}
+void flush_arr_in_single(t_struct_var *structs, t_quote_vars *vars, char *str, int *i)
+{
+	if (*structs->current)
+	{
+			if (ft_strlen(vars->arr) == 1)
+				(*structs->current)->next = new_token(TOKEN_WORD, ft_strdup_char(vars->arr[0]), 1, vars->new_word);
+			else
+				(*structs->current)->next = new_token(TOKEN_WORD, vars->arr, 1, vars->new_word);
+
+			if (vars->arr && vars->arr[1])
+			{
+				free(vars->arr);
+				vars->arr = NULL;
+			}
+			*structs->current = (*structs->current)->next;
+	}
+	else
+		flush_to_head(structs, vars);
+	// {
+	// 		if (ft_strlen(vars->arr) == 1)
+	// 			*structs->head = new_token(TOKEN_WORD, ft_strdup_char(vars->arr[0]), 1, vars->new_word);
+	// 		else
+	// 			*structs->head = new_token(TOKEN_WORD, vars->arr, 1, vars->new_word);
+	// 		if (vars->arr && vars->arr[1])
+	// 		{
+	// 			free_and_null(&vars->arr);
+	// 		}
+	// 		*structs->current = *structs->head;
+	// }
+}
+void add_single(t_struct_var *structs, t_quote_vars *vars)
+{
+	if ((*structs->current))
+	{
+		(*structs->current)->next = new_token(TOKEN_WORD, ft_strdup_char('\''), 1, vars->new_word);
+		*structs->current = (*structs->current)->next;
+	}
+	else
+		{
+			*structs->head = new_token(TOKEN_WORD, ft_strdup_char('\''), 1, vars->new_word);
+			*structs->current = *structs->head;
+		}
+}
+void assign_and_null(t_quote_vars *vars)
+{
+	if (vars->k > 0)
+	{
+		vars->arr = malloc(sizeof(char) * (vars->k + 1));
+		vars->arr[vars->k] = '\0';
+		vars->j = 0;
+		vars->k = 0;
+	}
+}
+void	allocate_after_single(char *str, t_quote_vars *vars, int *i)
+{
+	while (str[vars->j] && str[vars->j] != '"' && str[(*i)] != '\'' && str[vars->j] != '$') // new
+	{
+		vars->k++;
+		vars->j++;
+	}
+	if (vars->j == (*i) && str[vars->j] != '$' && str[vars->j] != '\'') // should work
+	{
+		vars->arr = NULL;
+		return;
+	}
+	assign_and_null(vars);
+}
+
+void handle_nested_single(t_struct_var *structs, t_quote_vars *vars, char *str, int *i)
+{
+	if (vars->j > 0)
+	{
+		vars->arr[vars->j] = '\0';
+		flush_arr_in_single(structs, vars, str, i);
+		vars->new_word = 0;
+	}
+	add_single(structs, vars);
+	vars->new_word = 0;
+	if (str[(*i) + 1])
+		(*i)++;
+	vars->j = (*i);
+
+	allocate_after_single(str, vars, i);
+}
+void flush_arr_in_var(t_quote_vars *vars, t_struct_var *structs)
+{
+	if (vars->j > 0 && vars->arr)
+	{
+		
+		if (*structs->current)
+		{
+			(*structs->current)->next = new_token(TOKEN_WORD, vars->arr, 1, vars->new_word);
+			vars->arr = NULL;
+			*structs->current = (*structs->current)->next;
+		}
+		else
+		{
+			*structs->head = new_token(TOKEN_WORD, vars->arr, 1, vars->new_word);
+			vars->arr = NULL;
+			*structs->current = *structs->head;
+		}
+		vars->new_word = 0;
+	}
+}
+void handle_nested_var(t_struct_var *structs, t_quote_vars *vars, char *str, int *i)
+{
+	t_token **current;
+
+	current = structs->current;
+	
+	if (vars->first != 0)
+	{
+		vars->new_word = 0;
+		vars->first = 1;
+	}
+	if (vars->j > 0 && vars->arr)
+	{
+		
+		if (*structs->current)
+		{
+			(*structs->current)->next = new_token(TOKEN_WORD, vars->arr, 1, vars->new_word);
+			vars->arr = NULL;
+			*structs->current = (*structs->current)->next;
+		}
+		else
+		{
+			*structs->head = new_token(TOKEN_WORD, vars->arr, 1, vars->new_word);
+			vars->arr = NULL;
+			*structs->current = *structs->head;
+		}
+		vars->new_word = 0;
+	}
+	if ((*structs->current))
+	{
+		(*structs->current)->next = new_token(TOKEN_WORD, &str[(*i)], 1, vars->new_word);
+		(*structs->current) = (*structs->current)->next;
+	}
+	else
+	{
+		*structs->head = new_token(TOKEN_WORD, &str[(*i)], 1, vars->new_word);
+		*structs->current = *structs->head;
+	}	
+	vars->new_word = 0;
+	if (vars->arr)
+	{
+		free(vars->arr);
+		vars->arr = NULL;
+	}
+	if (str[(*i) + 1])
+		(*i)++;
+	vars->j = (*i);
+	while (str[vars->j] && str[vars->j] != '"' && str[(*i)] != '\'' && str[vars->j] != '$') // new
+	{
+		vars->k++;
+		vars->j++;
+	}
+	if (vars->j == (*i) && str[vars->j] != '$' && str[vars->j] != '\'') // should work
+	{
+		vars->arr = NULL;
+		return;
+	}
+	assign_and_null(vars);
+}
+void fill_arr(char *str, int *i, t_quote_vars *vars)
+{
+	while (str[(*i)] && str[(*i)] != '"' && str[(*i)] != '\'' && str[(*i)] != '$')
+	{
+		vars->arr[vars->j] = str[(*i)];
+		vars->j++;
+		(*i)++;
+	}
+}
+
+char *handle_single(t_quote_vars *vars, int *i, char *str)
+{
+	if (!vars->arr)
+	{
+		vars->j = (*i);
+		while (str[vars->j] && str[vars->j] != vars->type)
+			vars->j++;
+		vars->arr = malloc(sizeof(char) * (vars->j + 1));
+	}
+	if (vars->arr)
+	{
+		vars->j = 0;
+		while ((str[(*i)]) && str[(*i)] != vars->quote)
+		{
+			vars->arr[vars->j] = str[(*i)];
+			(*i)++;
+			vars->j++;
+		}
+		printf("val of j = %d\n", vars->j);
+		vars->arr[vars->j] = '\0';
+	}
+	vars->quote_flag = 2;
+	return (vars->arr);
+}
+char quote_type(int type)
+{
+	int quote;
+	if (type == TOKEN_QUOTE_SINGLE)
+		quote = '\'';
+	else
+		quote = '"';
+	return (quote);
+}
+
+void allocate_arr(t_quote_vars *vars)
+{
+	vars->arr = malloc(sizeof(char) * (vars->j + 1));
+	if (!(vars->arr))
+		exit(EXIT_FAILURE);
+}
+
+void handle_double(t_quote_vars *vars, int *i, char *str, t_struct_var *structs)
+{
+	t_token **current;
+
+	current = structs->current;
+	while (str[(*i)] && str[(*i)] != '"')
+	{
+		// if (vars->arr)
+		// 	add_arr(vars, current, i);
+		if (str[(*i)] == '\'')
+		{
+			handle_nested_single(structs, vars, str, i);
+		}
+		if (str[(*i)] == '$')
+			handle_nested_var(structs, vars, str, i);
+		vars->j = 0;
+		fill_arr(str, i, vars);
+		if (vars->arr)
+			vars->arr[vars->j] = '\0';
+	}
+	vars->quote_flag = 1;
+}
+
+void add_arr(t_quote_vars *vars, t_struct_var *structs, int *i)
+{
+	t_token *token;
+	t_token **current;
+
+	current = structs->current;
+	token = NULL;
+	
+	if (*structs->current)
+	{
+		if (vars->arr && vars->arr[1])
+		{
+			
+			(*structs->current)->next = new_token(TOKEN_WORD, vars->arr, vars->quote_flag, vars->new_word);
+			// vars->arr = NULL;
+			*structs->current = (*structs->current)->next;
+		}
+		else if (vars->arr)
+		{
+			(*structs->current)->next = new_token(TOKEN_WORD, ft_strdup(vars->arr), vars->quote_flag, vars->new_word);
+			*structs->current = (*structs->current)->next;
+		}
+		// else
+		// 	token = NULL;
+		if (vars->arr)
+		{
+			free(vars->arr);
+			vars->arr = NULL;
+		}
+	}
+	else
+	{
+		if (vars->arr && vars->arr[1])
+		{
+			
+			(*structs->head) = new_token(TOKEN_WORD, vars->arr, vars->quote_flag, vars->new_word);
+			// vars->arr = NULL;
+			// *structs->current = (*structs->current)->next;
+		}
+		else if (vars->arr)
+		{
+			(*structs->head) = new_token(TOKEN_WORD, ft_strdup(vars->arr), vars->quote_flag, vars->new_word);
+			//*structs->current = (*structs->current)->next;
+		}
+		// else
+		// 	token = NULL;
+		if (vars->arr)
+		{
+			free(vars->arr);
+			vars->arr = NULL;
+		}
+		*structs->current = *structs->head;
+	}
+		//(*i) = vars->j;
+		// if (*structs->current)
+		// {
+		// 	while ((*structs->current)->next)
+		// 	{
+		// 		*structs->current = (*structs->current)->next;
+		// 	}
+		// 	(*structs->current)->next = token;
+		// 	*structs->current = (*structs->current)->next;
+		// }
+		
+
+	// else if (token && !(*structs->head))
+	// {
+	// 	*structs->current = token;
+	// 	structs->head = structs->current;
+	// }
+	// if (token)
+	// {
+	// 	(*current)->next = token;
+	// 	if ((*current)->next)
+	// 		*current = (*current)->next;
+	// }
+	// if (token)
+	// 	free(token);
+}
+void add_quoted_word_2(char *str, int *i, int type, t_struct_var *structs)
+{
+	t_quote_vars *vars;
+	t_token **current;
+
+	current = structs->current;
+
+	vars = malloc(sizeof(t_quote_vars));
+	if (!vars)
+		exit(1);
+	init_quoted_vars(vars);
+	(*i)++;
+	vars->j = (*i);
+	vars->quote = quote_type(type);
+	while (str[vars->j] && (str[vars->j] != '\'' && str[vars->j] != '"' && str[vars->j] != '$'))
+		vars->j++;
+	if (vars->j > (*i))
+		allocate_arr(vars);
+	else
+		vars->arr = NULL;
+	vars->j = 0;
+	if ((*i) > 1 && str[(*i) - 2] == ' ')
+		vars->new_word = 1;
+	if (type == 8)
+		handle_double(vars, i, str, structs);
+	else
+		vars->arr = handle_single(vars, i, str);
+	// vars->new_word = assign_concat_flag(str, (*i), current);
+	if (vars->arr)
+		add_arr(vars, structs, i);
+	char *arr;
+	// if (vars->arr)
+	// 	arr = ft_strdup(vars->arr);
+	// else
+	// 	arr = NULL;
+	free_quoted_vars(vars);
+	free(vars);
+	// return (arr);
 }
 
 int init_quote_vars(char **arr, int *quote, int type, int *i)
@@ -286,15 +691,20 @@ int ft_isalpha(int c)
 	return ((c >= 65 && c <= 90) || (c >= 97 && c <= 122));
 }
 
-t_token *handle_empty_quotes(int *i, int new_word)
+void handle_empty_quotes(int *i, int new_word, t_token **current)
 {
 	t_token *token;
 
 	token = new_token(TOKEN_WORD, ft_strdup_char('\0'), 1, new_word);
 	*i += 1;
-	return (token);
+	if ((*current))
+	{
+		(*current)->next = token;
+		*current = (*current)->next;
+	}
+	// return (token);
 }
-t_token *handle_quote(char *str, int *i, int type, t_token **current)
+void handle_quote(char *str, int *i, int type, t_struct_var *structs)
 {
 	char *arr;
 	char c;
@@ -302,30 +712,56 @@ t_token *handle_quote(char *str, int *i, int type, t_token **current)
 	int quote;
 	int j;
 	int new_word;
+	t_token **current;
 
+	current = structs->current;
+	//	printf("structs->current at begining of handle_quote = %s\n", (*structs->current)->value);
 	new_word = 0;
 	j = init_quote_vars(&arr, &quote, type, i);
 	j = *i;
 	if (j > 0 && str[j - 1] == ' ')
 		new_word = 1;
 	if (str[j + 1] == str[j])
-		return (handle_empty_quotes(i, new_word));
-	arr = add_quoted_word(str, &j, type, current);
-	new_word = assign_concat_flag(str, *i, current);
-	(*i) = j;
-	if (arr && arr[1])
-		token = new_token(TOKEN_WORD, arr, quote, new_word);
-	else if (arr)
-		token = new_token(TOKEN_WORD, ft_strdup(arr), quote, new_word);
-	else
-		token = NULL;
-	if (arr)
-	{
-		free(arr);
-	}
-	(*i) = j;
-	return (token);
+		return (handle_empty_quotes(i, new_word, current));
+	add_quoted_word_2(str, i, type, structs);
+	// new_word = assign_concat_flag(str, *i, current);
+	// (*i) = j;
+	// if (arr && arr[1])
+	// 	token = new_token(TOKEN_WORD, arr, quote, new_word);
+	// else if (arr)
+	// 	token = new_token(TOKEN_WORD, ft_strdup(arr), quote, new_word);
+	// else
+	// 	token = NULL;
+	// if (arr)
+	// {
+	// 	free(arr);
+	// }
+	// (*i) = j;
+	//	return (token);
 }
+
+// void	handle_head_quote(char *str, int *i, t_token **head, int type)
+// {
+// 	char *arr;
+// 	char c;
+// 	t_token *token;
+// 	int quote;
+// 	int j;
+// 	int new_word;
+// 	t_token **current;
+// 	current = head;
+// //	tmp = head;
+
+// 	new_word = 0;
+// 	j = init_quote_vars(&arr, &quote, type, i);
+// 	j = *i;
+// 	if (j > 0 && str[j - 1] == ' ')
+// 		new_word = 1;
+// 	if (str[j + 1] == str[j])
+// 		return (handle_empty_quotes(i, new_word, current));
+// 	add_quoted_word_2(str, i, type, current);
+// 	//return (&tmp);
+// }
 
 t_token *add_word(char *str, int *i)
 {
@@ -428,35 +864,35 @@ t_token *add_word(char *str, int *i)
 // 		return (head);
 // }
 
-void handle_head(char *str, t_token **current, int *i, t_token **head)
-{
-	// t_token *head;
-	t_token *tmp;
-	int type;
+// void handle_head(char *str, t_token **current, int *i, t_token **head)
+// {
+// 	// t_token *head;
+// 	t_token *tmp;
+// 	int type;
 
-	type = find_token_type(&str[(*i)]);
-	head = NULL;
-	tmp = NULL;
-	*head = new_token(TOKEN_WORD, str, 0, 1);
-	printf("val of head in handle_head = %s\n", (*head)->value);
-	// free(head->value);
-	*current = *head;
-	tmp = handle_quote(str, i, type, current);
-	// printf("currentt = %s\n", head->value);
-	while ((*current)->next)
-		*current = (*current)->next;
-	if (tmp)
-	{
-		(*current)->next = tmp;
-		if ((*current)->next)
-			*current = (*current)->next;
-	}
-	// tmp = head;
-	// head = head->next;
-	// free(tmp->value);
-	free(tmp);
-	// return (head);
-}
+// 	type = find_token_type(&str[(*i)]);
+// 	head = NULL;
+// 	tmp = NULL;
+// 	*head = new_token(TOKEN_WORD, str, 0, 1);
+// 	printf("val of head in handle_head = %s\n", (*head)->value);
+// 	// free(head->value);
+// 	*current = *head;
+// 	handle_quote(str, i, type, current);
+// 	// printf("currentt = %s\n", head->value);
+// 	while ((*current)->next)
+// 		*current = (*current)->next;
+// 	if (tmp)
+// 	{
+// 		(*current)->next = tmp;
+// 		if ((*current)->next)
+// 			*current = (*current)->next;
+// 	}
+// 	// tmp = head;
+// 	// head = head->next;
+// 	// free(tmp->value);
+// 	free(tmp);
+// 	// return (head);
+// }
 
 void quote_if(char *str, t_token **head, t_token **current, int *i)
 {
@@ -464,7 +900,11 @@ void quote_if(char *str, t_token **head, t_token **current, int *i)
 	int new_word;
 	int type;
 	int quote;
+	t_struct_var *structs;
 
+	structs = malloc(sizeof(t_struct_var));
+	structs->head = head;
+	structs->current = current;
 	type = find_token_type(&str[(*i)]);
 	if (type == TOKEN_QUOTE_DOUBLE)
 		quote = 1;
@@ -476,19 +916,32 @@ void quote_if(char *str, t_token **head, t_token **current, int *i)
 	//	handle_head(str, current, i, head);
 	//	else
 	//		{
-	tmp = handle_quote(str, i, type, current);
-	if (tmp && *head)
-	{
-		(*current)->next = tmp;
-		*current = (*current)->next;
-	}
-	else if (tmp)
-	{
-		*head = tmp;
-		*current = *head;
-	}
+	// if (!(*current))
+	// {
+	// 	handle_head_quote(str, i, type, head);
+	// 	current = head;
+	// 	while ((*current)->next)
+	// 		*current = (*current)->next;
+	// }
+	// else
+	handle_quote(str, i, type, structs);
+	// if (tmp && *head)
+	// {
+	// 	(*current)->next = tmp;
+	// 	*current = (*current)->next;
+	// }
+	// else if (tmp)
+	// {
+	// 	*head = tmp;
+	// 	*current = *head;
+	// }
 	//		}
 	// return (head);
+	// head = structs->head;
+	//printf("structs->current at end of quote_if = %s\n", (*structs->current)->value);
+	head = structs->head;
+	current = structs->current;
+	free(structs);
 }
 
 t_token *handle_no_quote(char *str, t_token *head, t_token **current, int *i)
@@ -524,7 +977,7 @@ void if_not_token(char *str, t_token **head, t_token **current, int *i)
 		*head = add_word(str, i);
 		*current = *head;
 	}
-	else
+	else if (*current)
 	{
 		(*current)->next = add_word(str, i);
 		*current = (*current)->next;
@@ -556,12 +1009,14 @@ void lexer_loop(char *str, t_token **head, t_token **current, int *i)
 
 			if (*i + 1 <= len)
 				(*i)++;
-			//		printf("value of *i before in whilee = %d\n", (*i));
 		}
 
 		(*i) = skip(str, (*i));
 		if ((str[(*i)]) && !is_token(str[(*i)]))
+		{
+
 			if_not_token(str, head, current, i);
+		}
 		//	printf("head in loop = %s\n", (*head)->value);
 		//		printf("value of *i at end of while loop = %d\n", (*i));
 	}
@@ -575,7 +1030,7 @@ void check_flags(t_token **token, t_env *env)
 
 	head = *token;
 	tmp = NULL;
-	while (token)
+	while (*token)
 	{
 		if ((*token)->type == TOKEN_VARIABLE && (*token)->next)
 		{
@@ -587,8 +1042,14 @@ void check_flags(t_token **token, t_env *env)
 	}
 	if (tmp)
 		free(tmp);
-
+	 *token = head;
 	//	return (head);
+}
+
+void init_struct_var(t_struct_var *structs)
+{
+	structs->head = NULL;
+	structs->current = NULL;
 }
 
 t_token *lexer(char *str, t_env *env)
@@ -603,6 +1064,9 @@ t_token *lexer(char *str, t_env *env)
 	int empty;
 	int quote;
 	int new_word;
+	// t_struct_var *structs;
+
+	// structs = malloc(sizeof(t_struct_var));
 
 	i = 0;
 	j = 0;
@@ -610,6 +1074,6 @@ t_token *lexer(char *str, t_env *env)
 	head = NULL;
 	current = NULL;
 	lexer_loop(str, &head, &current, &i);
-	// check_flags(&head, env);
+	 check_flags(&head, env);
 	return (head);
 }
