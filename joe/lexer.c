@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/14 23:04:34 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/15 20:20:02 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,6 +192,7 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 				k = 0;
 			}
 			j = 0;
+			//j = (*i);
 			while (str[(*i)] && str[(*i)] != '"' && str[(*i)] != '\'' && str[(*i)] != '$')
 			{
 				arr[j] = str[(*i)];
@@ -226,7 +227,6 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 				(*i)++;
 				j++;
 			}
-			printf("val of j = %d\n", j);
 			arr[j] = '\0';
 		}
 	}
@@ -443,7 +443,6 @@ char *handle_single(t_quote_vars *vars, int *i, char *str)
 			(*i)++;
 			vars->j++;
 		}
-		printf("val of j = %d\n", vars->j);
 		vars->arr[vars->j] = '\0';
 	}
 	vars->quote_flag = 2;
