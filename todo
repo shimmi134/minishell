@@ -39,3 +39,10 @@ export sami="hola mundo"
 export COMMAND=/usr/bin/ls
 
 expr $? + $?
+
+
+
+
+echo "$USE'" | echo $"HOM"E
+
+somewhere cmd is being freed before my free funtion. Can you find it and set it cmd->cmd to NULL afterwards?
