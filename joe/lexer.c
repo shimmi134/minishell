@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/15 20:20:02 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/16 20:28:52 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,6 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 	{
 		if (!arr)
 		{
-			printf("goes here\n");
 			j = (*i);
 			while (str[j] && str[j] != type)
 				j++;
@@ -1026,23 +1025,35 @@ void check_flags(t_token **token, t_env *env)
 {
 	t_token *head;
 	char *tmp;
-
+	
 	head = *token;
 	tmp = NULL;
 	while (*token)
 	{
 		if ((*token)->type == TOKEN_VARIABLE && (*token)->next)
 		{
+		int	prev_new_word = (*token)->new_word;
 			tmp = expand_var((*token)->next->value, NULL, env);
-			if (!tmp && (*token)->next->next)
-				(*token)->next->next->new_word = 1;
+			if (!tmp)
+			{
+				if ((*token)->next->inside_single || (*token)->next->inside_double)
+					(*token)->next->new_word = prev_new_word;
+				if ((*token)->next->next)
+				{
+				 if ((*token)->next->next->inside_single || (*token)->next->next->inside_double)
+				 	(*token)->next->next->new_word = prev_new_word;
+				else
+					(*token)->next->next->new_word = 0;
+				}
+			}
+			//  if (!tmp && (*token)->next->next && (*token)->next->next->value[0] != '$' && (*token)->next->inside_single || (*token)->next->inside_double)
+			//  	(*token)->next->next->new_word = 1;
 		}
 		*token = (*token)->next;
 	}
 	if (tmp)
 		free(tmp);
 	 *token = head;
-	//	return (head);
 }
 
 void init_struct_var(t_struct_var *structs)

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/15 20:22:08 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/16 20:29:08 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -353,7 +353,7 @@ int	main(int argc, char *argv[], char *envp[])
 		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN);
 		line = readline("\033[1;34mminishell>\033[0m ");
-	//	line = " \"echo\" \"$USER 'test\'\"";
+		//line = "echo $\'$\'$\'$\'";
 		if (line == NULL)
 		{
 			printf("exit\n");
@@ -371,7 +371,7 @@ int	main(int argc, char *argv[], char *envp[])
 		{
 			node = lexer(line, env);
 			head = node;
-          //  print_list(head);
+         //   print_list(head);
 			if (check_tokens(head))
 			{ 
 				t_head = init_cmds(node, env);
