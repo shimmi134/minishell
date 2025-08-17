@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:03 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/16 18:18:23 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/16 22:59:10 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,9 +99,9 @@ t_token *new_token(token_type type, char *value, int quote, int new_word)
 // else
 //     printf("value doesnt exist\n");
     token->type = type;
-    if (value[0] == '$' && (!value[1] || value[1] =='"' || value[1] == '"'))
+    if (value[0] == '$' && (!value[1] || value[1] =='"' || value[1] == '\''))
         token->value = ft_strdup_char('$');
-    else if (type == TOKEN_WORD && value[0] != '$')
+    else if (type == TOKEN_WORD)
         token->value = ft_strdup(value);
     else if (type == TOKEN_HEREDOC)
         token->value = ft_strdup("<<");
