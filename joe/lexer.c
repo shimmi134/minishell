@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/18 20:05:21 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/18 21:41:31 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -753,10 +753,10 @@ t_token *assign_word_arr(char *arr, int new_word)
 {
 	t_token *token;
 	
-	if (arr && !arr[1])
-		token = new_token(TOKEN_WORD, ft_strdup(arr), 0, new_word);
-	else
+	if (ft_strlen(arr) > 1)
 		token = new_token(TOKEN_WORD, arr, 0, new_word);
+	else
+		token = new_token(TOKEN_WORD, ft_strdup_char(arr[0]), 0, new_word);
 	return(token);
 }
 t_token *add_word(char *str, int *i)
@@ -774,8 +774,9 @@ t_token *add_word(char *str, int *i)
 	arr = NULL;
 	while ((str[j]) && !is_token(str[j]) && str[j] != ' ' && str[j] != '/')
 		j++;
-	if (j > (*i))
+	if (j >= (*i))
 	{
+	//	printf("enters\n");
 		arr = malloc(sizeof(char) * (j + 1));
 		if (!arr)
 			exit(EXIT_FAILURE);
@@ -783,15 +784,24 @@ t_token *add_word(char *str, int *i)
 	while ((str[(*i)]) && !is_token(str[(*i)]) && str[(*i)] != ' ' && str[(*i)] != '/')
 		arr[j++] = str[(*i)++];
 	arr[j] = '\0';
-	if (ft_strlen(arr) > 1)
+//	if (ft_strlen(arr) > 1)
 		current = assign_word_arr(arr, new_word);
-	else
-		current = assign_word_arr(ft_strdup_char(arr[0]), new_word);
+	if (strlen(arr) > 1)
+		free_and_null(&arr);
+	// else
+	// 	current = assign_word_arr(ft_strdup_char(arr[0]), new_word);
 	}
+//	printf("arr at end of add_arr = %s\n", arr);
+//	printf("current = %s\n", current->value);
 	if (arr)
 	{
 		free(arr);
 	}
+	t_token *head = current;
+	//  if (str[(*i)] && str[(*i)] == '/')
+	//  	handle_slash(&head, &current, str, i);
+	if (!current)
+		return (NULL);
 	return (current);
 }
 
@@ -949,37 +959,42 @@ void handle_slash(t_token **head, t_token **current, char *str, int *i)
 
 	new_word = 0;
 	j = *i;
+	//printf("current before handle_slash = %s\n", (*current)->value);
 	if (j > 0 && str[j - 1] == ' ') //new
 			new_word = 1;
-	if ((*current))
+	if (*current)
 	{
 		(*current)->next = new_token(TOKEN_WORD, ft_strdup_char('/'), 1, new_word);
 		*current = (*current)->next;
 	}
 	else
-		{
+	{
 			*head = new_token(TOKEN_WORD, ft_strdup_char('/'), 1, new_word);
 			*current = *head;
-		}
+	}
 	(*i)++;
 }
 void if_not_token(char *str, t_token **head, t_token **current, int *i)
 {
 	//	printf("address of head in if not token = %p\n", (*head));
-
+ 	if (str[(*i)] && str[(*i)] == '/')
+	 	handle_slash(head, current, str, i);
 	if (!*head)
 	{
 		//	printf("reaches\n");
 		*head = add_word(str, i);
 		*current = *head;
+	//	printf("current = %s\n", (*current)->value);
 	}
 	else if (*current)
 	{
 		(*current)->next = add_word(str, i);
 		*current = (*current)->next;
+//		printf("current is now =%s\n", (*current)->value);
 	}
-	 if (str[(*i)] && str[(*i)] == '/')
-	 	handle_slash(head, current, str, i);
+//	printf("current before slash = %s\n", (*current)->value);
+	//  if (str[(*i)] && str[(*i)] == '/')
+	//  	handle_slash(head, current, str, i);
 	//	return (head);
 }
 
@@ -994,6 +1009,7 @@ void lexer_loop(char *str, t_token **head, t_token **current, int *i)
 	len = ft_strlen(str);
 	while (str[(*i)])
 	{
+	//	printf("str[i] at start of loop = %c\n", str[(*i)]);
 		(*i) = skip(str, (*i));
 		if (is_token(str[(*i)]))
 		{

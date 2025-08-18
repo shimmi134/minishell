@@ -6,11 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/08/18 17:02:09 by shimi-be         ###   ########.fr       */
-=======
-/*   Updated: 2025/08/18 20:06:37 by joshapir         ###   ########.fr       */
->>>>>>> d781e02 (fixed ''ls leak and /path problem)
+/*   Updated: 2025/08/18 21:32:37 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +153,6 @@ int	main(int argc, char *argv[], char *envp[])
 	*exit_status = 0;
 	while (1)
 	{
-		printf("%i\n", *exit_status);
 		head = NULL;
 		t_head = NULL;
 		signal(SIGINT, handle_sigint);
@@ -172,7 +167,7 @@ int	main(int argc, char *argv[], char *envp[])
 			add_history(line);
 		if (line != NULL && check_quotes(head, line))
 		{
-			node = lexer(line, env	);
+			node = lexer(line, env);
 			head = node;
 		//	print_list(node);
 			if (check_tokens(head))
@@ -210,9 +205,9 @@ int	main(int argc, char *argv[], char *envp[])
 					do_commands(element, &env, argc);
 				}
 			}
+			if (line)
+				rl_free(line);
 		}
-		if (line)
-			rl_free(line);
 		if (element != NULL)
 		{
 			free_shell(element);
