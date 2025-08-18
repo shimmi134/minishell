@@ -6,22 +6,11 @@
 /*   By: shimi-be <shimi-be@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:26:05 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/18 12:50:28 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/18 15:00:46 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	delete_node(t_env **env, t_env *target, t_env *prev)
-{
-	if (prev == target)
-		*env = target->next;
-	else
-		prev->next = target->next;
-	free(target->key);
-	free(target->value);
-	free(target);
-}
 
 int	count_commands(t_shell *sh)
 {
@@ -46,7 +35,7 @@ void	addlast(t_env **env, t_env *add)
 	temp->next = add;
 }
 
-char *join_split(char **split)
+char	*join_split(char **split)
 {
 	int		i;
 	int		first;
@@ -73,33 +62,33 @@ char *join_split(char **split)
 	return (str);
 }
 
-t_env   *create_node(char *env)
+t_env	*create_node(char *env)
 {
-    char    **split;
+	char	**split;
 	char	*str;
-    t_env   *node;
-    int i;
+	t_env	*node;
+	int		i;
 
-    i = 0;
-    split = ft_split(env, '=');
-    if (!split)
-        return (NULL);
+	i = 0;
+	split = ft_split(env, '=');
+	if (!split)
+		return (NULL);
 	if (ft_strncmp(split[0], "SHLVL", 5) == 0)
 	{
 		str = split[1];
-		split[1] = ft_itoa(ft_atoi(split[1])+1);
+		split[1] = ft_itoa(ft_atoi(split[1]) + 1);
 		free(str);
 	}
-    node = malloc(sizeof(t_env));
-    if (!node)
-        return (NULL);
-    node->key = ft_strdup(split[0]);
-    node->value = join_split(split);
-    node->next = NULL;
-    while (split[i])
-        free(split[i++]);
-    free(split);
-    return (node);
+	node = malloc(sizeof(t_env));
+	if (!node)
+		return (NULL);
+	node->key = ft_strdup(split[0]);
+	node->value = join_split(split);
+	node->next = NULL;
+	while (split[i])
+		free(split[i++]);
+	free(split);
+	return (node);
 }
 
 int	ft_strspn(char *str, char *sep)

@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:20:03 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/07/10 18:38:16 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/18 14:58:28 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,12 +79,6 @@ char	**join_args(char *cmd, char **args)
 	return (final_args);
 }
 
-
-void perr_exit(int errnum, char *cmd)
-{
-	perror(cmd);
-	exit(errnum);
-}
 void	exec_command(t_shell *elem, t_env **env, char **envp)
 {
 	char	*path;
@@ -92,7 +86,8 @@ void	exec_command(t_shell *elem, t_env **env, char **envp)
 	char	**args;
 	char	**split;
 
-	if ((access(elem->command->cmd, F_OK) == 0 && ft_strchr(elem->command->cmd, '/') != NULL) || ft_strncmp(elem->command->cmd, "", 1) == 0)
+	if ((access(elem->command->cmd, F_OK) == 0 && ft_strchr(elem->command->cmd,
+				'/') != NULL) || ft_strncmp(elem->command->cmd, "", 1) == 0)
 		path = elem->command->cmd;
 	else
 	{
@@ -108,85 +103,4 @@ void	exec_command(t_shell *elem, t_env **env, char **envp)
 	execve(path, args, envp);
 	printf("Error: %s\n", strerror(errno));
 	exit(127);
-}
-
-t_env *duplicate_env(t_env* env)
-{
-	t_env *dup;
-	t_env *head;
-	t_env *last;
-	
-	head = NULL;
-	dup = NULL;
-	last = NULL;
-	while (env != NULL)
-	{
-		dup = malloc(sizeof(t_env));
-		if (!dup)
-			return (NULL);
-		dup->key = ft_strdup(env->key);
-		dup->value = ft_strdup(env->value);
-		dup->next = NULL;
-		env = env->next;
-		if (head == NULL)
-			head = dup;
-		else
-			last->next = dup;
-		last = dup;	
-	}
-	return head;
-}
-
-int swap(t_env *temp)
-{
-	char *key;
-	char *value;
-
-	if (ft_strncmp(temp->key, temp->next->key, ft_strlen(temp->key)) > 0)
-	{
-		key = temp->key;
-		value = temp->value;
-		temp->key = temp->next->key;
-		temp->value = temp->next->value;
-		temp->next->key = key;
-		temp->next->value = value;
-		return (1);
-	}
-	return (0);
-}
-
-void sort_list(t_env *env)
-{
-    t_env *temp;
-    t_env *head;
-    int swapped;
-
-    if (env == NULL)
-        return ;
-    head = duplicate_env(env);
-    swapped = 1;
-    while (swapped) 
-	{
-        swapped = 0;
-        temp = head;
-        while (temp && temp->next) 
-		{
-			swapped = swap(temp);
-            temp = temp->next;
-        }
-    }
-	print_env(head);
-	free_env_list_tmp(head);
-}
-
-void print_env(t_env *head)
-{
-	while (head != NULL)
-	{
-		printf("declare -x %s", head->key);
-		if (head->value)
-			printf("=\"%s\"", head->value);
-		printf("\n");
-		head = head->next;
-	}
 }

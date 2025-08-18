@@ -1,36 +1,13 @@
 norme!
 
-minishell> cd ~
-minishell> ls
-Error: Permission denied 
-minishell> 
-(on 42 pcs)
-
-Updated:
-
-minishell> ls
-a.out              builtins_utils2.o  builtins_utils.o  libft    Makefile    minishell    minishell_test.h  test.c  test_utils2.c  test_utils.c  todo
-builtins_utils2.c  builtins_utils.c   joe               libft.a  minimain.o  minishell.h  old_main_sami.ac  test.o  test_utils2.o  test_utils.o
-minishell> cd ~
-cd: No such file or directory: ~
-minishell> 
-
-
-
-env leaks with >a
-need to correct ls -la > out taking out as a parameter
-
-
-
-
 cd /home/$USER/Documents/
 
-bash expands the var in paths
 
 echo -nnnnnn-n a
 
 env | a a a 
 
+bash expands the var in paths
 cat <-- test writing something
 
 < 
@@ -39,7 +16,6 @@ export sami="hola mundo"
 export COMMAND=/usr/bin/ls
 
 expr $? + $?
-
 
 
 
