@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/18 21:39:07 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/18 22:39:16 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int token_loop (t_token *tokens)
         {
             if (!tokens->next || tokens->next->value[0] == '\0')
                 return (printf("Syntax error: pipe without command\n"), 0);
-            if (tokens->next->type != TOKEN_WORD && tokens->next->type != TOKEN_VARIABLE)
+             if ((tokens->next->type != TOKEN_WORD && tokens->next->type != TOKEN_VARIABLE) && (tokens->next->type != TOKEN_REDIRECT_IN && tokens->next->type != TOKEN_REDIRECT_OUT))
                     return (printf("Syntax error: pipe without command\n"), 0);
         }
          else if(tokens->type == TOKEN_HEREDOC || tokens->type == TOKEN_APPEND)
