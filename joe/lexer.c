@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/18 21:41:31 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/18 22:04:31 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -800,8 +800,8 @@ t_token *add_word(char *str, int *i)
 	t_token *head = current;
 	//  if (str[(*i)] && str[(*i)] == '/')
 	//  	handle_slash(&head, &current, str, i);
-	if (!current)
-		return (NULL);
+	// if (!current)
+	// 	return (NULL);
 	return (current);
 }
 
