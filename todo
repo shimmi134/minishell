@@ -2,7 +2,6 @@ norme!
 
 cd /home/$USER/Documents/
 
-
 echo -nnnnnn-n a
 
 env | a a a 
@@ -12,12 +11,7 @@ cat <-- test writing something
 
 < 
 
-export sami="hola mundo"
-export COMMAND=/usr/bin/ls
-
 expr $? + $?
-
-
 
 echo "$USE'" | echo $"HOM"E
 

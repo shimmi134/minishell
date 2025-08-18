@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:56:30 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/18 15:09:16 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/18 18:58:35 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,23 @@
 int	correct_export(char *str)
 {
 	int	i;
+	int	sep;
 	int	len;
 
 	i = 0;
+	sep = 0;
 	len = ft_strlen(str);
+	if (len == 1 && str[0] == '=')
+		return -1;
 	while (i < len)
 	{
-		if (!ft_isalnum(str[i]) && str[i] != '=')
+		if (str[i] == '=')
+			sep = 1;
+		else if (!sep && !ft_isalnum(str[i]) && str[i] != '_')
 			return (-1);
-		if (ft_isdigit(str[i]) && i == 0)
+		else if (!sep && i == 0 && ft_isdigit(str[i]))
+			return(-1);
+		else if (sep && i == 1 && ft_isdigit(str[i]))
 			return (-1);
 		i++;
 	}
