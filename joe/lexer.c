@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/17 22:00:04 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/18 20:05:21 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 		quote = '\'';
 	else
 		quote = '"';
-	while (str[j] && (str[j] != '\'' && str[j] != '"' && str[j] != '$'))
+	while (str[j] && (str[j] != '\'' && str[j] != '"' && str[j] != '$' && str[j] != '/'))
 		j++;
 	if (j > (*i))
 	{
@@ -137,12 +137,12 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 					(*i)++;
 				j = (*i);
 
-				while (str[j] && str[j] != '"' && str[(*i)] != '\'' && str[j] != '$') // new
+				while (str[j] && str[j] != '"' && str[(*i)] != '\'' && str[j] != '$' && str[j] != '/') // new
 				{
 					k++;
 					j++;
 				}
-				if (j == (*i) && str[j] != '$' && str[j] != '\'') // should work
+				if (j == (*i) && str[j] != '$' && str[j] != '\'' && str[j] != '/') // should work
 					return (NULL);
 				if (arr)
 					free(arr);
@@ -181,13 +181,13 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 				if (str[(*i) + 1])
 					(*i)++;
 				j = (*i);
-				while (str[j] && str[j] != '"' && str[(*i)] != '\'' && str[j] != '$') // new
+				while (str[j] && str[j] != '"' && str[(*i)] != '\'' && str[j] != '$' && str[(*i)] != '/') // new
 				{
 					k++;
 					j++;
 				}
 
-				if (j == (*i) && str[j] != '$' && str[j] != '\'') // should work
+				if (j == (*i) && str[j] != '$' && str[j] != '\'' && str[(*i)] != '/') // should work
 					return (NULL);
 				arr = malloc(sizeof(char) * (k + 1));
 				arr[k] = '\0';
@@ -196,7 +196,7 @@ char *add_quoted_word(char *str, int *i, int type, t_token **current)
 			}
 			j = 0;
 			//j = (*i);
-			while (str[(*i)] && str[(*i)] != '"' && str[(*i)] != '\'' && str[(*i)] != '$')
+			while (str[(*i)] && str[(*i)] != '"' && str[(*i)] != '\'' && str[(*i)] != '$' && str[(*i)] != '/')
 			{
 				arr[j] = str[(*i)];
 				j++;
@@ -284,6 +284,20 @@ void flush_arr_in_single(t_struct_var *structs, t_quote_vars *vars, char *str, i
 	// 		*structs->current = *structs->head;
 	// }
 }
+
+void add_slash(t_struct_var *structs, t_quote_vars *vars)
+{
+	if ((*structs->current))
+	{
+		(*structs->current)->next = new_token(TOKEN_WORD, ft_strdup_char('/'), 1, vars->new_word);
+		*structs->current = (*structs->current)->next;
+	}
+	else
+		{
+			*structs->head = new_token(TOKEN_WORD, ft_strdup_char('/'), 1, vars->new_word);
+			*structs->current = *structs->head;
+		}
+}
 void add_single(t_struct_var *structs, t_quote_vars *vars)
 {
 	if ((*structs->current))
@@ -311,12 +325,12 @@ void assign_and_null(t_quote_vars *vars)
 }
 void	allocate_after_single(char *str, t_quote_vars *vars, int *i)
 {
-	while (str[vars->j] && str[vars->j] != '"' && str[(*i)] != '\'' && str[vars->j] != '$') // new
+	while (str[vars->j] && str[vars->j] != '"' && str[(*i)] != '\'' && str[vars->j] != '$' && str[vars->j] != '/') // new
 	{
 		vars->k++;
 		vars->j++;
 	}
-	if (vars->j == (*i) && str[vars->j] != '$' && str[vars->j] != '\'') // should work
+	if (vars->j == (*i) && str[vars->j] != '$' && str[vars->j] != '\'' && str[vars->j] != '/') // should work
 	{
 		vars->arr = NULL;
 		return;
@@ -333,6 +347,22 @@ void handle_nested_single(t_struct_var *structs, t_quote_vars *vars, char *str, 
 		vars->new_word = 0;
 	}
 	add_single(structs, vars);
+	vars->new_word = 0;
+	if (str[(*i) + 1])
+		(*i)++;
+	vars->j = (*i);
+
+	allocate_after_single(str, vars, i);
+}
+void handle_nested_slash(t_struct_var *structs, t_quote_vars *vars, char *str, int *i)
+{
+	if (vars->j > 0)
+	{
+		vars->arr[vars->j] = '\0';
+		flush_arr_in_single(structs, vars, str, i);
+		vars->new_word = 0;
+	}
+	add_slash(structs, vars);
 	vars->new_word = 0;
 	if (str[(*i) + 1])
 		(*i)++;
@@ -405,12 +435,12 @@ void handle_nested_var(t_struct_var *structs, t_quote_vars *vars, char *str, int
 	if (str[(*i) + 1])
 		(*i)++;
 	vars->j = (*i);
-	while (str[vars->j] && str[vars->j] != '"' && str[(*i)] != '\'' && str[vars->j] != '$') // new
+	while (str[vars->j] && str[vars->j] != '"' && str[(*i)] != '\'' && str[vars->j] != '$' && str[vars->j] != '/') // new
 	{
 		vars->k++;
 		vars->j++;
 	}
-	if (vars->j == (*i) && str[vars->j] != '$' && str[vars->j] != '\'') // should work
+	if (vars->j == (*i) && str[vars->j] != '$' && str[vars->j] != '\'' && str[vars->j] != '/') // should work
 	{
 		vars->arr = NULL;
 		return;
@@ -419,7 +449,7 @@ void handle_nested_var(t_struct_var *structs, t_quote_vars *vars, char *str, int
 }
 void fill_arr(char *str, int *i, t_quote_vars *vars)
 {
-	while (str[(*i)] && str[(*i)] != '"' && str[(*i)] != '\'' && str[(*i)] != '$')
+	while (str[(*i)] && str[(*i)] != '"' && str[(*i)] != '\'' && str[(*i)] != '$' && str[(*i)] != '/')
 	{
 		vars->arr[vars->j] = str[(*i)];
 		vars->j++;
@@ -486,6 +516,8 @@ void handle_double(t_quote_vars *vars, int *i, char *str, t_struct_var *structs)
 		}
 		if (str[(*i)] == '$')
 			handle_nested_var(structs, vars, str, i);
+		if (str[(*i)] == '/')
+			handle_nested_slash(structs, vars, str, i);
 		vars->j = 0;
 		fill_arr(str, i, vars);
 		if (vars->arr)
@@ -543,7 +575,7 @@ void add_quoted_word_2(char *str, int *i, int type, t_struct_var *structs)
 	(*i)++;
 	vars->j = (*i);
 	vars->quote = quote_type(type);
-	while (str[vars->j] && (str[vars->j] != '\'' && str[vars->j] != '"' && str[vars->j] != '$'))
+	while (str[vars->j] && (str[vars->j] != '\'' && str[vars->j] != '"' && str[vars->j] != '$' && str[vars->j] != '/' ))
 		vars->j++;
 	if (vars->j > (*i))
 		allocate_arr(vars);
@@ -642,7 +674,7 @@ int ft_isalpha(int c)
 	return ((c >= 65 && c <= 90) || (c >= 97 && c <= 122));
 }
 
-void handle_empty_quotes(int *i, int new_word, t_token **current)
+void handle_empty_quotes(int *i, int new_word, t_token **head, t_token **current)
 {
 	t_token *token;
 
@@ -653,6 +685,9 @@ void handle_empty_quotes(int *i, int new_word, t_token **current)
 		(*current)->next = token;
 		*current = (*current)->next;
 	}
+	else
+		*head = token;
+		*current = *head;
 	// return (token);
 }
 void handle_quote(char *str, int *i, int type, t_struct_var *structs)
@@ -673,7 +708,7 @@ void handle_quote(char *str, int *i, int type, t_struct_var *structs)
 	if (j > 0 && str[j - 1] == ' ')
 		new_word = 1;
 	if (str[j + 1] == str[j])
-		return (handle_empty_quotes(i, new_word, current));
+		return (handle_empty_quotes(i, new_word, structs->head, current));
 	add_quoted_word_2(str, i, type, structs);
 	// new_word = assign_concat_flag(str, *i, current);
 	// (*i) = j;
@@ -733,21 +768,30 @@ t_token *add_word(char *str, int *i)
 
 	j = *i;
 	new_word = 0;
+	current = NULL;
 	if (j > 0 && str[j - 1] == ' ') //new
 			new_word = 1;
 	arr = NULL;
-	while ((str[j]) && !is_token(str[j]) && str[j] != ' ')
+	while ((str[j]) && !is_token(str[j]) && str[j] != ' ' && str[j] != '/')
 		j++;
-	arr = malloc(sizeof(char) * (j + 1));
-	if (!arr)
-		exit(EXIT_FAILURE);
+	if (j > (*i))
+	{
+		arr = malloc(sizeof(char) * (j + 1));
+		if (!arr)
+			exit(EXIT_FAILURE);
 	j = 0;
-	while ((str[*i]) && !is_token(str[*i]) && str[*i] != ' ')
+	while ((str[(*i)]) && !is_token(str[(*i)]) && str[(*i)] != ' ' && str[(*i)] != '/')
 		arr[j++] = str[(*i)++];
 	arr[j] = '\0';
-	current = assign_word_arr(arr, new_word);
+	if (ft_strlen(arr) > 1)
+		current = assign_word_arr(arr, new_word);
+	else
+		current = assign_word_arr(ft_strdup_char(arr[0]), new_word);
+	}
 	if (arr)
+	{
 		free(arr);
+	}
 	return (current);
 }
 
@@ -898,6 +942,27 @@ t_token *handle_no_quote(char *str, t_token *head, t_token **current, int *i)
 		(*i)++;
 	return (head);
 }
+void handle_slash(t_token **head, t_token **current, char *str, int *i)
+{
+	int j;
+	int new_word;
+
+	new_word = 0;
+	j = *i;
+	if (j > 0 && str[j - 1] == ' ') //new
+			new_word = 1;
+	if ((*current))
+	{
+		(*current)->next = new_token(TOKEN_WORD, ft_strdup_char('/'), 1, new_word);
+		*current = (*current)->next;
+	}
+	else
+		{
+			*head = new_token(TOKEN_WORD, ft_strdup_char('/'), 1, new_word);
+			*current = *head;
+		}
+	(*i)++;
+}
 void if_not_token(char *str, t_token **head, t_token **current, int *i)
 {
 	//	printf("address of head in if not token = %p\n", (*head));
@@ -913,6 +978,8 @@ void if_not_token(char *str, t_token **head, t_token **current, int *i)
 		(*current)->next = add_word(str, i);
 		*current = (*current)->next;
 	}
+	 if (str[(*i)] && str[(*i)] == '/')
+	 	handle_slash(head, current, str, i);
 	//	return (head);
 }
 

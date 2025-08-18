@@ -6,7 +6,11 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/08/18 17:02:09 by shimi-be         ###   ########.fr       */
+=======
+/*   Updated: 2025/08/18 20:06:37 by joshapir         ###   ########.fr       */
+>>>>>>> d781e02 (fixed ''ls leak and /path problem)
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +174,7 @@ int	main(int argc, char *argv[], char *envp[])
 		{
 			node = lexer(line, env	);
 			head = node;
+		//	print_list(node);
 			if (check_tokens(head))
 			{
 				t_head = init_cmds(node, env);
