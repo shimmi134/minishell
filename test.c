@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/19 17:29:11 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/19 19:05:28 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,7 @@ int	main(int argc, char *argv[], char *envp[])
 		}
 		if (head)
 			free_tokens(head);
-		if (t_head)
+//		if (t_head)
 			free_cmds(t_head);
 	}
 	if (exit_status)

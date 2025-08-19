@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/18 20:25:55 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/19 18:50:15 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef struct s_command
 	int					heredoc_fd;
 	int					heredoc_quoted;
 	int					exit_status;
+	int					exit_code;
 	struct s_command	*next;
 }						t_cmd;
 
