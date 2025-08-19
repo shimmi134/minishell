@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:07:51 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/18 15:08:14 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/19 18:21:27 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,28 @@ void	change_path(t_env *temp, t_shell *elem)
 		elem->command->args[0] = ft_strdup(temp->value);
 }
 
+int valiaa(char *str)
+{
+	int	i;
+	int	sep;
+
+	i = 0;
+	sep = 0;
+	while (i < ft_strlen(str))
+	{
+		if (str[i] == 'n')
+			sep = 1;
+		else if (sep && str[i] == '-')
+			return (0);
+		else if (!sep && str[i] == 'n')
+			return (0);
+		else if (i != 0 && str[i] == '-' && str[i-1] == '-')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 int	*find_newline(t_shell *elem)
 {
 	int	*arr;
@@ -48,7 +70,7 @@ int	*find_newline(t_shell *elem)
 	while (i < count_len(elem->command->args)
 		&& !ft_strncmp(elem->command->args[i], "-n", 2)
 		&&ft_strlen(elem->command->args[i]) == ft_strspn(elem->command->args[i],
-			"-n"))
+			"-n") && valiaa(elem->command->args[i]))
 	{
 		newline = 0;
 		i++;

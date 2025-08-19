@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:08:33 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/18 15:09:30 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/19 18:19:48 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,3 +51,35 @@ int	export_error(char *arg)
 	printf("export: '%s': not a valid identifier\n", arg);
 	return (1);
 }
+/*
+
+int* newline_order(t_shell *elem)
+{
+	int	j;
+	int	sep;
+	int	*arr;
+
+	arr = malloc*(sizeof(int)*2);
+	if (!arr)
+		return (NULL);
+	arr[0] = 0
+	while (arr[0] < count_len(elem->command->args))
+	{
+		j = 0;
+		sep = 0;
+		while (j < ft_strlen(elem->command->args[arr[0]))
+		{
+			if (elem->command->args[arr[0]][j] == 'n' && !sep)
+				sep = 1;
+			else if (elem->command->args[arr[0]][j] == 'n')
+				arr[1] = 0;
+			else if (elem->command->args[arr[0]][j] == '-' && sep)
+				arr[1] = 0;
+			j++;
+		}
+		if (arr[1] == 0)
+			break;
+		arr[0]++;
+	}
+	return (arr);
+}*/

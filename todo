@@ -1,11 +1,4 @@
 norme!
-
-cd /home/$USER/Documents/
-
-echo -nnnnnn-n a
-
-env | a a a 
-
 bash expands the var in paths
 cat <-- test writing something
 
@@ -14,5 +7,3 @@ cat <-- test writing something
 expr $? + $?
 
 echo "$USE'" | echo $"HOM"E
-
-somewhere cmd is being freed before my free funtion. Can you find it and set it cmd->cmd to NULL afterwards?
