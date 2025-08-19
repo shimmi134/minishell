@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/13 18:41:48 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/19 17:29:46 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ void free_cmds(t_cmd *head)
 {
     t_cmd *tmp;
 	int i;
-
+	
 	i = 0;
 	if (!head)
 		return ;
