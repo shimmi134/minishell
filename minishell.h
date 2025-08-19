@@ -6,7 +6,11 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/08/19 19:10:38 by shimi-be         ###   ########.fr       */
+=======
+/*   Updated: 2025/08/19 19:23:24 by joshapir         ###   ########.fr       */
+>>>>>>> 20657fc (added exit_status to cmd structs and fixed  concat with issue wit exit_status)
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +66,7 @@ typedef struct s_command
 	int					heredoc_fd;
 	int					heredoc_quoted;
 	int					exit_status;
+	int					exit_status2;
 	int					exit_code;
 	struct s_command	*next;
 }						t_cmd;
@@ -205,7 +210,7 @@ char					*ft_dup_upto(char *str, char c);
 char					**create_envp(t_env *env);
 size_t					ft_strlen(const char *s);
 t_cmd					*new_cmd_token(t_token *tokens, t_env *envp);
-t_cmd					*init_cmds(t_token *tokens, t_env *env);
+t_cmd					*init_cmds(t_token *tokens, int exit_code, t_env *env);
 t_env					*copy_env(char *envp[]);
 t_env					*create_node(char *env);
 t_env					*in_env(char *str, t_env **env);

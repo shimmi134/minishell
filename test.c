@@ -6,7 +6,11 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/08/19 19:09:45 by shimi-be         ###   ########.fr       */
+=======
+/*   Updated: 2025/08/19 19:53:16 by joshapir         ###   ########.fr       */
+>>>>>>> 20657fc (added exit_status to cmd structs and fixed  concat with issue wit exit_status)
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +171,7 @@ int	main(int argc, char *argv[], char *envp[])
 			//	print_list(node);
 			if (check_tokens(head))
 			{
-				t_head = init_cmds(node, env);
+				t_head = init_cmds(node, *exit_status, env);
 				if (ft_strcmp(t_head->cmd, "exit") == 0)
 				{
 					free_tokens(head);

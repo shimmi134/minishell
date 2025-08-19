@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/19 19:07:06 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/19 19:54:28 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ t_cmd *new_cmd_token(t_token *tokens, t_env *envp)
     t_cmd *cmd = malloc(sizeof(t_cmd));
     count = arg_count(tokens);
    // printf("count = %d\n", count);
-        cmd->args = calloc((count + 2), sizeof(char *));
+        cmd->args = calloc((count + 1), sizeof(char *));
     if (!cmd->args)
         return(NULL);
 	cmd->args[count] = NULL;    
@@ -130,6 +130,8 @@ t_cmd *new_cmd_token(t_token *tokens, t_env *envp)
     cmd->heredoc = 0;
     cmd->heredoc_fd = -1;
 	cmd->exit_status = 0;
+    cmd->exit_status2 = 0;
+    cmd->exit_code = 0;
     cmd->next = NULL;
     return (cmd);
 }
@@ -257,7 +259,10 @@ char *expand_var(char *str, t_cmd *cmd, t_env *env)
                 return(val);
         }
         else if (cmd && str[0] == '?' && !str[1])
-                cmd->exit_status = 1;
+        {
+            cmd->exit_status2 = 1;
+            return (ft_itoa(cmd->exit_code));
+        }
         env = env->next;
         i++;
     }
@@ -322,7 +327,7 @@ void handle_varible (t_cmd *cmd, t_token *token, t_env *envp)
             else if (!token->inside_single)
                 cmd->args[i] = expand_var(token->next->value, cmd, envp);         
         else
-            cmd->args[i] = token->value;
+            cmd->args[i] = ft_strdup(token->value);//new
         i = 0;    
 }
 
@@ -385,7 +390,6 @@ t_cmd *handle_pipes(t_cmd *cmds, t_token *tokens, t_env *envp)
 
 void handle_join(t_cmd *cmds, int i)
 {
-    
     char *joined;
     if (!cmds->args[i - 1] || !cmds->args[i])
         return;
@@ -424,7 +428,7 @@ t_token *cmd_loop(t_token *tokens, t_cmd *cmds, int type, t_env *envp)
     }
     return (tokens);
 }
-t_cmd *init_cmds(t_token *tokens, t_env *envp)
+t_cmd *init_cmds(t_token *tokens, int exit_code, t_env *envp)
 {
     t_cmd *head;
     t_cmd *cmds;
@@ -434,6 +438,7 @@ t_cmd *init_cmds(t_token *tokens, t_env *envp)
     i = 0;
     
     cmds = new_cmd_token(tokens, envp);
+    cmds->exit_code = exit_code;
     head = cmds;
     tokens = cmd_loop(tokens, cmds, type, envp);
     if (!tokens || tokens->new_word)
