@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/19 17:37:00 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/19 19:07:06 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,8 @@ t_cmd *new_cmd_token(t_token *tokens, t_env *envp)
     i = 0;
     t_cmd *cmd = malloc(sizeof(t_cmd));
     count = arg_count(tokens);
-        cmd->args = calloc((count + 1), sizeof(char *));
+   // printf("count = %d\n", count);
+        cmd->args = calloc((count + 2), sizeof(char *));
     if (!cmd->args)
         return(NULL);
 	cmd->args[count] = NULL;    
@@ -357,7 +358,8 @@ void shift_left(char **arr)
     
     while (arr[i + 1])
     {
-            arr[i] = ft_strdup(arr[i + 1]);
+    //    printf("arr[i] in shift = %s\n", arr[i + 1]);
+            arr[i] = arr[i + 1];
         i++;
     }
     arr[i] = NULL;

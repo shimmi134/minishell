@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/19 17:29:46 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/19 18:25:30 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ void free_cmds(t_cmd *head)
 		i = 0;
         if (head->cmd)
 		{
-	//		printf("freeing head: %s\n", head->cmd);
+			printf("freeing head: %s\n", head->cmd);
 	//printf("Freeing cmds->cmd: %p, content: %s\n", (void *)head->cmd, head->cmd);
            free(head->cmd);
 		}
@@ -141,7 +141,7 @@ void free_cmds(t_cmd *head)
 			free(head->outfile);
 		while (head->args[i])
 		{
-		//	printf("freeing arg: %s\n", head->args[i]);
+			printf("freeing arg: %s\n", head->args[i]);
 
 			free(head->args[i++]);
 		}
