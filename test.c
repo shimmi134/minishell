@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/19 17:29:11 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/19 18:46:04 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,7 @@ pid_t	spawn_one_process(t_shell *elem, t_env **env, int *prev_fd)
 	init_rw(elem, &need_next, &next_read, &next_write);
 	next_pipe[0] = -1;
 	next_pipe[1] = -1;
-	prepare_pipe_if_needed(next_pipe, need_next);
-	if (need_next)
-		next_read = next_pipe[0];
-	if (need_next)
-		next_write = next_pipe[1];
+	prepare_pipe_if_needed(next_pipe, need_next, &next_read, &next_write);
 	pid = fork();
 	if (pid < 0)
 		perror("fork");
@@ -48,8 +44,7 @@ pid_t	spawn_one_process(t_shell *elem, t_env **env, int *prev_fd)
 	return (pid);
 }
 
-void	wait_children_and_set_status(int *pids, int count,
-		int *last_status_ptr)
+void	wait_children_and_set_status(int *pids, int count, int *last_status_ptr)
 {
 	int	i;
 	int	status;
@@ -81,7 +76,7 @@ int	execute_loop(t_shell *elem, t_env **env, int *pids,
 		int **last_status_ptr_out)
 {
 	pid_t	pid;
-	int 	prev_fd;
+	int		prev_fd;
 	int		count;
 
 	prev_fd = -1;
@@ -169,7 +164,7 @@ int	main(int argc, char *argv[], char *envp[])
 		{
 			node = lexer(line, env);
 			head = node;
-		//	print_list(node);
+			//	print_list(node);
 			if (check_tokens(head))
 			{
 				t_head = init_cmds(node, env);
@@ -205,9 +200,9 @@ int	main(int argc, char *argv[], char *envp[])
 					do_commands(element, &env, argc);
 				}
 			}
-			if (line)
-				rl_free(line);
 		}
+		if (line)
+			rl_free(line);
 		if (element != NULL)
 		{
 			free_shell(element);

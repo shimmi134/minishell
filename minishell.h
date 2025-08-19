@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/18 20:25:55 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/19 18:45:51 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,11 +140,12 @@ int						ft_isdigit(int c);
 int						env_len(t_env *env);
 
 
+int valiaa(char *str);
 int						close_parent(int prev_fd, int has_next, int *next_pipe);
 int						export_error(char *arg);
 int	run_standalone_builtin(t_shell *elem, t_env **env);
 void	dup_prev_to_stdin(int prev_fd);
-void	prepare_pipe_if_needed(int next_pipe[2], int need);
+void	prepare_pipe_if_needed(int next_pipe[2], int need, int *next_read, int *next_write);
 void	open_and_dup_outfile(const char *path, int append);
 void	set_out_flags(int *flags, int append);
 void	child_handle_outfile(t_shell *elem);

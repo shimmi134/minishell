@@ -1,9 +1,2 @@
 norme!
-bash expands the var in paths
-cat <-- test writing something
-
-< 
-
 expr $? + $?
-
-echo "$USE'" | echo $"HOM"E

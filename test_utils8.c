@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:24:40 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/18 15:41:19 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/19 18:50:17 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ int	run_standalone_builtin(t_shell *elem, t_env **env)
 	return (code);
 }
 
-void	prepare_pipe_if_needed(int next_pipe[2], int need)
+void	prepare_pipe_if_needed(int next_pipe[2], int need, int *next_read,
+		int *next_write)
 {
 	int	res;
 
@@ -77,6 +78,10 @@ void	prepare_pipe_if_needed(int next_pipe[2], int need)
 			exit(1);
 		}
 	}
+	if (need)
+		*next_read = next_pipe[0];
+	if (need)
+		*next_write = next_pipe[1];
 }
 
 void	dup_prev_to_stdin(int prev_fd)
