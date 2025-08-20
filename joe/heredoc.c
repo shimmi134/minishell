@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 04:43:52 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/20 21:38:04 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/20 21:44:57 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ void	free_heredoc(t_heredoc *heredoc)
 		return ;
 	free(heredoc->heredoc_delim);
 	heredoc->heredoc_delim = NULL;
-	//	if (heredoc->cmd)
 	free(heredoc->cmd);
 	heredoc->cmd = NULL;
 	if (heredoc->args)
@@ -123,10 +122,7 @@ char	*heredoc_expand(char *str, t_env *env)
 			i++;
 			j++;
 		}
-		// i = ft_strlen(str) - j;
 		tmp2 = malloc((sizeof(char *) * j) + 1);
-		//   i = ft_strlen(str) - j;
-		// i = j;
 		j = 0;
 		while (str[j] != '$')
 			j++;
@@ -165,7 +161,6 @@ int	init_heredoc(t_heredoc *hd_temp, t_env *env, t_shell *element, int *fd_val)
 	int		status;
 	int		ac;
 
-	printf("reaches heredoc\n");
 	if (hd_temp->heredoc_delim)
 	{
 		hd_temp->heredoc_fd = read_heredoc(hd_temp, env);
@@ -211,7 +206,6 @@ int	init_heredoc(t_heredoc *hd_temp, t_env *env, t_shell *element, int *fd_val)
 			perror("fork");
 	}
 	free_heredoc(hd_temp);
-	// env = free_env_list_tmp(env);
 	return (0);
 }
 int	read_heredoc(t_heredoc *hd_temp, t_env *env)
@@ -240,11 +234,7 @@ int	read_heredoc(t_heredoc *hd_temp, t_env *env)
 		{
 			line = readline("> ");
 			if (!line)
-			{
-				// printf("line is null\n");
-				//  printf("warning: here-document delimited by end-of-file (wanted `EOF`)\n");
 				break ;
-			}
 			if (ft_strcmp(line, hd_temp->heredoc_delim) == 0)
 			{
 				delimiter_found = 1;
@@ -261,21 +251,6 @@ int	read_heredoc(t_heredoc *hd_temp, t_env *env)
 			}
 			else
 			{
-				// token = lexer(line);
-				// cmd = init_cmds(token, env);
-				// char quote;
-				// quote = NULL;
-				// if (line[0] =='"')
-				// 	quote = '"';
-				// else
-				// 	quote = '\'';
-				// if (line[0] == '"' || line[0] == '\'')
-				// {
-				// 	write(pipefd[1], &quote, 1);
-				// 	write (pipefd[1], cmd->cmd, strlen(cmd->cmd));
-				// 	write(pipefd[1], &quote, 1);
-				// }
-				// else
 				write(pipefd[1], line, strlen(line));
 				write(pipefd[1], "\n", 1);
 				free(line);
@@ -288,7 +263,6 @@ int	read_heredoc(t_heredoc *hd_temp, t_env *env)
 		}
 		close(pipefd[1]);
 		free_heredoc(hd_temp);
-		// env = free_env_list_tmp(env);
 		exit(0);
 	}
 	close(pipefd[1]);
