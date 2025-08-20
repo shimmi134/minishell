@@ -6,13 +6,10 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/08/19 19:09:45 by shimi-be         ###   ########.fr       */
-=======
-/*   Updated: 2025/08/19 19:53:16 by joshapir         ###   ########.fr       */
->>>>>>> 20657fc (added exit_status to cmd structs and fixed  concat with issue wit exit_status)
+/*   Updated: 2025/08/20 21:02:54 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "minishell.h"
 #include <readline/history.h>
@@ -157,6 +154,7 @@ int	main(int argc, char *argv[], char *envp[])
 		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN);
 		line = readline("\033[1;34mminishell>\033[0m ");
+		//line = "echo \"test\'test\'$USER\'test\'test$USER\'\"";
 		if (line == NULL)
 		{
 			printf("exit\n");
@@ -168,7 +166,7 @@ int	main(int argc, char *argv[], char *envp[])
 		{
 			node = lexer(line, env);
 			head = node;
-			//	print_list(node);
+				print_list(node);
 			if (check_tokens(head))
 			{
 				t_head = init_cmds(node, *exit_status, env);

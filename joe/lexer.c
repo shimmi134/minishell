@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/19 19:53:07 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/20 21:22:08 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,173 +67,173 @@ void free_quoted_vars(t_quote_vars **vars)
 	free(*vars);
 }
 
-char *add_quoted_word(char *str, int *i, int type, t_token **current)
-{
-	int j;
-	int k;
-	char quote;
-	char *arr;
-	int new_word;
-	int first;
+// char *add_quoted_word(char *str, int *i, int type, t_token **current)
+// {
+// 	int j;
+// 	int k;
+// 	char quote;
+// 	char *arr;
+// 	int new_word;
+// 	int first;
 
-	arr = NULL;
-	new_word = 0;
-	first = 0;
-	k = 0;
-	j = 0;
-	(*i)++;
-	j = (*i);
-	if (type == TOKEN_QUOTE_SINGLE)
-		quote = '\'';
-	else
-		quote = '"';
-	while (str[j] && (str[j] != '\'' && str[j] != '"' && str[j] != '$' && str[j] != '/'))
-		j++;
-	if (j > (*i))
-	{
+// 	arr = NULL;
+// 	new_word = 0;
+// 	first = 0;
+// 	k = 0;
+// 	j = 0;
+// 	(*i)++;
+// 	j = (*i);
+// 	if (type == TOKEN_QUOTE_SINGLE)
+// 		quote = '\'';
+// 	else
+// 		quote = '"';
+// 	while (str[j] && (str[j] != '\'' && str[j] != '"' && str[j] != '$' && str[j] != '/'))
+// 		j++;
+// 	if (j > (*i))
+// 	{
 
-		arr = malloc(sizeof(char) * (j + 1));
-		if (!arr)
-			exit(EXIT_FAILURE);
-		//		printf("address after mallloc = %p\n", arr);
-	}
-	else
-		arr = NULL;
-	j = 0;
-	if ((*i) > 1 && str[(*i) - 2] == ' ')
-		new_word = 1;
-	if (type == 8)
-	{
-		while (str[(*i)] && str[(*i)] != '"')
-		{
-			if (str[(*i)] == '\'')
-			{
-				if (j > 0)
-				{
-					arr[j] = '\0';
-					if ((*current))
-					{
-						if (ft_strlen(arr) == 1)
-							(*current)->next = new_token(TOKEN_WORD, ft_strdup_char(arr[0]), 1, new_word);
-						else
-							(*current)->next = new_token(TOKEN_WORD, arr, 1, new_word);
+// 		arr = malloc(sizeof(char) * (j + 1));
+// 		if (!arr)
+// 			exit(EXIT_FAILURE);
+// 		//		printf("address after mallloc = %p\n", arr);
+// 	}
+// 	else
+// 		arr = NULL;
+// 	j = 0;
+// 	if ((*i) > 1 && str[(*i) - 2] == ' ')
+// 		new_word = 1;
+// 	if (type == 8)
+// 	{
+// 		while (str[(*i)] && str[(*i)] != '"')
+// 		{
+// 			if (str[(*i)] == '\'')
+// 			{
+// 				if (j > 0)
+// 				{
+// 					arr[j] = '\0';
+// 					if ((*current))
+// 					{
+// 						if (ft_strlen(arr) == 1)
+// 							(*current)->next = new_token(TOKEN_WORD, ft_strdup_char(arr[0]), 1, new_word);
+// 						else
+// 							(*current)->next = new_token(TOKEN_WORD, arr, 1, new_word);
 
-						if (arr && arr[1])
-							free(arr);
+// 						if (arr && arr[1])
+// 							free(arr);
 
-						*current = (*current)->next;
-					}
-					new_word = 0;
-				}
-				if ((*current))
-				{
-					(*current)->next = new_token(TOKEN_WORD, ft_strdup_char('\''), 1, new_word);
-					*current = (*current)->next;
-				}
-				new_word = 0;
-				// if (arr && arr[1])
-				// 	free(arr);
-				if (str[(*i) + 1])
-					(*i)++;
-				j = (*i);
+// 						*current = (*current)->next;
+// 					}
+// 					new_word = 0;
+// 				}
+// 				if ((*current))
+// 				{
+// 					(*current)->next = new_token(TOKEN_WORD, ft_strdup_char('\''), 1, new_word);
+// 					*current = (*current)->next;
+// 				}
+// 				new_word = 0;
+// 				// if (arr && arr[1])
+// 				// 	free(arr);
+// 				if (str[(*i) + 1])
+// 					(*i)++;
+// 				j = (*i);
 
-				while (str[j] && str[j] != '"' && str[(*i)] != '\'' && str[j] != '$' && str[j] != '/') // new
-				{
-					k++;
-					j++;
-				}
-				if (j == (*i) && str[j] != '$' && str[j] != '\'' && str[j] != '/') // should work
-					return (NULL);
-				if (arr)
-					free(arr);
-				arr = malloc(sizeof(char) * (k + 1));
-				if (!arr)
-					exit(EXIT_FAILURE);
-				arr[k] = '\0';
-				j = 0;
-				k = 0;
-			}
-			if (str[(*i)] == '$')
-			{
-				if (first != 0)
-				{
-					new_word = 0;
-					first = 1;
-				}
-				if (j > 0)
-				{
-					if ((*current))
-					{
-						(*current)->next = new_token(TOKEN_WORD, arr, 1, new_word);
-						arr = NULL;
-						(*current) = (*current)->next;
-					}
-					new_word = 0;
-				}
-				if (*current)
-				{
-					(*current)->next = new_token(TOKEN_WORD, &str[(*i)], 1, new_word);
-					(*current) = (*current)->next;
-				}
-				new_word = 0;
-				if (arr)
-					free(arr);
-				if (str[(*i) + 1])
-					(*i)++;
-				j = (*i);
-				while (str[j] && str[j] != '"' && str[(*i)] != '\'' && str[j] != '$' && str[(*i)] != '/') // new
-				{
-					k++;
-					j++;
-				}
+// 				while (str[j] && str[j] != '"' && str[(*i)] != '\'' && str[j] != '$' && str[j] != '/') // new
+// 				{
+// 					k++;
+// 					j++;
+// 				}
+// 				if (j == (*i) && str[j] != '$' && str[j] != '\'' && str[j] != '/') // should work
+// 					return (NULL);
+// 				if (arr)
+// 					free(arr);
+// 				arr = malloc(sizeof(char) * (k + 1));
+// 				if (!arr)
+// 					exit(EXIT_FAILURE);
+// 				arr[k] = '\0';
+// 				j = 0;
+// 				k = 0;
+// 			}
+// 			if (str[(*i)] == '$')
+// 			{
+// 				if (first != 0)
+// 				{
+// 					new_word = 0;
+// 					first = 1;
+// 				}
+// 				if (j > 0)
+// 				{
+// 					if ((*current))
+// 					{
+// 						(*current)->next = new_token(TOKEN_WORD, arr, 1, new_word);
+// 						arr = NULL;
+// 						(*current) = (*current)->next;
+// 					}
+// 					new_word = 0;
+// 				}
+// 				if (*current)
+// 				{
+// 					(*current)->next = new_token(TOKEN_WORD, &str[(*i)], 1, new_word);
+// 					(*current) = (*current)->next;
+// 				}
+// 				new_word = 0;
+// 				if (arr)
+// 					free(arr);
+// 				if (str[(*i) + 1])
+// 					(*i)++;
+// 				j = (*i);
+// 				while (str[j] && str[j] != '"' && str[(*i)] != '\'' && str[j] != '$' && str[(*i)] != '/') // new
+// 				{
+// 					k++;
+// 					j++;
+// 				}
 
-				if (j == (*i) && str[j] != '$' && str[j] != '\'' && str[(*i)] != '/') // should work
-					return (NULL);
-				arr = malloc(sizeof(char) * (k + 1));
-				arr[k] = '\0';
-				j = 0;
-				k = 0;
-			}
-			j = 0;
-			//j = (*i);
-			while (str[(*i)] && str[(*i)] != '"' && str[(*i)] != '\'' && str[(*i)] != '$' && str[(*i)] != '/')
-			{
-				arr[j] = str[(*i)];
-				j++;
-				(*i)++;
-			}
-			//	printf("val of j = %d\n", j);
-			if (arr)
-			{
-				//		printf("goes here\n");
-				arr[j] = '\0';
-			}
-			//		printf("arr to be freed = %s\n", arr);
-		}
-	}
-	else
-	{
-		if (!arr)
-		{
-			j = (*i);
-			while (str[j] && str[j] != type)
-				j++;
-			arr = malloc(sizeof(char) * (j + 1));
-		}
-		if (arr)
-		{
-			j = 0;
-			while ((str[(*i)]) && str[(*i)] != quote)
-			{
-				arr[j] = str[(*i)];
-				(*i)++;
-				j++;
-			}
-			arr[j] = '\0';
-		}
-	}
-	return (arr);
-}
+// 				if (j == (*i) && str[j] != '$' && str[j] != '\'' && str[(*i)] != '/') // should work
+// 					return (NULL);
+// 				arr = malloc(sizeof(char) * (k + 1));
+// 				arr[k] = '\0';
+// 				j = 0;
+// 				k = 0;
+// 			}
+// 			j = 0;
+// 			//j = (*i);
+// 			while (str[(*i)] && str[(*i)] != '"' && str[(*i)] != '\'' && str[(*i)] != '$' && str[(*i)] != '/')
+// 			{
+// 				arr[j] = str[(*i)];
+// 				j++;
+// 				(*i)++;
+// 			}
+// 			//	printf("val of j = %d\n", j);
+// 			if (arr)
+// 			{
+// 				//		printf("goes here\n");
+// 				arr[j] = '\0';
+// 			}
+// 			//		printf("arr to be freed = %s\n", arr);
+// 		}
+// 	}
+// 	else
+// 	{
+// 		if (!arr)
+// 		{
+// 			j = (*i);
+// 			while (str[j] && str[j] != type)
+// 				j++;
+// 			arr = malloc(sizeof(char) * (j + 1));
+// 		}
+// 		if (arr)
+// 		{
+// 			j = 0;
+// 			while ((str[(*i)]) && str[(*i)] != quote)
+// 			{
+// 				arr[j] = str[(*i)];
+// 				(*i)++;
+// 				j++;
+// 			}
+// 			arr[j] = '\0';
+// 		}
+// 	}
+// 	return (arr);
+// }
 
 void free_and_null(char **str)
 {
@@ -248,7 +248,7 @@ void flush_to_head(t_struct_var *structs, t_quote_vars *vars)
 		*structs->head = new_token(TOKEN_WORD, ft_strdup_char(vars->arr[0]), 1, vars->new_word);
 	else
 		*structs->head = new_token(TOKEN_WORD, vars->arr, 1, vars->new_word);
-	if (vars->arr && vars->arr[1])
+	if (vars->arr)
 	{
 		free_and_null(&vars->arr);
 	}
@@ -263,7 +263,7 @@ void flush_arr_in_single(t_struct_var *structs, t_quote_vars *vars, char *str, i
 			else
 				(*structs->current)->next = new_token(TOKEN_WORD, vars->arr, 1, vars->new_word);
 
-			if (vars->arr && vars->arr[1])
+			if (vars->arr)
 			{
 				free(vars->arr);
 				vars->arr = NULL;
@@ -272,17 +272,7 @@ void flush_arr_in_single(t_struct_var *structs, t_quote_vars *vars, char *str, i
 	}
 	else
 		flush_to_head(structs, vars);
-	// {
-	// 		if (ft_strlen(vars->arr) == 1)
-	// 			*structs->head = new_token(TOKEN_WORD, ft_strdup_char(vars->arr[0]), 1, vars->new_word);
-	// 		else
-	// 			*structs->head = new_token(TOKEN_WORD, vars->arr, 1, vars->new_word);
-	// 		if (vars->arr && vars->arr[1])
-	// 		{
-	// 			free_and_null(&vars->arr);
-	// 		}
-	// 		*structs->current = *structs->head;
-	// }
+
 }
 
 void add_slash(t_struct_var *structs, t_quote_vars *vars)
@@ -311,8 +301,10 @@ void add_single(t_struct_var *structs, t_quote_vars *vars)
 			*structs->current = *structs->head;
 		}
 }
-void assign_and_null(t_quote_vars *vars)
+void assign_arr_memory(t_quote_vars *vars)
 {
+	if (vars->arr)
+		free(vars->arr);
 	if (vars->k > 0)
 	{
 		vars->arr = malloc(sizeof(char) * (vars->k + 1));
@@ -335,9 +327,10 @@ void	allocate_after_single(char *str, t_quote_vars *vars, int *i)
 		vars->arr = NULL;
 		return;
 	}
-	assign_and_null(vars);
+	assign_arr_memory(vars);
+	//fill_arr(str, i, vars);
 }
-
+// echo "test'test'$USER'test'test$USER'"
 void handle_nested_single(t_struct_var *structs, t_quote_vars *vars, char *str, int *i)
 {
 	if (vars->j > 0)
@@ -351,7 +344,7 @@ void handle_nested_single(t_struct_var *structs, t_quote_vars *vars, char *str, 
 	if (str[(*i) + 1])
 		(*i)++;
 	vars->j = (*i);
-
+	
 	allocate_after_single(str, vars, i);
 }
 void handle_nested_slash(t_struct_var *structs, t_quote_vars *vars, char *str, int *i)
@@ -378,16 +371,47 @@ void flush_arr_in_var(t_quote_vars *vars, t_struct_var *structs)
 		if (*structs->current)
 		{
 			(*structs->current)->next = new_token(TOKEN_WORD, vars->arr, 1, vars->new_word);
-			vars->arr = NULL;
+			//vars->arr = NULL;
 			*structs->current = (*structs->current)->next;
 		}
 		else
 		{
 			*structs->head = new_token(TOKEN_WORD, vars->arr, 1, vars->new_word);
-			vars->arr = NULL;
+		//	vars->arr = NULL;
 			*structs->current = *structs->head;
 		}
 		vars->new_word = 0;
+	}
+}
+
+void	assign_var_token(t_struct_var *structs, t_quote_vars *vars, char *str, int *i)
+{
+	if ((*structs->current))
+	{
+		(*structs->current)->next = new_token(TOKEN_WORD, &str[(*i)], 1, vars->new_word);
+		(*structs->current) = (*structs->current)->next;
+	}
+	else
+	{
+		*structs->head = new_token(TOKEN_WORD, &str[(*i)], 1, vars->new_word);
+		*structs->current = *structs->head;
+	}	
+	vars->new_word = 0;
+}
+
+void	assign_after_var(char *str, t_quote_vars *vars, int *i)
+{
+	while (str[vars->j] && str[vars->j] != '"' && str[(*i)] != '\'' && str[vars->j] != '$' && str[vars->j] != '/') // new
+	{
+		vars->k++;
+		vars->j++;
+	}
+	if (vars->j == (*i) && str[vars->j] != '$' && str[vars->j] != '\'' && str[vars->j] != '/') // should work
+	{
+		if (vars->arr)
+			free(vars->arr);
+		vars->arr = NULL;
+		return;
 	}
 }
 void handle_nested_var(t_struct_var *structs, t_quote_vars *vars, char *str, int *i)
@@ -400,33 +424,8 @@ void handle_nested_var(t_struct_var *structs, t_quote_vars *vars, char *str, int
 		vars->new_word = 0;
 		vars->first = 1;
 	}
-	if (vars->j > 0 && vars->arr)
-	{
-		if (*structs->current)
-		{
-			(*structs->current)->next = new_token(TOKEN_WORD, vars->arr, 1, vars->new_word);
-			vars->arr = NULL;
-			*structs->current = (*structs->current)->next;
-		}
-		else
-		{
-			*structs->head = new_token(TOKEN_WORD, vars->arr, 1, vars->new_word);
-			vars->arr = NULL;
-			*structs->current = *structs->head;
-		}
-		vars->new_word = 0;
-	}
-	if ((*structs->current))
-	{
-		(*structs->current)->next = new_token(TOKEN_WORD, &str[(*i)], 1, vars->new_word);
-		(*structs->current) = (*structs->current)->next;
-	}
-	else
-	{
-		*structs->head = new_token(TOKEN_WORD, &str[(*i)], 1, vars->new_word);
-		*structs->current = *structs->head;
-	}	
-	vars->new_word = 0;
+	flush_arr_in_var(vars, structs);
+	assign_var_token(structs, vars, str, i);
 	if (vars->arr)
 	{
 		free(vars->arr);
@@ -435,17 +434,10 @@ void handle_nested_var(t_struct_var *structs, t_quote_vars *vars, char *str, int
 	if (str[(*i) + 1])
 		(*i)++;
 	vars->j = (*i);
-	while (str[vars->j] && str[vars->j] != '"' && str[(*i)] != '\'' && str[vars->j] != '$' && str[vars->j] != '/') // new
-	{
-		vars->k++;
-		vars->j++;
-	}
-	if (vars->j == (*i) && str[vars->j] != '$' && str[vars->j] != '\'' && str[vars->j] != '/') // should work
-	{
-		vars->arr = NULL;
-		return;
-	}
-	assign_and_null(vars);
+	vars->k = 0;
+	assign_after_var(str, vars, i);
+	if (vars-> k > 0)
+		assign_arr_memory(vars);
 }
 void fill_arr(char *str, int *i, t_quote_vars *vars)
 {
@@ -479,6 +471,8 @@ char *handle_single(t_quote_vars *vars, int *i, char *str)
 		}
 		vars->arr[vars->j] = '\0';
 	}
+	if (vars->arr)
+		free(vars->arr);
 	vars->quote_flag = 2;
 	return (vars->arr);
 }
@@ -514,9 +508,9 @@ void handle_double(t_quote_vars *vars, int *i, char *str, t_struct_var *structs)
 		{
 			handle_nested_single(structs, vars, str, i);
 		}
-		if (str[(*i)] == '$')
+		else if (str[(*i)] == '$')
 			handle_nested_var(structs, vars, str, i);
-		if (str[(*i)] == '/')
+		else if  (str[(*i)] == '/')
 			handle_nested_slash(structs, vars, str, i);
 		vars->j = 0;
 		fill_arr(str, i, vars);
@@ -710,20 +704,6 @@ void handle_quote(char *str, int *i, int type, t_struct_var *structs)
 	if (str[j + 1] == str[j])
 		return (handle_empty_quotes(i, new_word, structs->head, current));
 	add_quoted_word_2(str, i, type, structs);
-	// new_word = assign_concat_flag(str, *i, current);
-	// (*i) = j;
-	// if (arr && arr[1])
-	// 	token = new_token(TOKEN_WORD, arr, quote, new_word);
-	// else if (arr)
-	// 	token = new_token(TOKEN_WORD, ft_strdup(arr), quote, new_word);
-	// else
-	// 	token = NULL;
-	// if (arr)
-	// {
-	// 	free(arr);
-	// }
-	// (*i) = j;
-	//	return (token);
 }
 
 // void	handle_head_quote(char *str, int *i, t_token **head, int type)
@@ -759,6 +739,17 @@ t_token *assign_word_arr(char *arr, int new_word)
 		token = new_token(TOKEN_WORD, ft_strdup_char(arr[0]), 0, new_word);
 	return(token);
 }
+
+void	allocate_word_arr(char **arr, char *str, int *i, int j)
+{
+	*arr = malloc(sizeof(char) * (j + 1));
+		if (!*arr)
+			exit(EXIT_FAILURE);
+	j = 0;
+	while ((str[(*i)]) && !is_token(str[(*i)]) && str[(*i)] != ' ' && str[(*i)] != '/')
+		(*arr)[j++] = str[(*i)++];
+	(*arr)[j] = '\0';
+}
 t_token *add_word(char *str, int *i)
 {
 	int j;
@@ -776,32 +767,13 @@ t_token *add_word(char *str, int *i)
 		j++;
 	if (j >= (*i))
 	{
-	//	printf("enters\n");
-		arr = malloc(sizeof(char) * (j + 1));
-		if (!arr)
-			exit(EXIT_FAILURE);
-	j = 0;
-	while ((str[(*i)]) && !is_token(str[(*i)]) && str[(*i)] != ' ' && str[(*i)] != '/')
-		arr[j++] = str[(*i)++];
-	arr[j] = '\0';
-//	if (ft_strlen(arr) > 1)
+		allocate_word_arr(&arr, str, i, j);
 		current = assign_word_arr(arr, new_word);
 	if (strlen(arr) > 1)
 		free_and_null(&arr);
-	// else
-	// 	current = assign_word_arr(ft_strdup_char(arr[0]), new_word);
 	}
-//	printf("arr at end of add_arr = %s\n", arr);
-//	printf("current = %s\n", current->value);
 	if (arr)
-	{
 		free(arr);
-	}
-	t_token *head = current;
-	//  if (str[(*i)] && str[(*i)] == '/')
-	//  	handle_slash(&head, &current, str, i);
-	// if (!current)
-	// 	return (NULL);
 	return (current);
 }
 
@@ -1018,7 +990,6 @@ void lexer_loop(char *str, t_token **head, t_token **current, int *i)
 				quote_if(str, head, current, i);
 			else if (type != TOKEN_QUOTE_SINGLE && type != TOKEN_QUOTE_DOUBLE)
 				*head = handle_no_quote(str, *head, current, i);
-
 			if (*i + 1 <= len)
 				(*i)++;
 		}
@@ -1027,7 +998,20 @@ void lexer_loop(char *str, t_token **head, t_token **current, int *i)
 			if_not_token(str, head, current, i);
 	}
 }
-
+void	flag_if(char *tmp, t_token **token, int prev_new_word)
+{
+		if (!tmp && ((*token)->next->value[0] != '?' && ft_strlen((*token)->value) == 1))
+			{
+					(*token)->next->new_word = prev_new_word;
+				if ((*token)->next->next)
+				{
+				 if ((*token)->next->next->inside_single || (*token)->next->next->inside_double)
+				 	(*token)->next->next->new_word = prev_new_word;
+				else
+					(*token)->next->next->new_word = 0;
+				}
+			}
+}
 void check_flags(t_token **token, t_env *env)
 {
 	t_token *head;
@@ -1041,27 +1025,13 @@ void check_flags(t_token **token, t_env *env)
 		{
 		int	prev_new_word = (*token)->new_word;
 			tmp = expand_var((*token)->next->value, NULL, env);
-			if (!tmp && ((*token)->next->value[0] != '?' && ft_strlen((*token)->value) == 1))
-			{
-				//if ((*token)->next->inside_single || (*token)->next->inside_double)
-					(*token)->next->new_word = prev_new_word;
-				if ((*token)->next->next)
-				{
-				 if ((*token)->next->next->inside_single || (*token)->next->next->inside_double)
-				 	(*token)->next->next->new_word = prev_new_word;
-				else
-					(*token)->next->next->new_word = 0;
-				}
-			}
+			flag_if(tmp, token, prev_new_word);
 			(*token)->next->new_word = prev_new_word;
-			//  if (!tmp && (*token)->next->next && (*token)->next->next->value[0] != '$' && (*token)->next->inside_single || (*token)->next->inside_double)
-			//  	(*token)->next->next->new_word = 1;
 		}
-		
 		*token = (*token)->next;
+		if (tmp)
+			free(tmp);
 	}
-	if (tmp)
-		free(tmp);
 	 *token = head;
 }
 

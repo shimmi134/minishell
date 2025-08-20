@@ -6,11 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/08/19 19:10:38 by shimi-be         ###   ########.fr       */
-=======
-/*   Updated: 2025/08/19 19:23:24 by joshapir         ###   ########.fr       */
->>>>>>> 20657fc (added exit_status to cmd structs and fixed  concat with issue wit exit_status)
+/*   Updated: 2025/08/20 18:52:18 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,4 +227,5 @@ int						assign_concat_flag(char *str, int i, t_token **current);
 void					add_arr(t_quote_vars *vars, t_struct_var *structs,
 							int *i);
 void					handle_slash(t_token **head, t_token **current, char *str, int *i);
+void					fill_arr(char *str, int *i, t_quote_vars *vars);
 #endif
