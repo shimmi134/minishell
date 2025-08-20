@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/20 21:22:18 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/20 21:41:01 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,4 +239,9 @@ t_token					*assign_ctl_tokens(t_token *token, t_cmd *cmd,
 							t_env *envp);
 t_heredoc				*init_heredoc_struct(t_cmd *cmd);
 token_type				find_token_type(char *str);
+int						assign_concat_flag(char *str, int i, t_token **current);
+void					add_arr(t_quote_vars *vars, t_struct_var *structs,
+							int *i);
+void					handle_slash(t_token **head, t_token **current, char *str, int *i);
+void					fill_arr(char *str, int *i, t_quote_vars *vars);
 #endif
