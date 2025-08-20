@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:25:13 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/18 15:42:42 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/20 21:24:42 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	dup_next_to_stdout(int next_write)
 	}
 }
 
-void	child_close_unneeded_fds(int prev_fd, int next_read, int next_write)
+void	child_close_fds(int prev_fd, int next_read, int next_write)
 {
 	if (prev_fd != -1)
 		close(prev_fd);
@@ -62,8 +62,33 @@ void	child_process(t_shell *elem, t_env **env, int prev_fd, int next_write)
 {
 	dup_prev_to_stdin(prev_fd);
 	dup_next_to_stdout(next_write);
-	child_close_unneeded_fds(prev_fd, -1, next_write);
-	child_handle_infile(elem);
-	child_handle_outfile(elem);
+	child_close_fds(prev_fd, -1, next_write);
+	child_infile(elem);
+	child_outfile(elem);
 	child_exec_or_builtin(elem, env);
+}
+
+void	wait_children(int *pids, int count, int *last_status_ptr)
+{
+	int	i;
+	int	status;
+
+	i = 0;
+	status = 0;
+	while (i < count)
+	{
+		waitpid(pids[i], &status, 0);
+		if (WIFEXITED(status))
+		{
+			if (last_status_ptr)
+				*last_status_ptr = WEXITSTATUS(status);
+		}
+		else
+		{
+			if (last_status_ptr)
+				*last_status_ptr = 127;
+		}
+		i = i + 1;
+	}
+	free(pids);
 }

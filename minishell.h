@@ -6,11 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2025/08/19 19:10:38 by shimi-be         ###   ########.fr       */
-=======
-/*   Updated: 2025/08/19 19:23:24 by joshapir         ###   ########.fr       */
->>>>>>> 20657fc (added exit_status to cmd structs and fixed  concat with issue wit exit_status)
+/*   Updated: 2025/08/20 21:22:18 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +111,7 @@ typedef struct s_struct_var
 	t_token				**current;
 }						t_struct_var;
 
-int	if_valid(char *str);
+int						if_valid(char *str);
 int						has_token(char *str);
 int						skip(char *str, int i);
 int						is_word(char *str);
@@ -135,8 +131,8 @@ int						do_builtins(t_shell *elem, t_env **env);
 int						corr_input(t_shell *elem);
 int						do_export(t_shell *elem, t_env **env);
 int						do_cd(t_shell *elem, t_env **env);
-int						init_heredoc(t_heredoc *hd_temp, t_env *env, char *line,
-							t_shell *element);
+int						init_heredoc(t_heredoc *hd_temp, t_env *env,
+							t_shell *element, int *fd_val);
 int						do_echo(t_shell *elem, t_env **env);
 int						do_pwd(void);
 int						do_env(t_env **env);
@@ -144,30 +140,40 @@ int						do_unset(t_shell *elem, t_env **env);
 int						ft_isalnum(int c);
 int						ft_isdigit(int c);
 int						env_len(t_env *env);
-
-
-int valiaa(char *str);
-int						close_parent(int prev_fd, int has_next, int *next_pipe);
+int						run_builtin(t_shell *elem, t_env **env);
 int						export_error(char *arg);
-int	run_standalone_builtin(t_shell *elem, t_env **env);
-void	dup_prev_to_stdin(int prev_fd);
-void	prepare_pipe_if_needed(int next_pipe[2], int need, int *next_read, int *next_write);
-void	open_and_dup_outfile(const char *path, int append);
-void	set_out_flags(int *flags, int append);
-void	child_handle_outfile(t_shell *elem);
-void	child_handle_infile(t_shell *elem);
-void	parent_housekeeping(int *prev_fd, int next_read, int next_write);
+int						assign_concat_flag(char *str, int i, t_token **current);
+int						valiaa(char *str);
+int						close_parent(int prev_fd, int has_next, int *next_pipe);
+int						execute_loop_loop(t_shell *elem, t_env **env,
+							int **last_status_ptr_out);
+void					do_heredoc(t_cmd *t_head, t_env *env, int *exit_status,
+							int *fd_val);
+void					execute_loop(t_shell *elem, t_env **env, int *fd_val,
+							int **last_status_ptr_out);
 void					do_struct(t_shell **element, t_cmd *command,
 							int *exit_status);
-void	child_process(t_shell *elem, t_env **env, int prev_fd, int next_write);
-void	child_exec_or_builtin(t_shell *elem, t_env **env);
-void	child_close_unneeded_fds(int prev_fd, int next_read, int next_write);
-void	dup_next_to_stdout(int next_write);
-void	init_rw(t_shell *elem, int *need_next, int *next_read, int *next_write);
-
-
-
-
+void					child_outfile(t_shell *elem);
+void					child_infile(t_shell *elem);
+void					dup_prev_to_stdin(int prev_fd);
+void					dup_next_to_stdout(int next_write);
+void					child_process(t_shell *elem, t_env **env, int prev_fd,
+							int next_write);
+void					child_exec_or_builtin(t_shell *elem, t_env **env);
+void					child_close_fds(int prev_fd, int next_read,
+							int next_write);
+void					open_and_dup_outfile(char *path, int append);
+void					set_flags(int *flags, int append);
+void					close_prev_next(int *prev_fd, int next_read,
+							int next_write);
+void					wait_children(int *pids, int count,
+							int *last_status_ptr);
+void					prepare_pipe(int next_pipe[2], int need, int *next_read,
+							int *next_write);
+void					init_rw(t_shell *elem, int *need_next, int *next_read,
+							int *next_write);
+void					close_prev_next(int *prev_fd, int next_read,
+							int next_write);
 void					free_shell(t_shell *element);
 void					create_shlvl(t_env *tail);
 void					init_env_vals(t_env **head, int *i, int *shlvl);
@@ -181,7 +187,6 @@ void					close_and_open_child(int prev_fd, int has_next,
 							int *next_pipe);
 void					execute_command(t_shell *elem, t_env **env);
 void					perr_exit(int errnum, char *cmd);
-t_env					*free_env_list_tmp(t_env *env);
 void					exec_command(t_shell *elem, t_env **env, char **envp);
 void					delete_node(t_env **env, t_env *target, t_env *prev);
 void					addlast(t_env **env, t_env *add);
@@ -190,10 +195,17 @@ void					print_list(t_token *head);
 void					print_enum(t_token *list);
 void					free_heredoc(t_heredoc *heredoc);
 void					free_cmds(t_cmd *head);
-void					do_commands(t_shell *elem, t_env **env, int ac);
+void					do_commands(t_shell *elem, t_env **env, int ac,
+							int fd_val);
 void					sort_list(t_env *env);
 void					create_and_add(t_env **env, char *str);
 void					print_env(t_env *head);
+void					handle_quote(char *str, int *i, int type,
+							t_struct_var *structs);
+void					add_arr(t_quote_vars *vars, t_struct_var *structs,
+							int *i);
+void					handle_slash(t_token **head, t_token **current,
+							char *str, int *i);
 char					*ft_strdup(char *str);
 char					*ft_strdup_char(char c);
 char					*ft_strdup_char(char c);
@@ -209,6 +221,8 @@ char					*ft_itoa(int n);
 char					*ft_dup_upto(char *str, char c);
 char					**create_envp(t_env *env);
 size_t					ft_strlen(const char *s);
+pid_t					command_fork(t_shell *elem, t_env **env, int *prev_fd);
+t_env					*free_env_list_tmp(t_env *env);
 t_cmd					*new_cmd_token(t_token *tokens, t_env *envp);
 t_cmd					*init_cmds(t_token *tokens, int exit_code, t_env *env);
 t_env					*copy_env(char *envp[]);
@@ -220,15 +234,9 @@ t_token					*new_token(token_type type, char *value, int flag,
 							int new_word);
 t_token					*lexer(char *str, t_env *env);
 t_token					*add_word(char *str, int *i);
-void					handle_quote(char *str, int *i, int type,
-							t_struct_var *structs);
 t_token					*assign_args(t_token *tokens, t_cmd *cmds, t_env *env);
 t_token					*assign_ctl_tokens(t_token *token, t_cmd *cmd,
 							t_env *envp);
-token_type				find_token_type(char *str);
 t_heredoc				*init_heredoc_struct(t_cmd *cmd);
-int						assign_concat_flag(char *str, int i, t_token **current);
-void					add_arr(t_quote_vars *vars, t_struct_var *structs,
-							int *i);
-void					handle_slash(t_token **head, t_token **current, char *str, int *i);
+token_type				find_token_type(char *str);
 #endif

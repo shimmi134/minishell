@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:22:28 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/18 15:43:22 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/20 14:38:31 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	if_valid(char *str)
 	return (1);
 }
 
-void	parent_housekeeping(int *prev_fd, int next_read, int next_write)
+void	close_prev_next(int *prev_fd, int next_read, int next_write)
 {
 	if (*prev_fd != -1)
 		close(*prev_fd);
@@ -61,7 +61,7 @@ void	parent_housekeeping(int *prev_fd, int next_read, int next_write)
 		*prev_fd = -1;
 }
 
-void	child_handle_infile(t_shell *elem)
+void	child_infile(t_shell *elem)
 {
 	int	fd;
 	int	res;
@@ -86,7 +86,7 @@ void	child_handle_infile(t_shell *elem)
 	}
 }
 
-void	child_handle_outfile(t_shell *elem)
+void	child_outfile(t_shell *elem)
 {
 	int	fd;
 	int	flags;
@@ -95,7 +95,7 @@ void	child_handle_outfile(t_shell *elem)
 	flags = 0;
 	if (elem->command->outfile)
 	{
-		set_out_flags(&flags, elem->command->append);
+		set_flags(&flags, elem->command->append);
 		fd = open(elem->command->outfile, flags, 0644);
 		if (fd < 0)
 		{

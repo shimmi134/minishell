@@ -6,13 +6,13 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:24:40 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/19 18:50:17 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/20 14:37:47 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	set_out_flags(int *flags, int append)
+void	set_flags(int *flags, int append)
 {
 	*flags = 0;
 	if (append)
@@ -23,7 +23,7 @@ void	set_out_flags(int *flags, int append)
 	*flags = O_WRONLY | O_CREAT | O_TRUNC;
 }
 
-void	open_and_dup_outfile(const char *path, int append)
+void	open_and_dup_outfile(char *path, int append)
 {
 	int	flags;
 	int	fd;
@@ -32,7 +32,7 @@ void	open_and_dup_outfile(const char *path, int append)
 	flags = 0;
 	fd = -1;
 	res = 0;
-	set_out_flags(&flags, append);
+	set_flags(&flags, append);
 	fd = open(path, flags, 0644);
 	if (fd < 0)
 	{
@@ -48,7 +48,7 @@ void	open_and_dup_outfile(const char *path, int append)
 	close(fd);
 }
 
-int	run_standalone_builtin(t_shell *elem, t_env **env)
+int	run_builtin(t_shell *elem, t_env **env)
 {
 	int	code;
 
@@ -61,7 +61,7 @@ int	run_standalone_builtin(t_shell *elem, t_env **env)
 	return (code);
 }
 
-void	prepare_pipe_if_needed(int next_pipe[2], int need, int *next_read,
+void	prepare_pipe(int next_pipe[2], int need, int *next_read,
 		int *next_write)
 {
 	int	res;
