@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/20 21:22:08 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/20 21:31:08 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1027,10 +1027,11 @@ void check_flags(t_token **token, t_env *env)
 			tmp = expand_var((*token)->next->value, NULL, env);
 			flag_if(tmp, token, prev_new_word);
 			(*token)->next->new_word = prev_new_word;
+			if (tmp)
+				free(tmp);
 		}
 		*token = (*token)->next;
-		if (tmp)
-			free(tmp);
+		
 	}
 	 *token = head;
 }
