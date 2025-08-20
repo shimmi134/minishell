@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/20 21:31:08 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/20 21:43:14 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,174 +66,6 @@ void free_quoted_vars(t_quote_vars **vars)
 	(*vars)->type = 0;
 	free(*vars);
 }
-
-// char *add_quoted_word(char *str, int *i, int type, t_token **current)
-// {
-// 	int j;
-// 	int k;
-// 	char quote;
-// 	char *arr;
-// 	int new_word;
-// 	int first;
-
-// 	arr = NULL;
-// 	new_word = 0;
-// 	first = 0;
-// 	k = 0;
-// 	j = 0;
-// 	(*i)++;
-// 	j = (*i);
-// 	if (type == TOKEN_QUOTE_SINGLE)
-// 		quote = '\'';
-// 	else
-// 		quote = '"';
-// 	while (str[j] && (str[j] != '\'' && str[j] != '"' && str[j] != '$' && str[j] != '/'))
-// 		j++;
-// 	if (j > (*i))
-// 	{
-
-// 		arr = malloc(sizeof(char) * (j + 1));
-// 		if (!arr)
-// 			exit(EXIT_FAILURE);
-// 		//		printf("address after mallloc = %p\n", arr);
-// 	}
-// 	else
-// 		arr = NULL;
-// 	j = 0;
-// 	if ((*i) > 1 && str[(*i) - 2] == ' ')
-// 		new_word = 1;
-// 	if (type == 8)
-// 	{
-// 		while (str[(*i)] && str[(*i)] != '"')
-// 		{
-// 			if (str[(*i)] == '\'')
-// 			{
-// 				if (j > 0)
-// 				{
-// 					arr[j] = '\0';
-// 					if ((*current))
-// 					{
-// 						if (ft_strlen(arr) == 1)
-// 							(*current)->next = new_token(TOKEN_WORD, ft_strdup_char(arr[0]), 1, new_word);
-// 						else
-// 							(*current)->next = new_token(TOKEN_WORD, arr, 1, new_word);
-
-// 						if (arr && arr[1])
-// 							free(arr);
-
-// 						*current = (*current)->next;
-// 					}
-// 					new_word = 0;
-// 				}
-// 				if ((*current))
-// 				{
-// 					(*current)->next = new_token(TOKEN_WORD, ft_strdup_char('\''), 1, new_word);
-// 					*current = (*current)->next;
-// 				}
-// 				new_word = 0;
-// 				// if (arr && arr[1])
-// 				// 	free(arr);
-// 				if (str[(*i) + 1])
-// 					(*i)++;
-// 				j = (*i);
-
-// 				while (str[j] && str[j] != '"' && str[(*i)] != '\'' && str[j] != '$' && str[j] != '/') // new
-// 				{
-// 					k++;
-// 					j++;
-// 				}
-// 				if (j == (*i) && str[j] != '$' && str[j] != '\'' && str[j] != '/') // should work
-// 					return (NULL);
-// 				if (arr)
-// 					free(arr);
-// 				arr = malloc(sizeof(char) * (k + 1));
-// 				if (!arr)
-// 					exit(EXIT_FAILURE);
-// 				arr[k] = '\0';
-// 				j = 0;
-// 				k = 0;
-// 			}
-// 			if (str[(*i)] == '$')
-// 			{
-// 				if (first != 0)
-// 				{
-// 					new_word = 0;
-// 					first = 1;
-// 				}
-// 				if (j > 0)
-// 				{
-// 					if ((*current))
-// 					{
-// 						(*current)->next = new_token(TOKEN_WORD, arr, 1, new_word);
-// 						arr = NULL;
-// 						(*current) = (*current)->next;
-// 					}
-// 					new_word = 0;
-// 				}
-// 				if (*current)
-// 				{
-// 					(*current)->next = new_token(TOKEN_WORD, &str[(*i)], 1, new_word);
-// 					(*current) = (*current)->next;
-// 				}
-// 				new_word = 0;
-// 				if (arr)
-// 					free(arr);
-// 				if (str[(*i) + 1])
-// 					(*i)++;
-// 				j = (*i);
-// 				while (str[j] && str[j] != '"' && str[(*i)] != '\'' && str[j] != '$' && str[(*i)] != '/') // new
-// 				{
-// 					k++;
-// 					j++;
-// 				}
-
-// 				if (j == (*i) && str[j] != '$' && str[j] != '\'' && str[(*i)] != '/') // should work
-// 					return (NULL);
-// 				arr = malloc(sizeof(char) * (k + 1));
-// 				arr[k] = '\0';
-// 				j = 0;
-// 				k = 0;
-// 			}
-// 			j = 0;
-// 			//j = (*i);
-// 			while (str[(*i)] && str[(*i)] != '"' && str[(*i)] != '\'' && str[(*i)] != '$' && str[(*i)] != '/')
-// 			{
-// 				arr[j] = str[(*i)];
-// 				j++;
-// 				(*i)++;
-// 			}
-// 			//	printf("val of j = %d\n", j);
-// 			if (arr)
-// 			{
-// 				//		printf("goes here\n");
-// 				arr[j] = '\0';
-// 			}
-// 			//		printf("arr to be freed = %s\n", arr);
-// 		}
-// 	}
-// 	else
-// 	{
-// 		if (!arr)
-// 		{
-// 			j = (*i);
-// 			while (str[j] && str[j] != type)
-// 				j++;
-// 			arr = malloc(sizeof(char) * (j + 1));
-// 		}
-// 		if (arr)
-// 		{
-// 			j = 0;
-// 			while ((str[(*i)]) && str[(*i)] != quote)
-// 			{
-// 				arr[j] = str[(*i)];
-// 				(*i)++;
-// 				j++;
-// 			}
-// 			arr[j] = '\0';
-// 		}
-// 	}
-// 	return (arr);
-// }
 
 void free_and_null(char **str)
 {
@@ -371,13 +203,11 @@ void flush_arr_in_var(t_quote_vars *vars, t_struct_var *structs)
 		if (*structs->current)
 		{
 			(*structs->current)->next = new_token(TOKEN_WORD, vars->arr, 1, vars->new_word);
-			//vars->arr = NULL;
 			*structs->current = (*structs->current)->next;
 		}
 		else
 		{
 			*structs->head = new_token(TOKEN_WORD, vars->arr, 1, vars->new_word);
-		//	vars->arr = NULL;
 			*structs->current = *structs->head;
 		}
 		vars->new_word = 0;
@@ -502,8 +332,6 @@ void handle_double(t_quote_vars *vars, int *i, char *str, t_struct_var *structs)
 	current = structs->current;
 	while (str[(*i)] && str[(*i)] != '"')
 	{
-		// if (vars->arr)
-		// 	add_arr(vars, current, i);
 		if (str[(*i)] == '\'')
 		{
 			handle_nested_single(structs, vars, str, i);
@@ -600,68 +428,6 @@ int ft_isascii(int c)
 {
 	return (c >= 0 && c <= 127);
 }
-// int assign_concat_flag(char *str, int i, t_token **current)
-// {
-// 	int k;
-// 	int len;
-// 	int new_word;
-// 	char quote;
-// 	if (!str[i])
-// 		return (0);
-// 	new_word = 0;
-// 	if (!*current)
-// 		return (0);
-// 	k = ft_strlen((*current)->value);
-// 	len = ft_strlen(str);
-// 	if (!str || !i || !current || !(*current) || !(*current)->value)
-// 		return (0);
-// 	if (str[i] == '"' || str[i] == '\'')
-// 	{
-// 		quote = str[i];
-// 		if (i > 0)
-// 			i--;
-// 		while (i <= len && (k - 1) > 0 && str[i] != (*current)->value[k - 1] && str[i] != quote)
-// 			i--;
-// 	}
-// 	else
-// 	{
-// 		while (i <= len && str[i] != (*current)->value[k - 1])
-// 			i--;
-// 	}
-// 	if (i > 0)
-// 	{
-// 		if (str[i + 1] == ' ')
-// 			new_word = 1;
-// 	}
-// 	else
-// 		new_word = 0;
-// 	return (new_word);
-// }
-/*
-int assign_concat_flag(char *str, int *i, t_token **current)
-{
-	int k;
-	int new_word;
-	int len;
-
-	if (!str || !i || !current || !(*current) || !(*current)->value)
-		return 0;
-	len = ft_strlen(str);
-	k = ft_strlen((*current)->value);
-	if (k == 0)
-		k = 1;
-	if (*i >= len)
-		*i = len - 1;
-	while (*i >= 0 && str[*i] != (*current)->value[k - 1])
-		(*i)--;
-	if (*i >= 0 && (*i + 1) < len && str[*i + 1] == ' ')
-		new_word = 1;
-	else
-		new_word = 0;
-
-	return new_word;
-}
-*/
 
 int ft_isalpha(int c)
 {
@@ -705,29 +471,6 @@ void handle_quote(char *str, int *i, int type, t_struct_var *structs)
 		return (handle_empty_quotes(i, new_word, structs->head, current));
 	add_quoted_word_2(str, i, type, structs);
 }
-
-// void	handle_head_quote(char *str, int *i, t_token **head, int type)
-// {
-// 	char *arr;
-// 	char c;
-// 	t_token *token;
-// 	int quote;
-// 	int j;
-// 	int new_word;
-// 	t_token **current;
-// 	current = head;
-// //	tmp = head;
-
-// 	new_word = 0;
-// 	j = init_quote_vars(&arr, &quote, type, i);
-// 	j = *i;
-// 	if (j > 0 && str[j - 1] == ' ')
-// 		new_word = 1;
-// 	if (str[j + 1] == str[j])
-// 		return (handle_empty_quotes(i, new_word, current));
-// 	add_quoted_word_2(str, i, type, current);
-// 	//return (&tmp);
-// }
 
 t_token *assign_word_arr(char *arr, int new_word)
 {
