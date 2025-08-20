@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:25:13 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/20 21:24:42 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/20 21:52:16 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,13 +68,15 @@ void	child_process(t_shell *elem, t_env **env, int prev_fd, int next_write)
 	child_exec_or_builtin(elem, env);
 }
 
-void	wait_children(int *pids, int count, int *last_status_ptr)
+void	wait_children(int *pids, int count, int *last_status_ptr, int *fd_val)
 {
 	int	i;
 	int	status;
 
 	i = 0;
 	status = 0;
+	if (*fd_val != -1)
+		close(*fd_val);
 	while (i < count)
 	{
 		waitpid(pids[i], &status, 0);

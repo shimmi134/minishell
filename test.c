@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/20 21:40:36 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/20 21:52:26 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
 {
 	int		*pids;
 	int		pid;
-	int		prev_fd;
 	int		count;
 
 	count = 0;
@@ -69,10 +68,10 @@ void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
 			*last_status_ptr_out = elem->exit_status_code;
 			elem = elem->next;
 		}
+		else
+			break ;
 	}
-	if (*fd_val != -1)
-		close(prev_fd);
-	wait_children(pids, count, *last_status_ptr_out);
+	wait_children(pids, count, *last_status_ptr_out, fd_val);
 }
 
 void	do_commands(t_shell *elem, t_env **env, int ac, int fd_val)

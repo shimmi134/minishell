@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/20 21:41:01 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/20 21:56:14 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ void					set_flags(int *flags, int append);
 void					close_prev_next(int *prev_fd, int next_read,
 							int next_write);
 void					wait_children(int *pids, int count,
-							int *last_status_ptr);
+							int *last_status_ptr, int* fd_val);
 void					prepare_pipe(int next_pipe[2], int need, int *next_read,
 							int *next_write);
 void					init_rw(t_shell *elem, int *need_next, int *next_read,

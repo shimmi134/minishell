@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:30 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/04 01:28:44 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/20 22:02:25 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ int	is_token(char c)
 		return (1);
 	else if (c == '>')
 		return (1);
-//	else if (c == ';')
-//		return (1);
+	//	else if (c == ';')
+	//		return (1);
 	else if (c == '"')
 		return (1);
 	else
@@ -82,7 +82,7 @@ token_type	find_token_type(char *str)
 		return (TOKEN_REDIRECT_IN);
 	else if (c == '>')
 		return (TOKEN_REDIRECT_OUT);
-	//else if (c == ';')
+	// else if (c == ';')
 	//	return (TOKEN_SEPARATOR);
 	//  else if (is_word(str))
 	//     return(TOKEN_WORD);
