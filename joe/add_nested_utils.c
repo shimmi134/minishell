@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   add_nested_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:30:09 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 18:30:57 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/21 20:39:09 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

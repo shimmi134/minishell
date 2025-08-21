@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 19:32:46 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/21 20:33:35 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,7 +212,7 @@ void					free_shell(t_shell *element);
 void					create_shlvl(t_env *tail);
 void					init_env_vals(t_env **head, int *i, int *shlvl);
 void					change_path(t_env *temp, t_shell *elem);
-char	*handle_single(t_quote_vars *vars, int *i, char *str);
+void	handle_single(t_quote_vars *vars, int *i, char *str);
 void					print_cmd_list(t_cmd *head);
 t_token	*cmd_loop(t_token *tokens, t_cmd *cmds, int type, t_env *envp);
 void					free_cmds(t_cmd *head);

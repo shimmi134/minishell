@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   quote_utils2.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:51:10 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 18:51:23 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/21 20:38:35 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*handle_single(t_quote_vars *vars, int *i, char *str)
+void	handle_single(t_quote_vars *vars, int *i, char *str)
 {
 	if (!vars->arr)
 	{
@@ -34,10 +34,7 @@ char	*handle_single(t_quote_vars *vars, int *i, char *str)
 		}
 		vars->arr[vars->j] = '\0';
 	}
-	if (vars->arr)
-		free(vars->arr);
 	vars->quote_flag = 2;
-	return (vars->arr);
 }
 
 char	quote_type(int type)
