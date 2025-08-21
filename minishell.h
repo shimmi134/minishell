@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 14:56:58 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/21 18:35:18 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,9 +148,13 @@ int						valiaa(char *str);
 int						close_parent(int prev_fd, int has_next, int *next_pipe);
 int						execute_loop_loop(t_shell *elem, t_env **env,
 							int **last_status_ptr_out);
-int	init_execute(t_token *node, t_token *head, t_env *env, int *exit_status);
+int						init_execute(t_token *node, t_token *head, t_env *env,
+							int *exit_status);
 int						pre_exec(char *line, t_env *env, int *exit_status);
 int						check_line(char *str);
+int						execute_pipe_command(int *fd_val, t_env *env,
+							t_shell *element);
+int						calc_dollar(char *str);
 void					free_combined(int *exit_status, t_env *env);
 void					do_heredoc(t_cmd *t_head, t_env *env, int *exit_status,
 							int *fd_val);
@@ -211,6 +215,14 @@ void					add_arr(t_quote_vars *vars, t_struct_var *structs,
 							int *i);
 void					handle_slash(t_token **head, t_token **current,
 							char *str, int *i);
+void					heredoc_loop(int pipefd[2], t_heredoc *hd_temp,
+							t_env *env);
+void					expand_or_write(char *line, t_env *env, int pipefd,
+							t_heredoc *hd_temp);
+void					write_expand(char *line, t_env *env, int pipefd);
+void					execute_heredoc_command(t_heredoc *hd_temp,
+							t_shell *element, t_env *env, int *fd_val);
+void					delimiter_message(char *str);
 char					*ft_strdup(char *str);
 char					*ft_strdup_char(char c);
 char					*ft_strdup_char(char c);
@@ -223,8 +235,13 @@ char					*ft_strtrim(char const *s1, char const *set);
 char					*ft_strchr(const char *s, int c);
 char					*expand_with_quotes(char *str, t_env *env);
 char					*ft_itoa(int n);
+char					*copy_upto(int i, char *str);
+char					*copy_from_var(int i, char *str);
+char					*ret_exp(int i, char *str, t_env *env, char *tmp);
 char					*ft_dup_upto(char *str, char c);
+char					*heredoc_expand(char *str, t_env *env);
 char					**create_envp(t_env *env);
+char					**ft_strdup_double(char **str);
 size_t					ft_strlen(const char *s);
 pid_t					command_fork(t_shell *elem, t_env **env, int *prev_fd);
 t_env					*free_env_list_tmp(t_env *env);
