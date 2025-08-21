@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 04:43:52 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/20 22:03:54 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/20 21:44:57 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,13 @@ t_heredoc	*init_heredoc_struct(t_cmd *cmd)
 	else
 		heredoc->cmd = NULL;
 	if (cmd->args[0])
+	{
 		heredoc->args = ft_strdup_double(cmd->args);
+		for (int i = 0; i < ft_lensplit(heredoc->args); i++)
+			printf("Heredoc args: [%s]\n", heredoc->args[i]);
+		if (!heredoc->args)
+			printf("dup_double failed\n");
+	}
 	else
 		heredoc->args = NULL;
 	heredoc->heredoc_delim = ft_strdup(cmd->heredoc_delim);
@@ -58,7 +64,7 @@ t_heredoc	*init_heredoc_struct(t_cmd *cmd)
 
 void	free_heredoc(t_heredoc *heredoc)
 {
-	int	i;
+		int i;
 
 	if (!heredoc)
 		return ;
@@ -200,7 +206,7 @@ int	init_heredoc(t_heredoc *hd_temp, t_env *env, t_shell *element, int *fd_val)
 			perror("fork");
 	}
 	free_heredoc(hd_temp);
-	return (status);
+	return (0);
 }
 int	read_heredoc(t_heredoc *hd_temp, t_env *env)
 {
