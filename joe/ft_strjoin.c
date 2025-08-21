@@ -6,21 +6,20 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 21:28:54 by joshapir          #+#    #+#             */
-/*   Updated: 2025/07/28 20:51:44 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/21 14:52:28 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdlib.h>
-#include"../minishell.h"
-size_t  ft_strlen(const char    *s)
+#include "../minishell.h"
+
+size_t	ft_strlen(const char *s)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
-
 	while (s[i])
 		i++;
-	return(i);
+	return (i);
 }
 
 char	*ft_while(char *arr, char const *s1, char const *s2)
@@ -54,8 +53,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 
 	if (!s2)
 		return (NULL);
-	// if (ft_strcmp((char *)s1, "<<"))
-	// 	return("<<");
 	total = ft_strlen(s1) + ft_strlen(s2);
 	i = 0;
 	arr = malloc(total + 1);
@@ -63,63 +60,3 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (NULL);
 	return (ft_while(&arr[i], s1, s2));
 }
-/*int main()
-  {
-// Test cases
-char *str1 = "Hello, ";
-char *str2 = "World!";
-char *result;
-
-// Test 1: Normal concatenation
-result = ft_strjoin(str1, str2);
-if (result)
-{
-printf("Test 1: %s + %s = %s\n", str1, str2, result);
-free(result);  // Free the dynamically allocated memory
-}
-
-// Test 2: Empty string concatenation
-str1 = "";
-str2 = "World!";
-result = ft_strjoin(str1, str2);
-if (result)
-{
-printf("Test 2: %s + %s = %s\n", str1, str2, result);
-free(result);
-}
-
-// Test 3: Both strings are empty
-str1 = "";
-str2 = "";
-result = ft_strjoin(str1, str2);
-if (result)
-{
-printf("Test 3: %s + %s = %s\n", str1, str2, result);
-free(result);
-}
-
-// Test 4: One NULL input (should handle gracefully)
-str1 = NULL;
-str2 = "World!";
-result = ft_strjoin(str1, str2);
-if (result)
-{
-printf("Test 4: NULL + %s = %s\n", str2, result);
-free(result);
-}
-else
-{
-printf("Test 4: NULL input handled properly.\n");
-}
-
-// Test 5: Both NULL inputs (should return NULL)
-str1 = NULL;
-str2 = NULL;
-result = ft_strjoin(str1, str2);
-if (!result)
-{
-printf("Test 5: NULL + NULL = NULL (handled correctly)\n");
-}
-
-return 0;
-}*/

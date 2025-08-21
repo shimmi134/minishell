@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:30 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/04 01:28:44 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/21 14:50:08 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,12 @@ int	is_token(char c)
 		return (1);
 	else if (c == '>')
 		return (1);
-//	else if (c == ';')
-//		return (1);
 	else if (c == '"')
 		return (1);
 	else
 		return (0);
 }
+
 int	is_word(char *str)
 {
 	int	i;
@@ -44,8 +43,6 @@ int	is_word(char *str)
 		i++;
 	if (str[i - 1] == '\'' && str[0] == '\'')
 		return (1);
-	//   if (str[i - 1] == '"' && str[0] == '"')
-	//     return(1);
 	if (str[0] == '$')
 		return (1);
 	i = 0;
@@ -57,15 +54,12 @@ int	is_word(char *str)
 	}
 	return (1);
 }
+
 token_type	find_token_type(char *str)
 {
 	char	c;
 
-	// if (str[0])
 	c = str[0];
-	// printf("c = %c c + 1 = %c\n", c, str[1]);
-	//  else
-	//   return(TOKEN_INVALID);
 	if (c == '|')
 		return (TOKEN_PIPE);
 	else if (c == '$')
@@ -82,10 +76,6 @@ token_type	find_token_type(char *str)
 		return (TOKEN_REDIRECT_IN);
 	else if (c == '>')
 		return (TOKEN_REDIRECT_OUT);
-	//else if (c == ';')
-	//	return (TOKEN_SEPARATOR);
-	//  else if (is_word(str))
-	//     return(TOKEN_WORD);
 	else
 		return (TOKEN_INVALID);
 }

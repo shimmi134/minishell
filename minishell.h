@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/20 21:56:14 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/21 14:56:58 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <errno.h>
 # include <fcntl.h>
+# include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdbool.h>
@@ -147,6 +148,10 @@ int						valiaa(char *str);
 int						close_parent(int prev_fd, int has_next, int *next_pipe);
 int						execute_loop_loop(t_shell *elem, t_env **env,
 							int **last_status_ptr_out);
+int	init_execute(t_token *node, t_token *head, t_env *env, int *exit_status);
+int						pre_exec(char *line, t_env *env, int *exit_status);
+int						check_line(char *str);
+void					free_combined(int *exit_status, t_env *env);
 void					do_heredoc(t_cmd *t_head, t_env *env, int *exit_status,
 							int *fd_val);
 void					execute_loop(t_shell *elem, t_env **env, int *fd_val,
@@ -167,7 +172,7 @@ void					set_flags(int *flags, int append);
 void					close_prev_next(int *prev_fd, int next_read,
 							int next_write);
 void					wait_children(int *pids, int count,
-							int *last_status_ptr, int* fd_val);
+							int *last_status_ptr, int *fd_val);
 void					prepare_pipe(int next_pipe[2], int need, int *next_read,
 							int *next_write);
 void					init_rw(t_shell *elem, int *need_next, int *next_read,
@@ -242,6 +247,7 @@ token_type				find_token_type(char *str);
 int						assign_concat_flag(char *str, int i, t_token **current);
 void					add_arr(t_quote_vars *vars, t_struct_var *structs,
 							int *i);
-void					handle_slash(t_token **head, t_token **current, char *str, int *i);
+void					handle_slash(t_token **head, t_token **current,
+							char *str, int *i);
 void					fill_arr(char *str, int *i, t_quote_vars *vars);
 #endif

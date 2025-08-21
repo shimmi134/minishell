@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 04:43:52 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/20 21:44:57 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/21 14:37:22 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ t_heredoc	*init_heredoc_struct(t_cmd *cmd)
 
 void	free_heredoc(t_heredoc *heredoc)
 {
-		int i;
+	int	i;
 
 	if (!heredoc)
 		return ;

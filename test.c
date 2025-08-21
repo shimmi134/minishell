@@ -6,16 +6,11 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/20 21:52:26 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/21 14:57:00 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "minishell.h"
-#include <readline/history.h>
-#include <readline/readline.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 {
@@ -96,78 +91,55 @@ void	do_commands(t_shell *elem, t_env **env, int ac, int fd_val)
 		close(old_stdin);
 }
 
+int	init_execute(t_token *node, t_token *head, t_env *env, int *exit_status)
+{
+	t_cmd	*t_head;
+	t_shell	*element;
+
+	element = NULL;
+	t_head = init_cmds(node, *exit_status, env);
+	if (ft_strcmp(t_head->cmd, "exit") == 0)
+	{
+		free_tokens(head);
+		free_cmds(t_head);
+		return (1);
+	}
+	do_struct(&element, t_head, exit_status);
+	do_commands(element, &env, count_commands(element), -1);
+	if (t_head != NULL)
+		free_cmds(t_head);
+	if (element != NULL)
+	{
+		free_shell(element);
+		element = NULL;
+	}
+	return (0);
+}
+
 int	main(int argc, char *argv[], char *envp[])
 {
 	char		*line;
-	t_shell		*element;
-	t_token		*node;
-	t_token		*head;
-	t_cmd		*t_head;
 	t_env		*env;
 	int			*exit_status;
 
 	if (!envp || envp[0] == NULL)
 		return (printf("Error, no env detected.\n"), 1);
-	element = NULL;
 	exit_status = (int *)malloc(sizeof(int));
 	*exit_status = 0;
+	env = copy_env(envp);
 	while (1)
 	{
-		env = copy_env(envp);
 		if (!env)
 			return (printf("Error, copying the env.\n"), 1);
-		head = NULL;
-		t_head = NULL;
 		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN);
 		line = readline("\033[1;34mminishell>\033[0m ");
-		if (line == NULL)
-		{
-			printf("exit\n");
+		if (check_line(line) == 1)
 			break ;
-		}
-		if (line && *line)
-			add_history(line);
-		if (line != NULL && check_quotes(head, line))
-		{
-			node = lexer(line, env);
-			head = node;
-			if (check_tokens(head))
-			{
-				t_head = init_cmds(node, *exit_status, env);
-				if (ft_strcmp(t_head->cmd, "exit") == 0)
-				{
-					free(line);
-					free_tokens(head);
-					free_cmds(t_head);
-					break ;
-				}
-				free(line);
-				line = NULL;
-				do_struct(&element, t_head, exit_status);
-				argc = count_commands(element);
-				do_commands(element, &env, argc, -1);
-			}
-		}
-		if (line)
-			free(line);
-		if (element != NULL)
-		{
-			free_shell(element);
-			element = NULL;
-		}
-		if (head)
-			free_tokens(head);
-		if (t_head)
-			free_cmds(t_head);
-		if (env)
-			env = free_env_list_tmp(env);
+		if (pre_exec(line, env, exit_status) == 1)
+			break ;
 	}
 	clear_history();
-	if (exit_status)
-		free(exit_status);
-	if (env)
-		env = free_env_list_tmp(env);
-	clear_history();
+	free_combined(exit_status, env);
 	return (0);
 }
