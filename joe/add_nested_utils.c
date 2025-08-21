@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:30:09 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 20:39:09 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/21 21:05:30 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	add_single(t_struct_var *structs, t_quote_vars *vars)
 	}
 }
 
-void	add_arr(t_quote_vars *vars, t_struct_var *structs, int *i)
+void	add_arr(t_quote_vars *vars, t_struct_var *structs)
 {
 	t_token	*token;
 	t_token	**current;

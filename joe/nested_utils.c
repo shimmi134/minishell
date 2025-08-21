@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:36:57 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 18:37:15 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/21 21:32:08 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	handle_nested_single(t_struct_var *structs, t_quote_vars *vars,
 	if (vars->j > 0)
 	{
 		vars->arr[vars->j] = '\0';
-		flush_arr_in_single(structs, vars, str, i);
+		flush_arr_in_single(structs, vars);
 		vars->new_word = 0;
 	}
 	add_single(structs, vars);
@@ -82,7 +82,7 @@ void	handle_nested_slash(t_struct_var *structs, t_quote_vars *vars,
 	if (vars->j > 0)
 	{
 		vars->arr[vars->j] = '\0';
-		flush_arr_in_single(structs, vars, str, i);
+		flush_arr_in_single(structs, vars);
 		vars->new_word = 0;
 	}
 	add_slash(structs, vars);

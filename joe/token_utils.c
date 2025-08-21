@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:45 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 18:52:52 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/21 21:36:53 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void	if_not_token(char *str, t_token **head, t_token **current, int *i)
 
 t_token	*new_token(t_type type, char *value, int quote, int new_word)
 {
-	char	c;
 	t_token	*token;
 
 	token = malloc(sizeof(t_token));
@@ -62,7 +61,7 @@ t_token	*new_token(t_type type, char *value, int quote, int new_word)
 	init_token_flags(token, new_word, type, quote);
 	handle_var_assign(value, token, quote);
 	token->next = NULL;
-	if ((value && value[1] == '\0' || !value[0]) && type == TOKEN_WORD)
+	if (value && (value[1] == '\0' || !value[0]) && type == TOKEN_WORD)
 	{
 		if (value)
 			free(value);

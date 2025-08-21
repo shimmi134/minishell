@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:21:23 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/21 18:34:43 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/21 21:26:48 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	execute_pipe_command(int *fd_val, t_env *env, t_shell *element)
 	pid_t	pid;
 	int		status;
 
+	status = 0;
 	if (*fd_val != -1)
 	{
 		dup2(*fd_val, STDIN_FILENO);

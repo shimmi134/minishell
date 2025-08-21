@@ -6,14 +6,13 @@
 /*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:35:59 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 18:36:34 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/21 21:30:57 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	flush_arr_in_single(t_struct_var *structs, t_quote_vars *vars,
-		char *str, int *i)
+void	flush_arr_in_single(t_struct_var *structs, t_quote_vars *vars)
 {
 	if (*structs->current)
 	{

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:35:25 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 18:35:27 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/21 21:24:38 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,14 +72,14 @@ void	handle_varible(t_cmd *cmd, t_token *token, t_env *envp)
 	i = 0;
 }
 
-t_cmd	*handle_pipes(t_cmd *cmds, t_token *tokens, t_env *envp)
+t_cmd	*handle_pipes(t_cmd *cmds, t_token *tokens)
 {
 	if (!cmds->cmd)
 	{
 		cmds->cmd = cmds->args[0];
 		shift_left(cmds->args);
 	}
-	cmds->next = new_cmd_token(tokens, envp);
+	cmds->next = new_cmd_token(tokens);
 	cmds = cmds->next;
 	return (cmds);
 }
@@ -88,7 +88,6 @@ t_token	*assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp)
 {
 	int		type;
 	int		i;
-	char	*temp;
 
 	i = 0;
 	type = token->type;

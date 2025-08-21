@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 04:43:52 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 18:23:14 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/21 21:26:22 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int	init_heredoc(t_heredoc *hd_temp, t_env *env, t_shell *element, int *fd_val)
 	pid_t	pid;
 	int		status;
 
+	status = 0;
 	if (hd_temp->heredoc_delim)
 	{
 		hd_temp->heredoc_fd = read_heredoc(hd_temp, env);
@@ -84,6 +85,7 @@ int	wait_status(pid_t pid)
 {
 	int	status;
 
+	status = 0;
 	waitpid(pid, &status, 0);
 	if (WIFSIGNALED(status))
 	{
@@ -103,6 +105,7 @@ int	read_heredoc(t_heredoc *hd_temp, t_env *env)
 	pid_t	pid;
 	int		pipefd[2];
 
+	status = 0;
 	if (pipe(pipefd) == -1)
 		return (-1);
 	pid = fork();

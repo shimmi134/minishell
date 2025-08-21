@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:01:45 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/18 15:02:01 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/21 21:43:42 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	change_env(t_env **env, char *oldpwd, char *str)
 	}
 }
 
-int	cd_back(t_shell *elem, t_env **env, char *oldpwd)
+int	cd_back(t_env **env, char *oldpwd)
 {
 	char	*str;
 	t_env	*temp;
@@ -104,7 +104,7 @@ int	do_cd(t_shell *elem, t_env **env)
 	if (i != -1)
 		i = cd_correct(env, oldpwd);
 	else if (!ft_strncmp("-\0", elem->command->args[0], 2))
-		i = cd_back(elem, env, oldpwd);
+		i = cd_back(env, oldpwd);
 	if (i == -1)
 		return (printf("cd: %s: %s\n", strerror(errno), elem->command->args[0]),
 			1);

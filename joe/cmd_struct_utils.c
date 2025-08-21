@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:53:48 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 19:00:51 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/21 21:23:55 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	shift_left(char **arr)
 {
 	int		i;
-	char	*tmp;
 
 	i = 0;
 	while (arr[i + 1])
@@ -28,7 +27,6 @@ void	shift_left(char **arr)
 
 void	handle_join(t_cmd *cmds, int i)
 {
-	char	*joined;
 	char	*tmp;
 
 	if (!cmds->args[i - 1] || !cmds->args[i])
@@ -43,12 +41,12 @@ void	handle_join(t_cmd *cmds, int i)
 void	type_if(int type, t_cmd *cmds, t_token *tokens, t_env *envp)
 {
 	if (type == TOKEN_PIPE)
-		cmds = handle_pipes(cmds, tokens, envp);
+		cmds = handle_pipes(cmds, tokens);
 	else if (type == TOKEN_VARIABLE && !tokens->inside_double
 		&& (tokens->next->inside_single || tokens->next->inside_double))
 		tokens = tokens->next;
 	if (tokens->type == TOKEN_WORD)
-		tokens = assign_args(tokens, cmds, envp);
+		tokens = assign_args(tokens, cmds);
 	else
 		tokens = assign_ctl_tokens(tokens, cmds, envp);
 }
@@ -75,7 +73,7 @@ t_token	*cmd_loop(t_token *tokens, t_cmd *cmds, int type, t_env *envp)
 	return (tokens);
 }
 
-t_cmd	*init_cmds(t_token *tokens, int exit_code, t_env *envp)
+t_cmd	*init_cmds(t_token *tokens, int exit_code, t_env *env)
 {
 	t_cmd	*head;
 	t_cmd	*cmds;
@@ -83,10 +81,11 @@ t_cmd	*init_cmds(t_token *tokens, int exit_code, t_env *envp)
 	int		type;
 
 	i = 0;
-	cmds = new_cmd_token(tokens, envp);
+	type = 0;
+	cmds = new_cmd_token(tokens);
 	cmds->exit_code = exit_code;
 	head = cmds;
-	tokens = cmd_loop(tokens, cmds, type, envp);
+	tokens = cmd_loop(tokens, cmds, type, env);
 	if (!tokens || tokens->new_word)
 	{
 		while (cmds->next)

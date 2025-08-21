@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:47:05 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 20:36:46 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/21 21:34:25 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,6 @@ void	add_quoted_word_2(char *str, int *i, int type, t_struct_var *structs)
 	else
 		handle_single(vars, i, str);
 	if (vars->arr)
-		add_arr(vars, structs, i);
+		add_arr(vars, structs);
 	free_quoted_vars(&vars);
 }

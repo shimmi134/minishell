@@ -6,13 +6,13 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:34:22 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 19:05:12 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/21 21:08:41 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_cmd	*new_cmd_token(t_token *tokens, t_env *envp)
+t_cmd	*new_cmd_token(t_token *tokens)
 {
 	int		count;
 	int		i;
@@ -41,12 +41,9 @@ t_cmd	*new_cmd_token(t_token *tokens, t_env *envp)
 	return (cmd);
 }
 
-t_token	*assign_args(t_token *tokens, t_cmd *cmds, t_env *env)
+t_token	*assign_args(t_token *tokens, t_cmd *cmds)
 {
-	t_token	*current_t;
-	t_cmd	*current_c;
 	int		i;
-	char	*tmp;
 
 	i = 0;
 	while (cmds->args[i])

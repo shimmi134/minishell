@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 19:23:01 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/21 21:29:45 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ void	handle_sigint(int sig_num)
 t_env	*free_env_list_tmp(t_env *env)
 {
 	t_env	*tmp;
-	char	*str;
 
 	if (!env)
 		return (NULL);

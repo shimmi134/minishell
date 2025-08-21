@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 20:50:21 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/21 21:33:19 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,8 +141,7 @@ void	assign_var_token(t_struct_var *structs, t_quote_vars *vars, char *str,
 void	assign_arr_memory(t_quote_vars *vars);
 void	add_slash(t_struct_var *structs, t_quote_vars *vars);
 void	add_single(t_struct_var *structs, t_quote_vars *vars);
-void	add_arr(t_quote_vars *vars, t_struct_var *structs, int *i);
-int						check_quotes(t_token *token, char *str);
+int						check_quotes(char *str);
 int						read_heredoc(t_heredoc *hd_temp, t_env *env);
 int						count_len(char **av);
 int						count_commands(t_shell *sh);
@@ -241,8 +240,7 @@ void					handle_quote(char *str, int *i, int type,
 							t_struct_var *structs);
 void					handle_empty_quotes(int *i, int new_word, t_token **head,
 							t_token **current);
-void					add_arr(t_quote_vars *vars, t_struct_var *structs,
-							int *i);
+void					add_arr(t_quote_vars *vars, t_struct_var *structs);
 void					handle_slash(t_token **head, t_token **current,
 							char *str, int *i);
 void					heredoc_loop(int pipefd[2], t_heredoc *hd_temp,
@@ -275,7 +273,7 @@ char					**ft_strdup_double(char **str);
 size_t					ft_strlen(const char *s);
 pid_t					command_fork(t_shell *elem, t_env **env, int *prev_fd);
 t_env					*free_env_list_tmp(t_env *env);
-t_cmd					*new_cmd_token(t_token *tokens, t_env *envp);
+t_cmd					*new_cmd_token(t_token *tokens);
 t_cmd					*init_cmds(t_token *tokens, int exit_code, t_env *env);
 t_env					*copy_env(char *envp[]);
 t_env					*create_node(char *env);
@@ -285,13 +283,12 @@ t_env					*create_env_node(char *arg, t_env **env, int flag,
 t_token					*handle_redirect(t_cmd *cmd, t_token *token, int type);
 t_token					*handle_heredoc(t_cmd *cmd, t_token *token);
 void					handle_varible(t_cmd *cmd, t_token *token, t_env *envp);
-t_cmd					*handle_pipes(t_cmd *cmds, t_token *tokens, t_env *envp);
-t_token					*assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp);	
+t_cmd					*handle_pipes(t_cmd *cmds, t_token *tokens);
 t_token					*new_token(t_type type, char *value, int flag,
 							int new_word);
 t_token					*lexer(char *str, t_env *env);
 t_token					*add_word(char *str, int *i);
-t_token					*assign_args(t_token *tokens, t_cmd *cmds, t_env *env);
+t_token					*assign_args(t_token *tokens, t_cmd *cmds);
 void					quote_if(char *str, t_token **head, t_token **current, int *i);
 void					add_quoted_word_2(char *str, int *i, int type, t_struct_var *structs);
 void					quoted_arr_len(char *str, t_quote_vars *vars);
@@ -299,8 +296,7 @@ void					init_quoted_vars(t_quote_vars *vars);
 void					free_and_null(char **str);
 void					free_quoted_vars(t_quote_vars **vars);
 int						init_quote_vars(char **arr, int *quote, int type, int *i);
-void					flush_arr_in_single(t_struct_var *structs, t_quote_vars *vars,
-							char *str, int *i);
+void					flush_arr_in_single(t_struct_var *structs, t_quote_vars *vars);
 void					handle_quote(char *str, int *i, int type, t_struct_var *structs);
 void					fill_arr(char *str, int *i, t_quote_vars *vars);
 void					handle_double(t_quote_vars *vars, int *i, char *str,
@@ -308,16 +304,13 @@ void					handle_double(t_quote_vars *vars, int *i, char *str,
 void					handle_slash(t_token **head, t_token **current, char *str, int *i);
 void					add_arr_to_head(t_struct_var *structs, t_quote_vars *vars);
 void					flush_to_head(t_struct_var *structs, t_quote_vars *vars);
-t_token					*assign_ctl_tokens(t_token *token, t_cmd *cmd,
-							t_env *envp);
+t_token					*assign_ctl_tokens(t_token *token, t_cmd *cmd, t_env *envp);
 t_heredoc				*init_heredoc_struct(t_cmd *cmd);
 t_type					find_token_type(char *str);
 int						find_char_pos(char *str, char c);
 void					shift_left(char **arr);
 void					handle_join(t_cmd *cmds, int i);
 int						assign_concat_flag(char *str, int i, t_token **current);
-void					add_arr(t_quote_vars *vars, t_struct_var *structs,
-							int *i);
 void					type_if(int type, t_cmd *cmds, t_token *tokens, t_env *envp);
 void					handle_slash(t_token **head, t_token **current,
 							char *str, int *i);

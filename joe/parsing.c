@@ -6,13 +6,13 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 19:28:34 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/21 21:33:39 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	check_quotes(t_token *token, char *str)
+int	check_quotes(char *str)
 {
 	int	i;
 
@@ -93,7 +93,6 @@ int	token_loop(t_token *tokens)
 int	check_tokens(t_token *tokens)
 {
 	t_token	*head;
-	int		prev_type;
 
 	head = tokens;
 	if (!tokens)

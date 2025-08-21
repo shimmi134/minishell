@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 19:42:05 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/21 21:29:31 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,7 @@
 void	lexer_loop(char *str, t_token **head, t_token **current, int *i)
 {
 	int		type;
-	int		quote;
 	int		len;
-	t_token	*tmp;
 
 	*head = NULL;
 	len = ft_strlen(str);

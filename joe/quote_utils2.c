@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:51:10 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 20:38:35 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/21 21:35:02 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ t_token	*add_word(char *str, int *i)
 
 void	quote_if(char *str, t_token **head, t_token **current, int *i)
 {
-	t_token			*tmp;
 	int				new_word;
 	int				type;
 	int				quote;
