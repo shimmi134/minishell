@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:30 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 14:50:08 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/21 18:10:00 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	is_word(char *str)
 	return (1);
 }
 
-token_type	find_token_type(char *str)
+t_type	find_token_type(char *str)
 {
 	char	c;
 
