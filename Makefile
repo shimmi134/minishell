@@ -23,7 +23,7 @@ $(NAME): $(OBJ) $(LIB)
 	cc $(OBJ) -L/usr/include -lreadline -lhistory $(LIB) -g -o $(NAME)
 
 %.o: %.c $(INCLUDE) Makefile
-	cc $(FLAGS) -g -c $< -o $@
+	cc  -g -c $< -o $@
 
 libft.a:
 	$(MAKE) -C libft

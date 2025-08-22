@@ -56,7 +56,7 @@ int	pre_exec(char *line, t_env *env, int *exit_status)
 	head = NULL;
 	if (line && *line)
 		add_history(line);
-	if (line != NULL && check_quotes(head, line))
+	if (line != NULL && check_quotes(line))
 	{
 		node = lexer(line, env);
 		line = NULL;
