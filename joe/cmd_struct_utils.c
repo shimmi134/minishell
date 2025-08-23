@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:53:48 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 16:16:38 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:49:32 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	type_if(int type, t_cmd **cmds, t_token **tokens, t_env *envp)
 		assign_ctl_tokens(tokens, cmds, envp);
 }
 
-void 	cmd_loop(t_token **tokens, t_cmd **cmds, int type, t_env *envp)
+void	cmd_loop(t_token **tokens, t_cmd **cmds, int type, t_env *envp)
 {
 	int	i;
 
@@ -59,7 +59,7 @@ void 	cmd_loop(t_token **tokens, t_cmd **cmds, int type, t_env *envp)
 	{
 		i = 0;
 		type = (*tokens)->type;
-			type_if(type, cmds, tokens, envp);
+		type_if(type, cmds, tokens, envp);
 		while ((*cmds)->args[i])
 			i++;
 		i = i - 1;
@@ -70,7 +70,6 @@ void 	cmd_loop(t_token **tokens, t_cmd **cmds, int type, t_env *envp)
 			*tokens = (*tokens)->next;
 		*tokens = (*tokens)->next;
 	}
-	//return (tokens);
 }
 
 t_cmd	*init_cmds(t_token *tokens, int exit_code, t_env *env)

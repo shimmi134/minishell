@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:35:25 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 16:23:36 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:47:33 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	handle_redirect(t_cmd **cmd, t_token **token, int type)
 			free((*cmd)->outfile);
 		(*cmd)->outfile = ft_strdup((*token)->value);
 	}
-//	return (token);
 }
 
 void	handle_heredoc(t_cmd **cmd, t_token **token)
@@ -42,7 +41,6 @@ void	handle_heredoc(t_cmd **cmd, t_token **token)
 	(*cmd)->heredoc_delim = ft_strdup((*token)->value);
 	if ((*token)->inside_single || (*token)->inside_double)
 		(*cmd)->heredoc_quoted = 1;
-	//return (token);
 }
 
 void	handle_varible(t_cmd **cmd, t_token **token, t_env *envp)
@@ -81,7 +79,6 @@ void	handle_pipes(t_cmd **cmds, t_token **tokens)
 	}
 	(*cmds)->next = new_cmd_token(*tokens);
 	*cmds = (*cmds)->next;
-//	return (cmds);
 }
 
 void	assign_ctl_tokens(t_token **token, t_cmd **cmd, t_env *envp)
@@ -104,5 +101,4 @@ void	assign_ctl_tokens(t_token **token, t_cmd **cmd, t_env *envp)
 	}
 	else if (type == TOKEN_VARIABLE)
 		handle_varible(cmd, token, envp);
-//	return (token);
 }

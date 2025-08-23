@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:34:22 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 16:11:11 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:46:42 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void	assign_args(t_token *tokens, t_cmd **cmds)
 		i++;
 	}
 	(*cmds)->args[i] = NULL;
-//	return (tokens);
 }
 
 int	arg_count(t_token *tokens)
