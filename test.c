@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/23 16:46:16 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:54:32 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,8 @@ int	init_execute(t_token *node, t_token *head, t_env *env, int *exit_status)
 	}
 	do_struct(&element, t_head, exit_status);
 	do_commands(element, &env, -1);
+	if (t_head)
+		free_cmds(t_head);
 	if (element != NULL)
 	{
 		free_shell(element);
