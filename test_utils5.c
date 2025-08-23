@@ -6,17 +6,25 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:21:10 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/18 15:21:35 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 20:37:07 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int	ft_abs(int num)
+{
+	if (num >= 0)
+		return (num);
+	else
+		return (-num);
+}
+
 void	do_shlvl(t_env *env)
 {
 	char	*str;
 
-	if (ft_atoi(env->value) >= 1000)
+	if (ft_abs(ft_atoi(env->value)) >= 1000)
 		env->value = ft_itoa(1);
 	str = env->value;
 	env->value = ft_itoa(ft_atoi(env->value) + 1);

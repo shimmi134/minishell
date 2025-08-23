@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:26:05 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/18 15:00:46 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 20:49:34 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,19 @@ char	*join_split(char **split)
 	return (str);
 }
 
+char	*correct_shlvl(char *split)
+{
+	if (ft_abs(ft_atoi(split)) > 1000)
+	{
+		free(split);
+		return (ft_strdup("0"));
+	}
+	return (free(split), ft_itoa(ft_atoi(split) + 1));
+}
+
 t_env	*create_node(char *env)
 {
 	char	**split;
-	char	*str;
 	t_env	*node;
 	int		i;
 
@@ -75,9 +84,7 @@ t_env	*create_node(char *env)
 		return (NULL);
 	if (ft_strncmp(split[0], "SHLVL", 5) == 0)
 	{
-		str = split[1];
-		split[1] = ft_itoa(ft_atoi(split[1]) + 1);
-		free(str);
+		split[1] = correct_shlvl(split[1]);
 	}
 	node = malloc(sizeof(t_env));
 	if (!node)
