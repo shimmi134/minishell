@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:22:28 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/23 16:06:29 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:45:38 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,4 +89,14 @@ void	child_outfile(t_shell *elem)
 		}
 		close(fd);
 	}
+}
+
+int	pre_start_check(int ac, char **av, char **ep)
+{
+	if (ac != 1)
+		return (printf("Please only run the executable.\n"), 0);
+	(void)av;
+	if (!ep || !ep[0])
+		return (printf("Error, no env detected.\n"), 0);
+	return (1);
 }

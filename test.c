@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/23 16:43:15 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:46:16 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,24 +106,12 @@ int	init_execute(t_token *node, t_token *head, t_env *env, int *exit_status)
 	}
 	do_struct(&element, t_head, exit_status);
 	do_commands(element, &env, -1);
-	/*if (t_head != NULL)
-		free_cmds(t_head);*/
 	if (element != NULL)
 	{
 		free_shell(element);
 		element = NULL;
 	}
 	return (0);
-}
-
-int	pre_start_check(int ac, char **av, char **ep)
-{
-	if (ac != 1)
-		return (printf("Please only run the executable.\n"), 0);
-	(void)av;
-	if (!ep || !ep[0])
-		return (printf("Error, no env detected.\n"), 0);
-	return (1);
 }
 
 int	main(int argc, char *argv[], char *envp[])

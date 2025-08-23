@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 16:41:00 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:49:07 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,8 @@ int						check_line(char *str);
 int						execute_pipe_command(int *fd_val, t_env *env,
 							t_shell *element);
 int						calc_dollar(char *str);
+int						pre_start_check(int ac, char **av, char **ep);
+int						len_spn(char *str);
 void					free_combined(int *exit_status, t_env *env);
 void					do_heredoc(t_cmd *t_head, t_env *env, int *exit_status,
 							int *fd_val);

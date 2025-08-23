@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:07:51 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/23 15:56:46 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:49:36 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,7 @@ int	*find_newline(t_shell *elem)
 	newline = 1;
 	while (i < count_len(elem->command->args)
 		&& !ft_strncmp(elem->command->args[i], "-n", 2)
-		&&(int)ft_strlen(elem->command->args[i]) == ft_strspn(elem->command->args[i],
-			"-n") && valiaa(elem->command->args[i]))
+		&& len_spn(elem->command->args[i]) && valiaa(elem->command->args[i]))
 	{
 		newline = 0;
 		i++;

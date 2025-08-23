@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:40:58 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/23 15:57:28 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:48:49 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,9 @@ int	valiaa(char *str)
 		i++;
 	}
 	return (1);
+}
+
+int	len_spn(char *str)
+{
+	return ((int)ft_strlen(str) == ft_strspn(str, "-n"));
 }
