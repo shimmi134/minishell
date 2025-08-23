@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:22:28 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/23 16:45:38 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 17:09:51 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	do_builtins(t_shell *elem, t_env **env)
 	if (!ft_strncmp(elem->command->cmd, "pwd", 3))
 		return (do_pwd());
 	else if (!ft_strncmp(elem->command->cmd, "env", 3))
-		return (do_env(env));
+		return (do_env(env, elem));
 	else if (!ft_strncmp(elem->command->cmd, "unset", 5))
 		return (do_unset(elem, env));
 	else if (!ft_strncmp(elem->command->cmd, "echo", 4))

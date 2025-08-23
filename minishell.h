@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 17:43:04 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 17:50:43 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ void					handle_nested_status(t_struct_var *structs,
 							t_quote_vars *vars, char *str, int *i);
 void					add_status(t_struct_var *structs, t_quote_vars *vars);
 int						do_pwd(void);
-int						do_env(t_env **env);
+int						do_env(t_env **env, t_shell *elem);
 int						do_unset(t_shell *elem, t_env **env);
 int						ft_isalnum(int c);
 int						ft_isdigit(int c);
@@ -182,6 +182,7 @@ int						execute_pipe_command(int *fd_val, t_env *env,
 int						calc_dollar(char *str);
 int						pre_start_check(int ac, char **av, char **ep);
 int						len_spn(char *str);
+int						incorr_env(t_shell *elem);
 void					free_combined(int *exit_status, t_env *env);
 void					do_heredoc(t_cmd *t_head, t_env *env, int *exit_status,
 							int *fd_val);

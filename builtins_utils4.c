@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:07:51 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/23 16:49:36 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 17:29:36 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,11 +97,22 @@ int	do_pwd(void)
 	return (0);
 }
 
-int	do_env(t_env **env)
+int	do_env(t_env **env, t_shell *elem)
 {
 	t_env	*nd;
+	int		v;
 
 	nd = (*env);
+	v = incorr_env(elem);
+	if (v != 0)
+	{
+		if (v == 1)
+			return (printf("Error copying the env.\n"), 1);
+		else if (v == 2)
+			return (127);
+		else
+			return (0);
+	}
 	while (nd)
 	{
 		if (nd->value != NULL)

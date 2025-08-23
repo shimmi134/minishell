@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 13:21:28 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/18 14:05:58 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 17:48:04 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,25 @@ int	do_unset(t_shell *elem, t_env **env)
 		nd = nd->next;
 	}
 	return (0);
+}
+
+int	incorr_env(t_shell *elem)
+{
+	char	*str;
+	char	*str2;
+	int		v;
+
+	v = 0;
+	str = elem->command->args[0];
+	str2 = elem->command->args[1];
+	if (str2)
+		v = access(str2, F_OK | X_OK);
+	if (str && ft_strncmp(str, "-", 1) == 0 && !str2)
+		return (3);
+	if (str && !str2)
+		return (3);
+	if (v == -1)
+		return (printf("env: '%s': %s\n", str2, strerror(errno)), 2);
+	return (str && ft_strncmp(str, "-i", 2) == 0 && str2 && ft_strncmp(str2,
+			"./minishell", ft_strlen(str2)) == 0);
 }
