@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 21:33:39 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:29:02 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	token_loop_if(t_token *tokens)
 			return (printf("Syntax error: expected filename\n"), 0);
 		else if ((tokens->next->type) && tokens->next->type != TOKEN_WORD)
 			return (printf("Syntax error: expected filename\n"), 0);
-		if (tokens->next->next)
+		if (tokens->next->next && tokens->next->next->type == TOKEN_WORD)
 			return ((printf("Syntax error: unexpected token `%s'\n",
 						tokens->next->next->value), 0));
 	}

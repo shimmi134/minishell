@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:51:10 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 21:35:02 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:25:00 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,10 @@ void	handle_empty_quotes(int *i, int new_word, t_token **head,
 		*current = (*current)->next;
 	}
 	else
+	{
 		*head = token;
-	*current = *head;
+		*current = *head;
+	}
 }
 
 t_token	*add_word(char *str, int *i)

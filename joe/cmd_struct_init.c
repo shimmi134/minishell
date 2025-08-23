@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:34:22 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 21:08:41 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:11:11 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,20 @@ t_cmd	*new_cmd_token(t_token *tokens)
 	return (cmd);
 }
 
-t_token	*assign_args(t_token *tokens, t_cmd *cmds)
+void	assign_args(t_token *tokens, t_cmd **cmds)
 {
 	int		i;
 
 	i = 0;
-	while (cmds->args[i])
+	while ((*cmds)->args[i])
 		i++;
 	if (tokens && tokens->value && tokens->type == TOKEN_WORD)
 	{
-		cmds->args[i] = ft_strdup(tokens->value);
+		(*cmds)->args[i] = ft_strdup(tokens->value);
 		i++;
 	}
-	cmds->args[i] = NULL;
-	return (tokens);
+	(*cmds)->args[i] = NULL;
+//	return (tokens);
 }
 
 int	arg_count(t_token *tokens)
