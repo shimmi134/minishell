@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   allocate_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:31:25 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 18:32:05 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 17:05:30 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,13 @@ void	allocate_word_arr(char **arr, char *str, int *i, int j)
 void	allocate_after_single(char *str, t_quote_vars *vars, int *i)
 {
 	while (str[vars->j] && str[vars->j] != '"' && str[(*i)] != '\''
-		&& str[vars->j] != '$' && str[vars->j] != '/')
+		&& str[vars->j] != '$' && str[vars->j] != '/' && str[vars->j] != '?')
 	{
 		vars->k++;
 		vars->j++;
 	}
 	if (vars->j == (*i) && str[vars->j] != '$' && str[vars->j] != '\''
-		&& str[vars->j] != '/')
+		&& str[vars->j] != '/' && str[vars->j] != '?')
 	{
 		vars->arr = NULL;
 		return ;

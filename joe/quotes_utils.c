@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:47:05 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 21:34:25 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 17:18:44 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	handle_double(t_quote_vars *vars, int *i, char *str,
 			handle_nested_var(structs, vars, str, i);
 		else if (str[(*i)] == '/')
 			handle_nested_slash(structs, vars, str, i);
+		else if (str[(*i)] == '?')
+			handle_nested_status(structs, vars, str, i);
 		vars->j = 0;
 		fill_arr(str, i, vars);
 		if (vars->arr)
@@ -39,7 +41,7 @@ void	handle_double(t_quote_vars *vars, int *i, char *str,
 void	fill_arr(char *str, int *i, t_quote_vars *vars)
 {
 	while (str[(*i)] && str[(*i)] != '"' && str[(*i)] != '\''
-		&& str[(*i)] != '$' && str[(*i)] != '/')
+		&& str[(*i)] != '$' && str[(*i)] != '/' && str[(*i)] != '?')
 	{
 		vars->arr[vars->j] = str[(*i)];
 		vars->j++;
@@ -67,8 +69,9 @@ void	handle_quote(char *str, int *i, int type, t_struct_var *structs)
 
 void	quoted_arr_len(char *str, t_quote_vars *vars)
 {
+	vars->j = 0;
 	while (str[vars->j] && (str[vars->j] != '\'' && str[vars->j] != '"'
-			&& str[vars->j] != '$' && str[vars->j] != '/'))
+			&& str[vars->j] != '$' && str[vars->j] != '/' && str[vars->j] != '?'))
 		vars->j++;
 }
 

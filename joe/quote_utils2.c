@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:51:10 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 16:25:00 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 17:20:09 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,20 @@ void	handle_single(t_quote_vars *vars, int *i, char *str)
 	if (!vars->arr)
 	{
 		vars->j = (*i);
-		while (str[vars->j] && str[vars->j] != vars->type)
+		vars->k = 0;
+		while (str[vars->j] && str[vars->j] != '\'')
+		{
 			vars->j++;
-		vars->arr = malloc(sizeof(char) * (vars->j + 1));
+			vars->k++;
+		}
+		vars->arr = malloc(sizeof(char) * (vars->k + 1));
 		if (!vars->arr)
 			exit(EXIT_FAILURE);
 	}
 	if (vars->arr)
 	{
 		vars->j = 0;
-		while ((str[(*i)]) && str[(*i)] != vars->quote)
+		while ((str[(*i)]) && str[(*i)] != '\'')
 		{
 			vars->arr[vars->j] = str[(*i)];
 			(*i)++;

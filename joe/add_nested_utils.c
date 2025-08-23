@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:30:09 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 21:05:30 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 17:04:07 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,21 @@ void	add_slash(t_struct_var *structs, t_quote_vars *vars)
 	else
 	{
 		*structs->head = new_token(TOKEN_WORD, ft_strdup_char('/'), 1,
+				vars->new_word);
+		*structs->current = *structs->head;
+	}
+}
+void	add_status(t_struct_var *structs, t_quote_vars *vars)
+{
+	if ((*structs->current))
+	{
+		(*structs->current)->next = new_token(TOKEN_WORD, ft_strdup_char('?'),
+				1, vars->new_word);
+		*structs->current = (*structs->current)->next;
+	}
+	else
+	{
+		*structs->head = new_token(TOKEN_WORD, ft_strdup_char('?'), 1,
 				vars->new_word);
 		*structs->current = *structs->head;
 	}

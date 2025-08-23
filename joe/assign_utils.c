@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   assign_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:32:21 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 18:33:48 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 17:07:01 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,14 @@ t_token	*assign_word_arr(char *arr, int new_word)
 
 void	assign_after_var(char *str, t_quote_vars *vars, int *i)
 {
-	while (str[vars->j] && str[vars->j] != '"' && str[(*i)] != '\''
-		&& str[vars->j] != '$' && str[vars->j] != '/')
+	while (str[vars->j] && str[vars->j] != '"' && str[vars->j] != '\''
+		&& str[vars->j] != '$' && str[vars->j] != '/' && str[vars->j] != '?')
 	{
 		vars->k++;
 		vars->j++;
 	}
 	if (vars->j == (*i) && str[vars->j] != '$' && str[vars->j] != '\''
-		&& str[vars->j] != '/')
+		&& str[vars->j] != '/' && str[vars->j] != '?')
 	{
 		if (vars->arr)
 			free(vars->arr);
