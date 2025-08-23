@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/23 16:05:36 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:43:15 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ int	pre_start_check(int ac, char **av, char **ep)
 {
 	if (ac != 1)
 		return (printf("Please only run the executable.\n"), 0);
-	av[0][0] = '.';
+	(void)av;
 	if (!ep || !ep[0])
 		return (printf("Error, no env detected.\n"), 0);
 	return (1);
