@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:31:25 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 17:05:30 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 18:18:35 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,16 @@ void	allocate_word_arr(char **arr, char *str, int *i, int j)
 		exit(EXIT_FAILURE);
 	j = 0;
 	while ((str[(*i)]) && !is_token(str[(*i)]) && str[(*i)] != ' '
-		&& str[(*i)] != '/')
+		&& str[(*i)] != '/' && str[(*i)] != '\'' && str[(*i)] != '?')
+	{
 		(*arr)[j++] = str[(*i)++];
+	}
 	(*arr)[j] = '\0';
 }
 
 void	allocate_after_single(char *str, t_quote_vars *vars, int *i)
 {
+	vars->k = 0;
 	while (str[vars->j] && str[vars->j] != '"' && str[(*i)] != '\''
 		&& str[vars->j] != '$' && str[vars->j] != '/' && str[vars->j] != '?')
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   test_utils10.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 16:03:16 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/23 16:05:45 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 18:22:39 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ int	pre_exec(char *line, t_env *env, int *exit_status)
 			if (init_execute(node, head, env, exit_status) == 1)
 				return (1);
 	}
+	if (line)
+		free(line);
 	if (head)
 		free_tokens(head);
 	return (0);

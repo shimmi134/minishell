@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:47:05 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 17:29:53 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 18:18:51 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	handle_double(t_quote_vars *vars, int *i, char *str,
 
 void	fill_arr(char *str, int *i, t_quote_vars *vars)
 {
+	vars->j = 0;
 	while (str[(*i)] && str[(*i)] != '"' && str[(*i)] != '\''
 		&& str[(*i)] != '$' && str[(*i)] != '/' && str[(*i)] != '?')
 	{
@@ -69,7 +70,7 @@ void	handle_quote(char *str, int *i, int type, t_struct_var *structs)
 
 void	quoted_arr_len(char *str, t_quote_vars *vars)
 {
-	vars->j = 0;
+	//vars->j = 0;
 	while (str[vars->j] && (str[vars->j] != '\'' && str[vars->j] != '"'
 			&& str[vars->j] != '$' && str[vars->j] != '/'
 			&& str[vars->j] != '?'))
