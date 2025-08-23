@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:31:25 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 18:18:35 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 21:09:59 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	allocate_word_arr(char **arr, char *str, int *i, int j)
 		exit(EXIT_FAILURE);
 	j = 0;
 	while ((str[(*i)]) && !is_token(str[(*i)]) && str[(*i)] != ' '
-		&& str[(*i)] != '/' && str[(*i)] != '\'' && str[(*i)] != '?')
+		&& str[(*i)] != '/' && str[(*i)] != '\'')
 	{
 		(*arr)[j++] = str[(*i)++];
 	}
