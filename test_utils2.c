@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:26:05 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/23 20:49:34 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 21:47:51 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,16 +60,6 @@ char	*join_split(char **split)
 		i++;
 	}
 	return (str);
-}
-
-char	*correct_shlvl(char *split)
-{
-	if (ft_abs(ft_atoi(split)) > 1000)
-	{
-		free(split);
-		return (ft_strdup("0"));
-	}
-	return (free(split), ft_itoa(ft_atoi(split) + 1));
 }
 
 t_env	*create_node(char *env)

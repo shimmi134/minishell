@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 21:37:11 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 21:48:43 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,8 +170,8 @@ void					add_space(t_struct_var *structs, t_quote_vars *vars);
 int						run_builtin(t_shell *elem, t_env **env);
 int						export_error(char *arg);
 int						assign_concat_flag(char *str, int i, t_token **current);
-void					handle_nested_space(t_struct_var *structs, t_quote_vars *vars,
-							char *str, int *i);
+void					handle_nested_space(t_struct_var *structs,
+							t_quote_vars *vars, char *str, int *i);
 int						valiaa(char *str);
 int						close_parent(int prev_fd, int has_next, int *next_pipe);
 int						execute_loop_loop(t_shell *elem, t_env **env,
@@ -273,6 +273,7 @@ char					*ft_strdup_char(char c);
 char					*add_quoted_word(char *str, int *i, int type,
 							t_token **current);
 char					*expand_var(char *str, t_cmd *cmd, t_env *env);
+char					*correct_shlvl(char *split);
 char					**ft_split(char const *s, char c);
 char					*ft_strjoin(char const *s1, char const *s2);
 char					*ft_strtrim(char const *s1, char const *set);
