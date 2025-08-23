@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:22:28 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/20 14:38:31 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:06:29 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,32 +21,12 @@ int	do_builtins(t_shell *elem, t_env **env)
 	else if (!ft_strncmp(elem->command->cmd, "unset", 5))
 		return (do_unset(elem, env));
 	else if (!ft_strncmp(elem->command->cmd, "echo", 4))
-		return (do_echo(elem, env));
+		return (do_echo(elem));
 	else if (!ft_strncmp(elem->command->cmd, "export", 6))
 		return (do_export(elem, env));
 	else if (!ft_strncmp(elem->command->cmd, "cd", 2))
 		return (do_cd(elem, env));
 	return (0);
-}
-
-int	if_valid(char *str)
-{
-	int	len;
-
-	len = ft_strlen(str);
-	if (len == 3)
-	{
-		if (str[0] == '\"' || str[0] == '\'' && (str[2] == '\"'
-				|| str[2] == '\'' && str[2] == '\''))
-			return (printf("%c: command not found\n", str[1]), 0);
-	}
-	else if (len == 2)
-	{
-		if (str[0] == '\"' || str[0] == '\'' && (str[1] == '\"'
-				|| str[1] == '\'' && str[1] == '\''))
-			return (0);
-	}
-	return (1);
 }
 
 void	close_prev_next(int *prev_fd, int next_read, int next_write)

@@ -6,7 +6,7 @@
 #    By: shimi-be <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/11 11:53:14 by shimi-be          #+#    #+#              #
-#    Updated: 2025/08/21 21:04:53 by joshapir         ###   ########.fr        #
+#    Updated: 2025/08/23 15:55:22 by shimi-be         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ $(NAME): $(OBJ) $(LIB)
 	cc $(OBJ) -L/usr/include -lreadline -lhistory $(LIB) -g -o $(NAME)
 
 %.o: %.c $(INCLUDE) Makefile
-	cc  -g -c $< -o $@
+	cc $(FLAGS) -g -c $< -o $@
 
 libft.a:
 	$(MAKE) -C libft

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:56:30 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/19 18:42:49 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 15:59:03 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	good_export(char *arg, t_env **env, char *str)
 	free(pos);
 	if (!nd)
 	{
-		nd = create_env_node(arg, env, 1, str);
+		nd = create_env_node(arg, 1, str);
 		addlast(env, nd);
 	}
 }
@@ -67,7 +67,6 @@ int	do_export(t_shell *elem, t_env **env)
 {
 	char	*str;
 	int		i;
-	t_env	*node;
 	int		ret_val;
 
 	ret_val = 0;
@@ -96,11 +95,11 @@ void	create_and_add(t_env **env, char *str)
 {
 	t_env	*node;
 
-	node = create_env_node(str, env, 0, NULL);
+	node = create_env_node(str, 0, NULL);
 	addlast(env, node);
 }
 
-t_env	*create_env_node(char *arg, t_env **env, int flag, char *str)
+t_env	*create_env_node(char *arg, int flag, char *str)
 {
 	t_env	*node;
 

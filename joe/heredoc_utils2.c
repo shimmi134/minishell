@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:21:23 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/21 21:26:48 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:00:54 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,14 @@ int	execute_pipe_command(int *fd_val, t_env *env, t_shell *element)
 void	execute_heredoc_command(t_heredoc *hd_temp, t_shell *element,
 		t_env *env, int *fd_val)
 {
-	int	ac;
-
 	if (hd_temp->heredoc_fd != -1)
 	{
 		dup2(hd_temp->heredoc_fd, STDIN_FILENO);
 		close(hd_temp->heredoc_fd);
 	}
 	element->command->heredoc = 0;
-	ac = count_commands(element);
 	if (hd_temp->cmd)
-		do_commands(element, &env, ac, *fd_val);
+		do_commands(element, &env, *fd_val);
 	free_heredoc(hd_temp);
 	env = free_env_list_tmp(env);
 	exit(0);

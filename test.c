@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/21 14:57:00 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:05:36 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
 	wait_children(pids, count, *last_status_ptr_out, fd_val);
 }
 
-void	do_commands(t_shell *elem, t_env **env, int ac, int fd_val)
+void	do_commands(t_shell *elem, t_env **env, int fd_val)
 {
 	int	old_stdout;
 	int	old_stdin;
@@ -105,9 +105,9 @@ int	init_execute(t_token *node, t_token *head, t_env *env, int *exit_status)
 		return (1);
 	}
 	do_struct(&element, t_head, exit_status);
-	do_commands(element, &env, count_commands(element), -1);
-	if (t_head != NULL)
-		free_cmds(t_head);
+	do_commands(element, &env, -1);
+	/*if (t_head != NULL)
+		free_cmds(t_head);*/
 	if (element != NULL)
 	{
 		free_shell(element);
@@ -116,14 +116,24 @@ int	init_execute(t_token *node, t_token *head, t_env *env, int *exit_status)
 	return (0);
 }
 
+int	pre_start_check(int ac, char **av, char **ep)
+{
+	if (ac != 1)
+		return (printf("Please only run the executable.\n"), 0);
+	av[0][0] = '.';
+	if (!ep || !ep[0])
+		return (printf("Error, no env detected.\n"), 0);
+	return (1);
+}
+
 int	main(int argc, char *argv[], char *envp[])
 {
 	char		*line;
 	t_env		*env;
 	int			*exit_status;
 
-	if (!envp || envp[0] == NULL)
-		return (printf("Error, no env detected.\n"), 1);
+	if (!pre_start_check(argc, argv, envp))
+		return (1);
 	exit_status = (int *)malloc(sizeof(int));
 	*exit_status = 0;
 	env = copy_env(envp);
