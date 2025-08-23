@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 17:50:43 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 21:28:31 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,9 +166,12 @@ int						do_unset(t_shell *elem, t_env **env);
 int						ft_isalnum(int c);
 int						ft_isdigit(int c);
 int						env_len(t_env *env);
+void					add_space(t_struct_var *structs, t_quote_vars *vars);
 int						run_builtin(t_shell *elem, t_env **env);
 int						export_error(char *arg);
 int						assign_concat_flag(char *str, int i, t_token **current);
+void					handle_nested_space(t_struct_var *structs, t_quote_vars *vars,
+							char *str, int *i);
 int						valiaa(char *str);
 int						close_parent(int prev_fd, int has_next, int *next_pipe);
 int						execute_loop_loop(t_shell *elem, t_env **env,

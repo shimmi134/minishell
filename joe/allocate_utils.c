@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:31:25 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 21:09:59 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 21:21:44 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@ void	allocate_after_single(char *str, t_quote_vars *vars, int *i)
 {
 	vars->k = 0;
 	while (str[vars->j] && str[vars->j] != '"' && str[(*i)] != '\''
-		&& str[vars->j] != '$' && str[vars->j] != '/' && str[vars->j] != '?')
+		&& str[vars->j] != '$' && str[vars->j] != '/' && str[vars->j] != '?' && str[vars->j] != ' ')
 	{
 		vars->k++;
 		vars->j++;
 	}
 	if (vars->j == (*i) && str[vars->j] != '$' && str[vars->j] != '\''
-		&& str[vars->j] != '/' && str[vars->j] != '?')
+		&& str[vars->j] != '/' && str[vars->j] != '?' && str[vars->j] != ' ')
 	{
 		vars->arr = NULL;
 		return ;
