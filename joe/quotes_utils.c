@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:47:05 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 17:18:44 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 17:29:53 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ void	quoted_arr_len(char *str, t_quote_vars *vars)
 {
 	vars->j = 0;
 	while (str[vars->j] && (str[vars->j] != '\'' && str[vars->j] != '"'
-			&& str[vars->j] != '$' && str[vars->j] != '/' && str[vars->j] != '?'))
+			&& str[vars->j] != '$' && str[vars->j] != '/'
+			&& str[vars->j] != '?'))
 		vars->j++;
 }
 

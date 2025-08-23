@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:30:09 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 17:04:07 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 17:28:22 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	add_slash(t_struct_var *structs, t_quote_vars *vars)
 		*structs->current = *structs->head;
 	}
 }
+
 void	add_status(t_struct_var *structs, t_quote_vars *vars)
 {
 	if ((*structs->current))
