@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   var_expand.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:53:16 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 21:37:07 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 17:32:19 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*expand_var(char *str, t_cmd *cmd, t_env *env)
 	i = 0;
 	while (env)
 	{
-		if (!strcmp(str, env->key))
+		if (!ft_strcmp(str, env->key))
 		{
 			val = ft_strdup(env->value);
 			return (val);
