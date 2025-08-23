@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 16:34:30 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:35:57 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ int						do_export(t_shell *elem, t_env **env);
 int						do_cd(t_shell *elem, t_env **env);
 int						init_heredoc(t_heredoc *hd_temp, t_env *env,
 							t_shell *element, int *fd_val);
-int						do_echo(t_shell *elem, t_env **env);
+int						do_echo(t_shell *elem);
 int						do_pwd(void);
 int						do_env(t_env **env);
 int						do_unset(t_shell *elem, t_env **env);
@@ -231,8 +231,7 @@ void					print_list(t_token *head);
 void					print_enum(t_token *list);
 void					free_heredoc(t_heredoc *heredoc);
 void					free_cmds(t_cmd *head);
-void					do_commands(t_shell *elem, t_env **env, int ac,
-							int fd_val);
+void					do_commands(t_shell *elem, t_env **env, int fd_val);
 void					sort_list(t_env *env);
 void					create_and_add(t_env **env, char *str);
 void					print_env(t_env *head);
