@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 16:03:16 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/21 14:57:38 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 16:05:45 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void	do_heredoc(t_cmd *t_head, t_env *env, int *exit_status, int *fd_val)
 	t_heredoc	*heredoc;
 	t_shell		*element;
 	int			hd_res;
-	int			old_stdin;
 
 	heredoc = init_heredoc_struct(t_head);
 	do_struct(&element, t_head, exit_status);

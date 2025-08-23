@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 18:40:58 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/19 18:42:23 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 15:57:28 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	valiaa(char *str)
 
 	i = 0;
 	sep = 0;
-	while (i < ft_strlen(str))
+	while (i < (int)ft_strlen(str))
 	{
 		if (str[i] == 'n')
 			sep = 1;

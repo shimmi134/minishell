@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:25:13 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/20 21:52:16 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/23 13:04:54 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	child_exec_or_builtin(t_shell *elem, t_env **env)
 	int		code;
 
 	penv = NULL;
-	if (elem->command->cmd != NULL)
+	if (elem->command->cmd != NULL && ft_strncmp(elem->type, "built-in", ft_strlen(elem->type)) != 0)
 	{
 		penv = create_envp(*env);
 		exec_command(elem, env, penv);
