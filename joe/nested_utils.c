@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:36:57 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 20:16:15 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 20:36:36 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ void	handle_nested_var(t_struct_var *structs, t_quote_vars *vars, char *str,
 		free(vars->arr);
 		vars->arr = NULL;
 	}
-	if (str[(*i) + 1])
+	//if (str[(*i) + 1])
 		(*i)++;
 	vars->j = (*i);
-	vars->k = 0;
+//	vars->k = 0;
 	assign_after_var(str, vars, i);
 	if (vars->k > 0)
 		assign_arr_memory(vars);
@@ -106,7 +106,7 @@ void	handle_nested_status(t_struct_var *structs, t_quote_vars *vars,
 	}
 	add_status(structs, vars);
 	vars->new_word = 0;
-	if (str[(*i) + 1])
+//	if (str[(*i) + 1])
 		(*i)++;
 	vars->j = (*i);
 	allocate_after_single(str, vars, i);
