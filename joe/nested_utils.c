@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:36:57 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 17:28:43 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/23 20:16:15 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,15 +62,17 @@ void	flush_arr_in_var(t_quote_vars *vars, t_struct_var *structs)
 	{
 		if (*structs->current)
 		{
-			(*structs->current)->next = new_token(TOKEN_WORD, vars->arr, 1,
+			if (ft_strlen(vars->arr) == 1)
+			(*structs->current)->next = new_token(TOKEN_WORD,
+					ft_strdup_char(vars->arr[0]), 1, vars->new_word);
+			else
+				(*structs->current)->next = new_token(TOKEN_WORD, vars->arr, 1,
 					vars->new_word);
 			*structs->current = (*structs->current)->next;
 		}
 		else
 		{
-			*structs->head = new_token(TOKEN_WORD, vars->arr, 1,
-					vars->new_word);
-			*structs->current = *structs->head;
+			flush_to_head(structs, vars);
 		}
 		vars->new_word = 0;
 	}
