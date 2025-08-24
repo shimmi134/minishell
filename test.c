@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/23 21:43:15 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/24 14:08:54 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
 		int **last_status_ptr_out)
 {
-	int		*pids;
-	int		pid;
-	int		count;
+	int	*pids;
+	int	pid;
+	int	count;
 
 	count = 0;
 	pids = calloc((count_commands(elem)) + 1, sizeof(int));
@@ -101,6 +101,9 @@ int	init_execute(t_token *node, t_token *head, t_env *env, int *exit_status)
 	if (ft_strcmp(t_head->cmd, "exit") == 0)
 	{
 		free_tokens(head);
+		if (t_head->args && t_head->args[0] != NULL)
+			exit(custom_exit(ft_atoi(t_head->args[0]), exit_status, env,
+					t_head));
 		free_cmds(t_head);
 		return (1);
 	}
@@ -118,9 +121,9 @@ int	init_execute(t_token *node, t_token *head, t_env *env, int *exit_status)
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	char		*line;
-	t_env		*env;
-	int			*exit_status;
+	char	*line;
+	t_env	*env;
+	int		*exit_status;
 
 	if (!pre_start_check(argc, argv, envp))
 		return (1);
