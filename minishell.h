@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/24 19:36:39 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/24 22:26:29 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -310,10 +310,13 @@ void					handle_pipes(t_cmd **cmds, t_token **tokens);
 t_token					*new_token(t_type type, char *value, int flag,
 							int new_word);
 t_token					*lexer(char *str, t_env *env);
+void	add_append(t_token **tokens, t_cmd **cmds);
+void	handle_append(t_token **token, t_cmd **cmd);
 t_token					*add_word(char *str, int *i);
 void					assign_args(t_token *tokens, t_cmd **cmds);
 void					quote_if(char *str, t_token **head, t_token **current,
 							int *i);
+							void	append_while(t_token **token);
 void					add_quoted_word_2(char *str, int *i, int type,
 							t_struct_var *structs);
 void					quoted_arr_len(char *str, t_quote_vars *vars);

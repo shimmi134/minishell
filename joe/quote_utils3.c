@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:51:55 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 20:46:59 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/24 22:19:51 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,5 @@ t_token	*handle_no_quote(char *str, t_token *head, t_token **current, int *i)
 	}
 	if (type == TOKEN_HEREDOC || type == TOKEN_APPEND)
 		(*i)++;
-	// if (type = TOKEN_VARIABLE)
-	// 	(*i)++;
 	return (head);
 }
