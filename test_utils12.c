@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 16:55:28 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/24 17:21:28 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/24 18:07:31 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	is_sal(char *str)
 			flag = 1;
 		if (is_sign(str[i]) && flag)
 			return (0);
-		if(!ft_isdigit(str[i]) && !is_sign(str[i]))
+		if (!ft_isdigit(str[i]) && !is_sign(str[i]))
 			return (0);
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 21:47:17 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/24 16:59:42 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/24 18:07:29 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*correct_shlvl(char *split)
 		free(split);
 		return (ft_strdup("0"));
 	}
-	val = ft_itoa(ft_atoi(split)+1);
+	val = ft_itoa(ft_atoi(split) + 1);
 	return (free(split), val);
 }
 
@@ -57,13 +57,14 @@ void	do_exit(t_shell *elem)
 
 	val = 0;
 	if (elem->command->args && is_sal(elem->command->args[0]))
-		val = ft_atoi (elem->command->args[0]);
+		val = ft_atoi(elem->command->args[0]);
 	else if (elem->command->args)
 	{
-		printf("exit: %s: numeric argument required.\n", elem->command->args[0]);
+		printf("exit: %s: numeric argument required.\n",
+			elem->command->args[0]);
 		val = 2;
 	}
-	exit (val);
+	exit(val);
 }
 
 int	pre_struct_exit(t_cmd *t_head, int *exit_status, t_env *env, t_token *head)
