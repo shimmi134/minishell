@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:21:40 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/18 15:26:46 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:34:03 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ char	*get_element(char *line)
 	if (split && (!ft_strncmp(split[0], "pwd", 4) || !ft_strncmp(split[0],
 				"env", 4) || !ft_strncmp(split[0], "unset", 6)
 			|| !ft_strncmp(split[0], "echo", 5) || !ft_strncmp(split[0],
-				"export", 6) || !ft_strncmp(split[0], "cd", 2)))
+				"export", 6) || !ft_strncmp(split[0], "cd", 2)
+			|| !ft_strncmp(split[0], "exit", 4)))
 	{
 		return (free_split(split), "built-in");
 	}

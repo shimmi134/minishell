@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:20:03 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/23 17:43:46 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/24 15:21:54 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ void	exec_command(t_shell *elem, t_env **env, char **envp)
 	}
 	args = join_args(elem->command->cmd, elem->command->args);
 	execve(path, args, envp);
-	printf("%s: command not found\n", elem->command->cmd);
+	if (ft_strncmp("exit", elem->command->cmd, 4) != 0)
+		printf("%s: command not found\n", elem->command->cmd);
 	exit(127);
 }

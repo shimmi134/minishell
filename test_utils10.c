@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 16:03:16 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/23 18:22:39 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:31:33 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,12 @@ void	do_heredoc(t_cmd *t_head, t_env *env, int *exit_status, int *fd_val)
 
 int	execute_loop_loop(t_shell *elem, t_env **env, int **last_status_ptr_out)
 {
+	int	val;
+
 	if (strncmp(elem->type, "built-in", 9) == 0 && elem->next == NULL)
 	{
-		run_builtin(elem, env);
-		*last_status_ptr_out = elem->exit_status_code;
+		val = run_builtin(elem, env);
+		*last_status_ptr_out = &val;
 		elem = elem->next;
 		return (1);
 	}

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/24 14:08:53 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:34:34 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,8 +187,11 @@ int						pre_start_check(int ac, char **av, char **ep);
 int						len_spn(char *str);
 int						incorr_env(t_shell *elem);
 int						ft_abs(int num);
-int						custom_exit(int code, int *exit_status, t_env *env,
+int						custom_exit(int *exit_status, t_env *env,
 							t_cmd *t_head);
+int						pre_struct_exit(t_cmd *t_head, int *exit_status,
+							t_env *env, t_token *head);
+void					do_exit(void);
 void					free_combined(int *exit_status, t_env *env);
 void					do_heredoc(t_cmd *t_head, t_env *env, int *exit_status,
 							int *fd_val);

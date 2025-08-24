@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:25:13 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/24 14:02:16 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:35:22 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,11 @@ void	child_exec_or_builtin(t_shell *elem, t_env **env)
 	{
 		penv = create_envp(*env);
 		exec_command(elem, env, penv);
-		perror("exec");
-		exit(1);
 	}
 	else
 	{
+		if (ft_strncmp("exit", elem->command->cmd, 4) == 0)
+			do_exit();
 		code = do_builtins(elem, env);
 		exit(code);
 	}

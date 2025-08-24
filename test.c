@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/24 14:08:54 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:33:56 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ void	do_commands(t_shell *elem, t_env **env, int fd_val)
 
 	old_stdout = -1;
 	old_stdin = -1;
-	last_status_ptr = NULL;
 	old_stdout = dup(STDOUT_FILENO);
 	old_stdin = dup(STDIN_FILENO);
 	execute_loop(elem, env, &fd_val, &last_status_ptr);
@@ -98,15 +97,8 @@ int	init_execute(t_token *node, t_token *head, t_env *env, int *exit_status)
 
 	element = NULL;
 	t_head = init_cmds(node, *exit_status, env);
-	if (ft_strcmp(t_head->cmd, "exit") == 0)
-	{
-		free_tokens(head);
-		if (t_head->args && t_head->args[0] != NULL)
-			exit(custom_exit(ft_atoi(t_head->args[0]), exit_status, env,
-					t_head));
-		free_cmds(t_head);
+	if (pre_struct_exit(t_head, exit_status, env, head))
 		return (1);
-	}
 	do_struct(&element, t_head, exit_status);
 	do_commands(element, &env, -1);
 	if (t_head)
