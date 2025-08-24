@@ -6,32 +6,68 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:35:25 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/24 19:25:36 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/24 19:35:32 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	handle_redirect(t_cmd **cmd, t_token **token, int type)
+void handle_redirect(t_token **token, t_cmd **cmd, int type)
 {
-	int	token_len;
-
-	token_len = 0;
-	if (type == TOKEN_REDIRECT_IN)
-	{
+	char *arr;
+	char *arr2;
+	char *tmp;
+	char *tmp2;
+	
+	arr = NULL;
+	arr2 = NULL;
+	//(*cmd)->append = 1;
 		if ((*token)->next)
 			*token = (*token)->next;
-		(*cmd)->infile = ft_strdup((*token)->value);
-	}
-	// else if (type == TOKEN_REDIRECT_OUT)
-	// {
-	// 	if ((*token)->next)
-	// 		*token = (*token)->next;
-	// 	if ((*cmd)->outfile)
-	// 		free((*cmd)->outfile);
-	// 	(*cmd)->outfile = ft_strdup((*token)->value);
-	// }
+		if ((*token)->next && !(*token)->next->new_word)
+		{
+			while (*token)
+			{
+			
+				if ((*token)->next && !(*token)->next->new_word)
+				{
+					if (!arr)
+						tmp = ft_strdup((*token)->value);
+					else
+						tmp = arr;
+					*token = (*token)->next;
+					tmp2 = ft_strdup((*token)->value);
+					arr = ft_strjoin(tmp, tmp2);
+					(*token)->new_word = 1;
+				}
+				else
+					break ;
+			}
+		}
+		else
+			arr = ft_strdup((*token)->value);
+		if (arr)
+		{
+			if (type == TOKEN_REDIRECT_IN)
+				(*cmd)->infile = ft_strdup(arr);
+			else
+				(*cmd)->outfile = ft_strdup(arr);
+		}
+	
 }
+
+// void	handle_redirect(t_cmd **cmd, t_token **token, int type)
+// {
+// 	int	token_len;
+
+// 	token_len = 0;
+// 	if (type == TOKEN_REDIRECT_IN)
+// 	{
+// 		if ((*token)->next)
+// 			*token = (*token)->next;
+// 		(*cmd)->infile = ft_strdup((*token)->value);
+// 	}
+// }
 
 void	handle_heredoc(t_cmd **cmd, t_token **token)
 {
@@ -126,7 +162,7 @@ void	assign_ctl_tokens(t_token **token, t_cmd **cmd, t_env *envp)
 	i = 0;
 	type = (*token)->type;
 	if (type == TOKEN_REDIRECT_IN || type == TOKEN_REDIRECT_OUT)
-		handle_redirect(cmd, token, type);
+		handle_redirect(token, cmd, type);
 	else if (type == TOKEN_HEREDOC)
 		handle_heredoc(cmd, token);
 	else if (type == TOKEN_APPEND)

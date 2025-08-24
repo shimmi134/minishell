@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/24 16:59:18 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/24 19:36:39 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -302,7 +302,7 @@ t_env					*copy_env(char *envp[]);
 t_env					*create_node(char *env);
 t_env					*in_env(char *str, t_env **env);
 t_env					*create_env_node(char *arg, int flag, char *str);
-void					handle_redirect(t_cmd **cmd, t_token **token, int type);
+void					handle_redirect(t_token **token, t_cmd **cmd, int type);
 void					handle_heredoc(t_cmd **cmd, t_token **token);
 void					handle_varible(t_cmd **cmd, t_token **token,
 							t_env *envp);
