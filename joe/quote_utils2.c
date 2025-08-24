@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:51:10 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 18:08:37 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/24 23:23:03 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 void	handle_single(t_quote_vars *vars, int *i, char *str)
 {
+	if(vars->arr)
+	{
+		free(vars->arr);
+		vars->arr = NULL;
+	}
 	if (!vars->arr)
 	{
 		vars->j = (*i);
@@ -84,7 +89,7 @@ t_token	*add_word(char *str, int *i)
 	if (j > 0 && str[j - 1] == ' ')
 		new_word = 1;
 	arr = NULL;
-	while ((str[j]) && !is_token(str[j]) && str[j] != ' ' && str[j] != '/')
+	while ((str[j]) && !is_token(str[j]) && str[j] != ' ' && str[j] != '/' && str[j] != '?')
 		j++;
 	if (j >= (*i))
 	{

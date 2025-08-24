@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nested_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshapir <joshapir@student.42barcelon      +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:35:59 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 21:30:57 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/24 22:56:13 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,13 +71,36 @@ void	handle_slash(t_token **head, t_token **current, char *str, int *i)
 		new_word = 1;
 	if (*current)
 	{
-		(*current)->next = new_token(TOKEN_WORD, ft_strdup_char('/'), 1,
+		(*current)->next = new_token(TOKEN_WORD, ft_strdup_char('/'), 0,
 				new_word);
 		*current = (*current)->next;
 	}
 	else
 	{
-		*head = new_token(TOKEN_WORD, ft_strdup_char('/'), 1, new_word);
+		*head = new_token(TOKEN_WORD, ft_strdup_char('/'), 0, new_word);
+		*current = *head;
+	}
+	(*i)++;
+}
+
+void	handle_status(t_token **head, t_token **current, char *str, int *i)
+{
+	int	j;
+	int	new_word;
+
+	new_word = 0;
+	j = *i;
+	if (j > 0 && str[j - 1] == ' ')
+		new_word = 1;
+	if (*current)
+	{
+		(*current)->next = new_token(TOKEN_WORD, ft_strdup_char('?'), 0,
+				new_word);
+		*current = (*current)->next;
+	}
+	else
+	{
+		*head = new_token(TOKEN_WORD, ft_strdup_char('?'), 0, new_word);
 		*current = *head;
 	}
 	(*i)++;

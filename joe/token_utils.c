@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:45 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 21:36:53 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/24 23:24:05 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ void	if_not_token(char *str, t_token **head, t_token **current, int *i)
 {
 	if (str[(*i)] && str[(*i)] == '/')
 		handle_slash(head, current, str, i);
+	else if (str[(*i)] && str[(*i)] == '?')
+		handle_status(head, current, str, i);
 	if (!*head)
 	{
 		*head = add_word(str, i);

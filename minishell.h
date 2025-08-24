@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/24 22:28:21 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/24 22:47:55 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ void					assign_after_var(char *str, t_quote_vars *vars, int *i);
 t_token					*assign_word_arr(char *arr, int new_word);
 int						token_loop(t_token *tokens);
 int						token_loop_if(t_token *tokens);
-
+void	handle_status(t_token **head, t_token **current, char *str, int *i);
 int						ft_strncmp(const char *s1, const char *s2, size_t n);
 int						ft_strcmp(char *s1, char *s2);
 void					assign_var_token(t_struct_var *structs,
