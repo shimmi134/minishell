@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:35:25 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/24 21:56:17 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/24 22:05:43 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,23 +116,16 @@ void	handle_pipes(t_cmd **cmds, t_token **tokens)
 	(*cmds)->next = new_cmd_token(*tokens);
 	*cmds = (*cmds)->next;
 }
-void handle_append(t_token **token, t_cmd **cmd)
+
+void	append_while(t_token **token, t_cmd **cmd)
 {
 	char *arr;
 	char *arr2;
 	char *tmp;
 	char *tmp2;
 	
-	arr = NULL;
-	arr2 = NULL;
-	(*cmd)->append = 1;
-		if ((*token)->next)
-			*token = (*token)->next;
-		if ((*token)->next && !(*token)->next->new_word)
-		{
-			while (*token)
+	while (*token)
 			{
-			
 				if ((*token)->next && !(*token)->next->new_word)
 				{
 					if (!arr)
@@ -149,6 +142,40 @@ void handle_append(t_token **token, t_cmd **cmd)
 				else
 					break ;
 			}
+}
+void handle_append(t_token **token, t_cmd **cmd)
+{
+	char *arr;
+	char *arr2;
+	// char *tmp;
+	// char *tmp2;
+	
+	arr = NULL;
+	arr2 = NULL;
+	(*cmd)->append = 1;
+		if ((*token)->next)
+			*token = (*token)->next;
+		if ((*token)->next && !(*token)->next->new_word)
+		{
+			append_while(token, cmd);
+			// while (*token)
+			// {
+			// 	if ((*token)->next && !(*token)->next->new_word)
+			// 	{
+			// 		if (!arr)
+			// 			tmp = ft_strdup((*token)->value);
+			// 		else
+			// 			tmp = arr;
+			// 		*token = (*token)->next;
+			// 		tmp2 = ft_strdup((*token)->value);
+			// 		arr = ft_strjoin(tmp, tmp2);
+			// 		free(tmp);
+			// 		free(tmp2);
+			// 		(*token)->new_word = 1;
+			// 	}
+			// 	else
+			// 		break ;
+			// }
 		}
 		else
 			arr = ft_strdup((*token)->value);
@@ -157,7 +184,6 @@ void handle_append(t_token **token, t_cmd **cmd)
 			(*cmd)->outfile = ft_strdup(arr);
 			free (arr);
 		}
-	
 }
 
 void add_append(t_token **tokens, t_cmd **cmds)
@@ -165,12 +191,13 @@ void add_append(t_token **tokens, t_cmd **cmds)
 	char *cmd_prev;
 	char **args_prev;
 
-	args_prev = ft_strdup_double((*cmds)->args);
+	// args_prev = ft_strdup_double((*cmds)->args);
 	if (!(*cmds)->cmd)
 	{
 		 (*cmds)->cmd = (*cmds)->args[0];
 		shift_left((*cmds)->args);
 	}
+	args_prev = ft_strdup_double((*cmds)->args);
 	cmd_prev = ft_strdup((*cmds)->cmd);
 	(*cmds)->next = new_cmd_token(*tokens);
 	*cmds = (*cmds)->next;
