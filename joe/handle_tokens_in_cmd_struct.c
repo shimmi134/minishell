@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:35:25 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/24 19:35:32 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/24 20:37:57 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,26 @@ void handle_append(t_token **token, t_cmd **cmd)
 			(*cmd)->outfile = ft_strdup(arr);
 	
 }
+
+void add_append(t_token **tokens, t_cmd **cmds)
+{
+	char *cmd_prev;
+	char **args_prev;
+
+	args_prev = ft_strdup_double((*cmds)->args);
+	if (!(*cmds)->cmd)
+	{
+		(*cmds)->cmd = (*cmds)->args[0];
+		shift_left((*cmds)->args);
+	}
+	cmd_prev = ft_strdup((*cmds)->cmd);
+	(*cmds)->next = new_cmd_token(*tokens);
+	*cmds = (*cmds)->next;
+	(*cmds)->append = 1;
+	handle_append(tokens, cmds);
+	(*cmds)->cmd = ft_strdup(cmd_prev);
+	(*cmds)->args = args_prev;
+}
 void	assign_ctl_tokens(t_token **token, t_cmd **cmd, t_env *envp)
 {
 	int		type;
@@ -167,11 +187,12 @@ void	assign_ctl_tokens(t_token **token, t_cmd **cmd, t_env *envp)
 		handle_heredoc(cmd, token);
 	else if (type == TOKEN_APPEND)
 	{
-		handle_append(token, cmd);
-		// (*cmd)->append = 1;
-		// if ((*token)->next)
-		// 	*token = (*token)->next;
-		// (*cmd)->outfile = ft_strdup((*token)->value);
+		if (!(*cmd)->append)
+			handle_append(token, cmd);
+		else
+		{
+			add_append(token, cmd);
+		}
 	}
 	else if (type == TOKEN_VARIABLE)
 		handle_varible(cmd, token, envp);
