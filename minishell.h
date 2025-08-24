@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/24 16:34:34 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:59:18 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,8 @@ int						custom_exit(int *exit_status, t_env *env,
 							t_cmd *t_head);
 int						pre_struct_exit(t_cmd *t_head, int *exit_status,
 							t_env *env, t_token *head);
-void					do_exit(void);
+int						is_sal(char *str);
+void					do_exit(t_shell *element);
 void					free_combined(int *exit_status, t_env *env);
 void					do_heredoc(t_cmd *t_head, t_env *env, int *exit_status,
 							int *fd_val);

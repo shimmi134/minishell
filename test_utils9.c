@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:25:13 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/24 16:35:22 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:52:14 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	child_exec_or_builtin(t_shell *elem, t_env **env)
 	else
 	{
 		if (ft_strncmp("exit", elem->command->cmd, 4) == 0)
-			do_exit();
+			do_exit(elem);
 		code = do_builtins(elem, env);
 		exit(code);
 	}

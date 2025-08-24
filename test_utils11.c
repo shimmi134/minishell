@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 21:47:17 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/24 16:34:13 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/24 16:59:42 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,35 @@ int	ft_abs(int num)
 
 int	custom_exit(int *exit_status, t_env *env, t_cmd *t_head)
 {
+	int	val;
+
+	val = 0;
+	if (t_head->args && is_sal(t_head->args[0]))
+		val = ft_atoi(t_head->args[0]);
+	else if (t_head->args)
+	{
+		printf("exit: %s: numeric argument required.\n", t_head->args[0]);
+		val = 2;
+	}
 	free_cmds(t_head);
 	clear_history();
 	free_combined(exit_status, env);
-	exit(0);
+	return (val);
 }
 
-void	do_exit(void)
+void	do_exit(t_shell *elem)
 {
-	exit (0);
+	int	val;
+
+	val = 0;
+	if (elem->command->args && is_sal(elem->command->args[0]))
+		val = ft_atoi (elem->command->args[0]);
+	else if (elem->command->args)
+	{
+		printf("exit: %s: numeric argument required.\n", elem->command->args[0]);
+		val = 2;
+	}
+	exit (val);
 }
 
 int	pre_struct_exit(t_cmd *t_head, int *exit_status, t_env *env, t_token *head)
