@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:26:05 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/23 21:47:51 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/24 17:34:24 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ char	*join_split(char **split)
 		str2 = split[i];
 		str = ft_strjoin(str, str2);
 		free(temp);
+		first = 0;
 		i++;
 	}
 	return (str);

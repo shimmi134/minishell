@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:01:45 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/21 21:43:42 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/24 18:15:33 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ int	do_cd(t_shell *elem, t_env **env)
 	char	*oldpwd;
 	int		i;
 
+	if (elem->command->args[0] != NULL && elem->command->args[1] != NULL)
+		return (printf("cd: too many arguments.\n"), 1);
 	if (elem->command->args[0] == NULL || !ft_strncmp("~\0",
 			elem->command->args[0], 1))
 	{
