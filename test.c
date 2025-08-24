@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/24 20:38:21 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/24 21:56:44 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 	return (pid);
 }
 
+/*
 void print_cmd_list(t_cmd *head) 
 {
     int i;
@@ -84,7 +85,7 @@ void print_cmd_list(t_cmd *head)
     printf("\n-----------------------\n");
     //printf("NULL\n");
 }
-
+*/
 void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
 		int **last_status_ptr_out)
 {
@@ -101,7 +102,7 @@ void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
 			do_heredoc(elem->command, *env, elem->exit_status_code, fd_val);
 			break ;
 		}
-		if (execute_loop_loop(elem, env, last_status_ptr_out) == 0)
+		if (execute_loop_loop(elem, env, last_status_ptr_out, fd_val) == 0)
 		{
 			pid = command_fork(elem, env, fd_val);
 			pids[count++] = (int)pid;
@@ -142,7 +143,6 @@ int	init_execute(t_token *node, t_token *head, t_env *env, int *exit_status)
 
 	element = NULL;
 	t_head = init_cmds(node, *exit_status, env);
-	//print_cmd_list(t_head);
 	if (pre_struct_exit(t_head, exit_status, env, head))
 		return (1);
 	do_struct(&element, t_head, exit_status);

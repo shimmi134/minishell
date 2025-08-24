@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/24 22:26:29 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/24 22:28:21 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ void					handle_nested_space(t_struct_var *structs,
 int						valiaa(char *str);
 int						close_parent(int prev_fd, int has_next, int *next_pipe);
 int						execute_loop_loop(t_shell *elem, t_env **env,
-							int **last_status_ptr_out);
+							int **last_status_ptr_out, int *fd_val);
 int						init_execute(t_token *node, t_token *head, t_env *env,
 							int *exit_status);
 int						pre_exec(char *line, t_env *env, int *exit_status);
