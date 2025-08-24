@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 21:29:45 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/24 21:57:26 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,14 @@ void	free_if(t_cmd **head, t_cmd **tmp, int i)
 	if ((*head)->outfile)
 		free((*head)->outfile);
 	while ((*head)->args[i])
+	{
 		free((*head)->args[i++]);
+	}
 	(*tmp) = (*head)->next;
 	if ((*head)->args)
+	{
 		free((*head)->args);
+	}
 	if ((*head))
 		free((*head));
 }

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:35:25 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/24 20:37:57 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/24 21:56:17 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,8 @@ void handle_append(t_token **token, t_cmd **cmd)
 					*token = (*token)->next;
 					tmp2 = ft_strdup((*token)->value);
 					arr = ft_strjoin(tmp, tmp2);
+					free(tmp);
+					free(tmp2);
 					(*token)->new_word = 1;
 				}
 				else
@@ -151,7 +153,10 @@ void handle_append(t_token **token, t_cmd **cmd)
 		else
 			arr = ft_strdup((*token)->value);
 		if (arr)
+		{
 			(*cmd)->outfile = ft_strdup(arr);
+			free (arr);
+		}
 	
 }
 
@@ -163,7 +168,7 @@ void add_append(t_token **tokens, t_cmd **cmds)
 	args_prev = ft_strdup_double((*cmds)->args);
 	if (!(*cmds)->cmd)
 	{
-		(*cmds)->cmd = (*cmds)->args[0];
+		 (*cmds)->cmd = (*cmds)->args[0];
 		shift_left((*cmds)->args);
 	}
 	cmd_prev = ft_strdup((*cmds)->cmd);
@@ -171,8 +176,12 @@ void add_append(t_token **tokens, t_cmd **cmds)
 	*cmds = (*cmds)->next;
 	(*cmds)->append = 1;
 	handle_append(tokens, cmds);
-	(*cmds)->cmd = ft_strdup(cmd_prev);
-	(*cmds)->args = args_prev;
+	(*cmds)->cmd = cmd_prev;
+	if (args_prev)
+	{
+		free((*cmds)->args);
+		(*cmds)->args = args_prev;
+	}
 }
 void	assign_ctl_tokens(t_token **token, t_cmd **cmd, t_env *envp)
 {
@@ -190,7 +199,7 @@ void	assign_ctl_tokens(t_token **token, t_cmd **cmd, t_env *envp)
 		if (!(*cmd)->append)
 			handle_append(token, cmd);
 		else
-		{
+		{		
 			add_append(token, cmd);
 		}
 	}
