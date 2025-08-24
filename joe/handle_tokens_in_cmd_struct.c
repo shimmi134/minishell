@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:35:25 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/24 19:15:54 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/24 19:25:36 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,6 @@ void handle_append(t_token **token, t_cmd **cmd)
 	arr = NULL;
 	arr2 = NULL;
 	(*cmd)->append = 1;
-	printf("token before append = %s\n", (*token)->value);
 		if ((*token)->next)
 			*token = (*token)->next;
 		if ((*token)->next && !(*token)->next->new_word)
