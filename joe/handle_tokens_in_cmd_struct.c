@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:35:25 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 16:47:33 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/24 19:15:54 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,14 @@ void	handle_redirect(t_cmd **cmd, t_token **token, int type)
 			*token = (*token)->next;
 		(*cmd)->infile = ft_strdup((*token)->value);
 	}
-	else if (type == TOKEN_REDIRECT_OUT)
-	{
-		if ((*token)->next)
-			*token = (*token)->next;
-		if ((*cmd)->outfile)
-			free((*cmd)->outfile);
-		(*cmd)->outfile = ft_strdup((*token)->value);
-	}
+	// else if (type == TOKEN_REDIRECT_OUT)
+	// {
+	// 	if ((*token)->next)
+	// 		*token = (*token)->next;
+	// 	if ((*cmd)->outfile)
+	// 		free((*cmd)->outfile);
+	// 	(*cmd)->outfile = ft_strdup((*token)->value);
+	// }
 }
 
 void	handle_heredoc(t_cmd **cmd, t_token **token)
@@ -80,7 +80,45 @@ void	handle_pipes(t_cmd **cmds, t_token **tokens)
 	(*cmds)->next = new_cmd_token(*tokens);
 	*cmds = (*cmds)->next;
 }
-
+void handle_append(t_token **token, t_cmd **cmd)
+{
+	char *arr;
+	char *arr2;
+	char *tmp;
+	char *tmp2;
+	
+	arr = NULL;
+	arr2 = NULL;
+	(*cmd)->append = 1;
+	printf("token before append = %s\n", (*token)->value);
+		if ((*token)->next)
+			*token = (*token)->next;
+		if ((*token)->next && !(*token)->next->new_word)
+		{
+			while (*token)
+			{
+			
+				if ((*token)->next && !(*token)->next->new_word)
+				{
+					if (!arr)
+						tmp = ft_strdup((*token)->value);
+					else
+						tmp = arr;
+					*token = (*token)->next;
+					tmp2 = ft_strdup((*token)->value);
+					arr = ft_strjoin(tmp, tmp2);
+					(*token)->new_word = 1;
+				}
+				else
+					break ;
+			}
+		}
+		else
+			arr = ft_strdup((*token)->value);
+		if (arr)
+			(*cmd)->outfile = ft_strdup(arr);
+	
+}
 void	assign_ctl_tokens(t_token **token, t_cmd **cmd, t_env *envp)
 {
 	int		type;
@@ -94,10 +132,11 @@ void	assign_ctl_tokens(t_token **token, t_cmd **cmd, t_env *envp)
 		handle_heredoc(cmd, token);
 	else if (type == TOKEN_APPEND)
 	{
-		(*cmd)->append = 1;
-		if ((*token)->next)
-			*token = (*token)->next;
-		(*cmd)->outfile = ft_strdup((*token)->value);
+		handle_append(token, cmd);
+		// (*cmd)->append = 1;
+		// if ((*token)->next)
+		// 	*token = (*token)->next;
+		// (*cmd)->outfile = ft_strdup((*token)->value);
 	}
 	else if (type == TOKEN_VARIABLE)
 		handle_varible(cmd, token, envp);

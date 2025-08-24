@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/24 16:33:56 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/24 17:58:38 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,51 @@ pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 	}
 	close_prev_next(prev_fd, next_read, next_write);
 	return (pid);
+}
+
+void print_cmd_list(t_cmd *head) 
+{
+    int i;
+
+    i = 0;
+    t_cmd *current = head;
+    while (current != NULL) 
+	{
+        printf("\n-----------------------\n");
+        if (current->cmd)
+        {
+            if (current->cmd[0] == '\0')
+                printf("cmd = [empty]\n");
+            else
+                printf("cmd = %s\n", current->cmd);
+        }
+		 if (current->append)
+		 	printf("[append]");
+         if (current->heredoc)
+		 	printf("[heredoc] ");
+        if (current->heredoc_delim)
+            printf("heredoc_delim = %s\n", current->heredoc_delim);
+		if (current->infile)
+		 	printf("infile = %s\n", current->infile);
+        if (current->outfile)
+			printf("outfile = %s\n", current->outfile);
+		if (current->exit_status)
+			printf("return exit status\n");
+        if (current->args[i])
+           printf("args = ");
+       while(current->args[i])
+       {
+            if (current->args[i][0] == '\0')
+                printf("[empty]\n");
+            else
+                printf("%s ", current->args[i]);
+            i++;
+       }
+        current = current->next;
+        i = 0;
+    }
+    printf("\n-----------------------\n");
+    //printf("NULL\n");
 }
 
 void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
@@ -97,6 +142,7 @@ int	init_execute(t_token *node, t_token *head, t_env *env, int *exit_status)
 
 	element = NULL;
 	t_head = init_cmds(node, *exit_status, env);
+	print_cmd_list(t_head);
 	if (pre_struct_exit(t_head, exit_status, env, head))
 		return (1);
 	do_struct(&element, t_head, exit_status);

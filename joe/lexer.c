@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 20:41:45 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/24 18:00:52 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ t_token	*lexer(char *str, t_env *env)
 	int		i;
 	t_token	*head;
 	t_token	*current;
-
+	(void)env;
 	i = 0;
 	head = NULL;
 	current = NULL;
