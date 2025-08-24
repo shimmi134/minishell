@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 16:03:16 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/24 16:31:33 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/24 18:03:32 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ int	execute_loop_loop(t_shell *elem, t_env **env, int **last_status_ptr_out)
 {
 	int	val;
 
-	if (strncmp(elem->type, "built-in", 9) == 0 && elem->next == NULL)
+	if (strncmp(elem->type, "built-in", 9) == 0 && elem->next == NULL
+		&& strncmp(elem->command->cmd, "exit", 4) != 0)
 	{
 		val = run_builtin(elem, env);
 		*last_status_ptr_out = &val;
