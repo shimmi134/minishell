@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 04:43:52 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 21:26:22 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:30:24 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ int	wait_status(pid_t pid)
 	}
 	return (0);
 }
-
 int	read_heredoc(t_heredoc *hd_temp, t_env *env)
 {
 	int		status;
