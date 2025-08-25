@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:25:13 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/25 20:28:50 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 21:01:25 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	child_exec_or_builtin(t_shell *elem, t_env **env)
 
 void	child_process(t_shell *elem, t_env **env, int prev_fd, int next_write)
 {
+	signals_child();
 	dup_prev_to_stdin(prev_fd);
 	dup_next_to_stdout(next_write);
 	child_close_fds(prev_fd, -1, next_write);
@@ -81,18 +82,7 @@ void	wait_children(int *pids, int count, int *last_status_ptr, int *fd_val)
 	while (i < count)
 	{
 		waitpid(pids[i], &status, 0);
-		if (WIFEXITED(status))
-		{
-			if (last_status_ptr)
-				*last_status_ptr = WEXITSTATUS(status);
-		}
-		else if (WTERMSIG(status) == SIGINT)
-			*last_status_ptr = 130;
-		else
-		{
-			if (last_status_ptr)
-				*last_status_ptr = 127;
-		}
+		status_pointer(status, last_status_ptr);
 		i = i + 1;
 	}
 	free(pids);
