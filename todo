@@ -1,3 +1,7 @@
 unset SHELL
 
-*BOOM*
+*BOOM
+
+echo hi >> sami/shimi
+
+(shoudnt work)
