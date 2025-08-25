@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:20:03 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/25 14:53:01 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 15:58:49 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,15 +77,6 @@ char	**join_args(char *cmd, char **args)
 		i++;
 	}
 	return (final_args);
-}
-
-void	exit_message(t_shell *elem)
-{
-	if (ft_strchr(elem->command->cmd, '/') != NULL && ft_strncmp("exit", elem->command->cmd, 4) != 0)
-		perror(elem->command->cmd);
-	else if (ft_strncmp("exit", elem->command->cmd, 4) != 0)
-		printf("%s: command not found\n", elem->command->cmd);
-	exit(127);
 }
 
 void	exec_command(t_shell *elem, t_env **env, char **envp)

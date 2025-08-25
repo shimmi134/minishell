@@ -6,14 +6,13 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/24 22:47:55 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/25 15:58:47 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <stdio.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <readline/history.h>
@@ -21,7 +20,7 @@
 # include <signal.h>
 # include <stdbool.h>
 # include <stddef.h>
-
+# include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/wait.h>
@@ -136,7 +135,8 @@ void					assign_after_var(char *str, t_quote_vars *vars, int *i);
 t_token					*assign_word_arr(char *arr, int new_word);
 int						token_loop(t_token *tokens);
 int						token_loop_if(t_token *tokens);
-void	handle_status(t_token **head, t_token **current, char *str, int *i);
+void					handle_status(t_token **head, t_token **current,
+							char *str, int *i);
 int						ft_strncmp(const char *s1, const char *s2, size_t n);
 int						ft_strcmp(char *s1, char *s2);
 void					assign_var_token(t_struct_var *structs,
@@ -193,6 +193,8 @@ int						custom_exit(int *exit_status, t_env *env,
 int						pre_struct_exit(t_cmd *t_head, int *exit_status,
 							t_env *env, t_token *head);
 int						is_sal(char *str);
+
+void					exit_message(t_shell *elem);
 void					do_exit(t_shell *element);
 void					free_combined(int *exit_status, t_env *env);
 void					do_heredoc(t_cmd *t_head, t_env *env, int *exit_status,
@@ -311,13 +313,13 @@ void					handle_pipes(t_cmd **cmds, t_token **tokens);
 t_token					*new_token(t_type type, char *value, int flag,
 							int new_word);
 t_token					*lexer(char *str, t_env *env);
-void	add_append(t_token **tokens, t_cmd **cmds);
-void	handle_append(t_token **token, t_cmd **cmd);
+void					add_append(t_token **tokens, t_cmd **cmds);
+void					handle_append(t_token **token, t_cmd **cmd);
 t_token					*add_word(char *str, int *i);
 void					assign_args(t_token *tokens, t_cmd **cmds);
 void					quote_if(char *str, t_token **head, t_token **current,
 							int *i);
-							void	append_while(t_token **token);
+void					append_while(t_token **token);
 void					add_quoted_word_2(char *str, int *i, int type,
 							t_struct_var *structs);
 void					quoted_arr_len(char *str, t_quote_vars *vars);
