@@ -23,7 +23,7 @@ void	handle_redirect(t_token **token, t_cmd **cmd, int type)
 		*token = (*token)->next;
 	if ((*token)->next && !(*token)->next->new_word)
 	{
-		append_while(token);
+		arr = append_while(token);
 	}
 	else
 		arr = ft_strdup((*token)->value);
@@ -60,7 +60,7 @@ void	add_append(t_token **tokens, t_cmd **cmds)
 	}
 }
 
-void	append_while(t_token **token)
+char *append_while(t_token **token)
 {
 	char	*arr;
 	char	*tmp;
@@ -80,9 +80,11 @@ void	append_while(t_token **token)
 			arr = ft_strjoin(tmp, tmp2);
 			free(tmp);
 			free(tmp2);
+			printf("arr = %s\n", arr);
 			(*token)->new_word = 1;
 		}
 		else
 			break ;
 	}
+	return (arr);
 }
