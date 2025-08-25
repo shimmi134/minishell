@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/24 22:56:40 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/25 16:19:19 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 	return (pid);
 }
 
-/*
+
 void print_cmd_list(t_cmd *head) 
 {
     int i;
@@ -85,7 +85,7 @@ void print_cmd_list(t_cmd *head)
     printf("\n-----------------------\n");
     //printf("NULL\n");
 }
-*/
+
 void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
 		int **last_status_ptr_out)
 {
@@ -142,10 +142,8 @@ int	init_execute(t_token *node, t_token *head, t_env *env, int *exit_status)
 	t_shell	*element;
 
 	element = NULL;
-//	exit (0);
 	t_head = init_cmds(node, *exit_status, env);
-	//exit(0);
-//	print_cmd_list(t_head);
+	print_cmd_list(t_head);
 	if (pre_struct_exit(t_head, exit_status, env, head))
 		return (1);
 	do_struct(&element, t_head, exit_status);
@@ -208,6 +206,7 @@ void print_list(t_token *head)
     }
     	printf("NULL\n");
 }
+/*
 void print_cmd_list(t_cmd *head) 
 {
     int i;
@@ -251,7 +250,7 @@ void print_cmd_list(t_cmd *head)
     }
     printf("\n-----------------------\n");
     //printf("NULL\n");
-}
+}*/
 
 int	main(int argc, char *argv[], char *envp[])
 {

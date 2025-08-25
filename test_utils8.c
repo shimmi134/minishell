@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:24:40 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/25 14:42:33 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 16:22:24 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	open_and_dup_outfile(char *path, int append)
 	flags = 0;
 	fd = -1;
 	res = 0;
-	path = "sami/shimi";
 	set_flags(&flags, append);
 	fd = open(path, flags, 0644);
 	if (fd < 0)
@@ -54,7 +53,6 @@ int	run_builtin(t_shell *elem, t_env **env)
 	int	code;
 
 	code = 0;
-	//elem->command->outfile = "sami/shimi";
 	if (elem->command->outfile)
 		open_and_dup_outfile(elem->command->outfile, elem->command->append);
 	code = do_builtins(elem, env);
