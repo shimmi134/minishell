@@ -74,6 +74,11 @@ void	check_flags(t_token **token, t_env *env)
 			if (tmp)
 				free(tmp);
 		}
+		else if ((*token)->type == TOKEN_VARIABLE && !(*token)->next)
+		{
+			printf("reaches");
+					(*token)->type = TOKEN_WORD;
+		}
 		*token = (*token)->next;
 	}
 	*token = head;

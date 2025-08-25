@@ -90,7 +90,7 @@ void	handle_var_assign(char *value, t_token *token, int quote)
 		if (token->value)
 			free(token->value);
 		token->value = ft_strdup_char('$');
-		if (value[1] == '\0')
+		if (value[1] == '\0' || value[1] == ' ')
 			token->type = TOKEN_WORD;
 	}
 }

@@ -1,10 +1,10 @@
 unset SHELL
-
+exit
 
 unset 
 
 *BOOM
-
+(of course its my ft_strlen that it)
 
 cat 
 
@@ -12,6 +12,9 @@ cat
 ^c
 minishell> minishell> 
 
+unset ""
+exit
+^invalid free
 
 echo hi >> sami/shimi
 
