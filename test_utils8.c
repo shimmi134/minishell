@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:24:40 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/25 16:22:24 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 17:32:53 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	set_flags(int *flags, int append)
 	*flags = O_WRONLY | O_CREAT | O_TRUNC;
 }
 
-void	open_and_dup_outfile(char *path, int append)
+int	open_and_dup_outfile(char *path, int append)
 {
 	int	flags;
 	int	fd;
@@ -37,15 +37,16 @@ void	open_and_dup_outfile(char *path, int append)
 	if (fd < 0)
 	{
 		perror(path);
-		exit(1);
+		return (1);
 	}
 	res = dup2(fd, STDOUT_FILENO);
 	if (res < 0)
 	{
 		perror(path);
-		exit(1);
+		return (1);
 	}
 	close(fd);
+	return (0);
 }
 
 int	run_builtin(t_shell *elem, t_env **env)
@@ -54,7 +55,8 @@ int	run_builtin(t_shell *elem, t_env **env)
 
 	code = 0;
 	if (elem->command->outfile)
-		open_and_dup_outfile(elem->command->outfile, elem->command->append);
+		if (open_and_dup_outfile(elem->command->outfile, elem->command->append) == 1)
+			return (1);
 	code = do_builtins(elem, env);
 	if (elem->exit_status_code)
 		*(elem->exit_status_code) = code;

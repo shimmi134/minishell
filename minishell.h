@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/25 17:11:31 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 17:33:59 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,7 +218,7 @@ void					init_token_flags(t_token *token, int new_word, int type,
 							int quote);
 void					handle_var_assign(char *value, t_token *token,
 							int quote);
-void					open_and_dup_outfile(char *path, int append);
+int	open_and_dup_outfile(char *path, int append);
 t_token					*handle_no_quote(char *str, t_token *head,
 							t_token **current, int *i);
 void					set_flags(int *flags, int append);

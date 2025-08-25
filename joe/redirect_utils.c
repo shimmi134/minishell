@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 22:14:12 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/24 22:26:13 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/25 17:33:34 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ char *append_while(t_token **token)
 			arr = ft_strjoin(tmp, tmp2);
 			free(tmp);
 			free(tmp2);
-			printf("arr = %s\n", arr);
 			(*token)->new_word = 1;
 		}
 		else

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/25 17:11:47 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 17:33:29 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,52 +38,6 @@ pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 	}
 	close_prev_next(prev_fd, next_read, next_write);
 	return (pid);
-}
-
-
-void print_cmd_list(t_cmd *head) 
-{
-    int i;
-
-    i = 0;
-    t_cmd *current = head;
-    while (current != NULL) 
-	{
-        printf("\n-----------------------\n");
-        if (current->cmd)
-        {
-            if (current->cmd[0] == '\0')
-                printf("cmd = [empty]\n");
-            else
-                printf("cmd = %s\n", current->cmd);
-        }
-		 if (current->append)
-		 	printf("[append]");
-         if (current->heredoc)
-		 	printf("[heredoc] ");
-        if (current->heredoc_delim)
-            printf("heredoc_delim = %s\n", current->heredoc_delim);
-		if (current->infile)
-		 	printf("infile = %s\n", current->infile);
-        if (current->outfile)
-			printf("outfile = %s\n", current->outfile);
-		if (current->exit_status)
-			printf("return exit status\n");
-        if (current->args[i])
-           printf("args = ");
-       while(current->args[i])
-       {
-            if (current->args[i][0] == '\0')
-                printf("[empty]\n");
-            else
-                printf("%s ", current->args[i]);
-            i++;
-       }
-        current = current->next;
-        i = 0;
-    }
-    printf("\n-----------------------\n");
-    //printf("NULL\n");
 }
 
 void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
@@ -143,7 +97,6 @@ int	init_execute(t_token *node, t_token *head, t_env *env, int *exit_status)
 
 	element = NULL;
 	t_head = init_cmds(node, *exit_status, env);
-	print_cmd_list(t_head);
 	if (pre_struct_exit(t_head, exit_status, env, head))
 		return (1);
 	do_struct(&element, t_head, exit_status);
@@ -157,100 +110,6 @@ int	init_execute(t_token *node, t_token *head, t_env *env, int *exit_status)
 	}
 	return (0);
 }
-
-void print_enum(t_token *list)
-{
-	if (list->type == 0)
-    	printf("TOKEN_WORD ");
-    if (list->type == 1)
-    	printf("TOKEN_PIPE ");
-    if (list->type == 2)
-    	printf("TOKEN_REDIRECT_IN ");
-    if (list->type == 3)
-    	printf("TOKEN_REDIRECT_OUT ");
-    if (list->type == 4)
-    	printf("TOKEN_APPEND ");
-    if (list->type == 5)
-    	printf("TOKEN_HEREDOC ");
-    if (list->type == 6)
-    	printf("TOKEN_SEPARATOR ");
-    if (list->type == 7)
-    	printf("TOKEN_QUOTE_SINGLE ");
-    if (list->type == 8)
-    	printf("TOKEN_QUOTE_DOUBLE ");
-    if (list->type == 9)
-    	printf("TOKEN_VARIABLE ");
-    if (list->type == 10)
-    	printf("TOKEN_INVALID ");
-}
-
-
-void print_list(t_token *head) 
-{
-    t_token *current = head;
-    while (current != NULL) 
-	{
-		print_enum(current);
-		if (current->inside_double)
-			printf("[inside double quotes]");
-		else if (current->inside_single)
-			printf("[inside single quotes]");
-		if ((current != head) && !current->new_word)
-			printf("[part of prev word]");
-		if (current->value[0] == '\0')
-			printf("[empty]\n");
-		else
-        	printf("-> %s\n", current->value);
-
-        current = current->next;
-    }
-    	printf("NULL\n");
-}
-/*
-void print_cmd_list(t_cmd *head) 
-{
-    int i;
-
-    i = 0;
-    t_cmd *current = head;
-    while (current != NULL) 
-	{
-        printf("\n-----------------------\n");
-        if (current->cmd)
-        {
-            if (current->cmd[0] == '\0')
-                printf("cmd = [empty]\n");
-            else
-                printf("cmd = %s\n", current->cmd);
-        }
-		 if (current->append)
-		 	printf("[append]");
-         if (current->heredoc)
-		 	printf("[heredoc] ");
-        if (current->heredoc_delim)
-            printf("heredoc_delim = %s\n", current->heredoc_delim);
-		if (current->infile)
-		 	printf("infile = %s\n", current->infile);
-        if (current->outfile)
-			printf("outfile = %s\n", current->outfile);
-		if (current->exit_status)
-			printf("return exit status\n");
-        if (current->args[i])
-           printf("args = ");
-       while(current->args[i])
-       {
-            if (current->args[i][0] == '\0')
-                printf("[empty]\n");
-            else
-                printf("%s ", current->args[i]);
-            i++;
-       }
-        current = current->next;
-        i = 0;
-    }
-    printf("\n-----------------------\n");
-    //printf("NULL\n");
-}*/
 
 int	main(int argc, char *argv[], char *envp[])
 {
