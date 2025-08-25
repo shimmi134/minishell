@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:22:24 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/25 20:30:10 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:53:03 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	handle_sigint_heredoc(int sig_int)
 	(void)sig_int;
 	exit(1);
 }
+
 int	wait_status_2(pid_t pid)
 {
 	int	status;

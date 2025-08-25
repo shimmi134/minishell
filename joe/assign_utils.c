@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:32:21 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/23 18:04:40 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:52:25 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,14 @@ void	assign_after_var(char *str, t_quote_vars *vars, int *i)
 {
 	vars->k = 0;
 	while (str[vars->j] && str[vars->j] != '"' && str[vars->j] != '\''
-		&& str[vars->j] != '$' && str[vars->j] != '/' && str[vars->j] != '?' && str[vars->j] != ' ')
+		&& str[vars->j] != '$' && str[vars->j] != '/'
+		&& str[vars->j] != '?' && str[vars->j] != ' ')
 	{
 		vars->k++;
 		vars->j++;
 	}
 	if (vars->j == (*i) && str[vars->j] != '$' && str[vars->j] != '\''
-		&& str[vars->j] != '/' && str[vars->j] != '?'  && str[vars->j] != ' ')
+		&& str[vars->j] != '/' && str[vars->j] != '?' && str[vars->j] != ' ')
 	{
 		if (vars->arr)
 			free(vars->arr);

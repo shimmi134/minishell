@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:51:10 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/25 20:42:35 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:51:02 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,8 @@ t_token	*add_word(char *str, int *i)
 	if (j > 0 && str[j - 1] == ' ')
 		new_word = 1;
 	arr = NULL;
-	while ((str[j]) && !is_token(str[j]) && str[j] != ' ' && str[j] != '/' && str[j] != '?')
+	while ((str[j]) && !is_token(str[j]) && str[j] != ' '
+		&& str[j] != '/' && str[j] != '?')
 		j++;
 	if (j >= (*i))
 	{
