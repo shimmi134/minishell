@@ -66,6 +66,7 @@ void	append_while(t_token **token)
 	char	*tmp;
 	char	*tmp2;
 
+	arr = NULL;
 	while (*token)
 	{
 		if ((*token)->next && !(*token)->next->new_word)
