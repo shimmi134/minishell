@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:06:13 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/24 22:22:52 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/25 21:10:15 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,6 @@ int	check_tokens(t_token *tokens)
 	if (tokens->type == TOKEN_VARIABLE && !tokens->next)
 		return (printf("Syntax error, invalid token at start\n"), 0);
 	if (!token_loop(tokens))
-		return (0);
+		return (2);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 16:03:16 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/25 17:44:53 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 21:18:36 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,13 @@ int	pre_exec(char *line, t_env *env, int *exit_status)
 		node = lexer(line, env);
 		line = NULL;
 		head = node;
-		if (check_tokens(head))
+		if (check_tokens(head) == 1)
+		{
 			if (init_execute(node, head, env, exit_status) == 1)
 				return (1);
+		}
+		else
+			*exit_status = 2;
 	}
 	if (line)
 		free(line);
