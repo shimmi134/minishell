@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 22:14:12 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/25 17:33:34 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:36:33 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	add_append(t_token **tokens, t_cmd **cmds)
 	}
 }
 
-char *append_while(t_token **token)
+char	*append_while(t_token **token)
 {
 	char	*arr;
 	char	*tmp;

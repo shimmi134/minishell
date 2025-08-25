@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:51:55 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/24 22:19:51 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:42:42 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,16 @@ t_token	*handle_no_quote(char *str, t_token *head, t_token **current, int *i)
 	if (type == TOKEN_HEREDOC || type == TOKEN_APPEND)
 		(*i)++;
 	return (head);
+}
+
+void allocate_in_single(t_quote_vars *vars, char *str, int *i)
+{
+	vars->j = 0;
+		while ((str[(*i)]) && str[(*i)] != '\'')
+		{
+			vars->arr[vars->j] = str[(*i)];
+			(*i)++;
+			vars->j++;
+		}
+		vars->arr[vars->j] = '\0';
 }

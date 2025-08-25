@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:51:10 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/24 23:23:03 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:42:35 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	handle_single(t_quote_vars *vars, int *i, char *str)
 {
-	if(vars->arr)
+	if (vars->arr)
 	{
 		free(vars->arr);
 		vars->arr = NULL;
@@ -33,16 +33,7 @@ void	handle_single(t_quote_vars *vars, int *i, char *str)
 			exit(EXIT_FAILURE);
 	}
 	if (vars->arr)
-	{
-		vars->j = 0;
-		while ((str[(*i)]) && str[(*i)] != '\'')
-		{
-			vars->arr[vars->j] = str[(*i)];
-			(*i)++;
-			vars->j++;
-		}
-		vars->arr[vars->j] = '\0';
-	}
+		allocate_in_single(vars, str, i);
 	vars->quote_flag = 2;
 }
 

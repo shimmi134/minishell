@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/25 20:29:00 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:43:38 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,7 @@ int						is_token(char c);
 void					handle_nested_var(t_struct_var *structs,
 							t_quote_vars *vars, char *str, int *i);
 							int	wait_status(pid_t pid);
+						void allocate_in_single(t_quote_vars *vars, char *str, int *i);
 
 int	wait_status_2(pid_t pid);
 void					flush_arr_in_var(t_quote_vars *vars,

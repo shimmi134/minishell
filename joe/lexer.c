@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:31 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/24 22:22:25 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:36:08 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,7 @@ void	check_flags(t_token **token, t_env *env)
 		}
 		else if ((*token)->type == TOKEN_VARIABLE && !(*token)->next)
 		{
-			printf("reaches");
-					(*token)->type = TOKEN_WORD;
+			(*token)->type = TOKEN_WORD;
 		}
 		*token = (*token)->next;
 	}
