@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 16:55:28 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/25 15:58:22 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:31:27 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,16 @@ int	is_sal(char *str)
 
 void	exit_message(t_shell *elem)
 {
-	if (ft_strchr(elem->command->cmd, '/') != NULL && ft_strncmp("exit", elem->command->cmd, 4) != 0)
+	if (ft_strchr(elem->command->cmd, '/') != NULL && ft_strncmp("exit",
+			elem->command->cmd, 4) != 0)
 		perror(elem->command->cmd);
 	else if (ft_strncmp("exit", elem->command->cmd, 4) != 0)
 		printf("%s: command not found\n", elem->command->cmd);
 	exit(127);
+}
+
+void	signals_child(void)
+{
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGINT, SIG_DFL);
 }

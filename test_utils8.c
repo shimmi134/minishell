@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:24:40 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/25 17:32:53 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 17:36:28 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ int	run_builtin(t_shell *elem, t_env **env)
 
 	code = 0;
 	if (elem->command->outfile)
-		if (open_and_dup_outfile(elem->command->outfile, elem->command->append) == 1)
+		if (open_and_dup_outfile(elem->command->outfile,
+				elem->command->append) == 1)
 			return (1);
 	code = do_builtins(elem, env);
 	if (elem->exit_status_code)

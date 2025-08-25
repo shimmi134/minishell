@@ -6,15 +6,13 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/25 17:33:59 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:31:24 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-
-# include <stdio.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <readline/history.h>
@@ -22,7 +20,7 @@
 # include <signal.h>
 # include <stdbool.h>
 # include <stddef.h>
-
+# include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/wait.h>
@@ -113,7 +111,7 @@ typedef struct s_struct_var
 	t_token				**head;
 	t_token				**current;
 }						t_struct_var;
-
+void					handle_sigint_heredoc(int sig_int);
 int						if_valid(char *str);
 int						has_token(char *str);
 int						skip(char *str, int i);
@@ -146,6 +144,7 @@ void					assign_var_token(t_struct_var *structs,
 void					assign_arr_memory(t_quote_vars *vars);
 void					add_slash(t_struct_var *structs, t_quote_vars *vars);
 void					add_single(t_struct_var *structs, t_quote_vars *vars);
+void					signals_child(void);
 int						check_quotes(char *str);
 int						read_heredoc(t_heredoc *hd_temp, t_env *env);
 int						count_len(char **av);
@@ -220,7 +219,7 @@ void					init_token_flags(t_token *token, int new_word, int type,
 							int quote);
 void					handle_var_assign(char *value, t_token *token,
 							int quote);
-int	open_and_dup_outfile(char *path, int append);
+int						open_and_dup_outfile(char *path, int append);
 t_token					*handle_no_quote(char *str, t_token *head,
 							t_token **current, int *i);
 void					set_flags(int *flags, int append);
@@ -321,7 +320,7 @@ t_token					*add_word(char *str, int *i);
 void					assign_args(t_token *tokens, t_cmd **cmds);
 void					quote_if(char *str, t_token **head, t_token **current,
 							int *i);
-char 					*append_while(t_token **token);
+char					*append_while(t_token **token);
 void					add_quoted_word_2(char *str, int *i, int type,
 							t_struct_var *structs);
 void					quoted_arr_len(char *str, t_quote_vars *vars);
