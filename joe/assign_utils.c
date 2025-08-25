@@ -18,7 +18,7 @@ void	assign_arr_memory(t_quote_vars *vars)
 		free(vars->arr);
 	if (vars->k > 0)
 	{
-		vars->arr = malloc(sizeof(char) * (vars->k + 1));
+		vars->arr = malloc(sizeof(char) * ((vars->k) + 1));
 		if (!vars->arr)
 			exit(EXIT_FAILURE);
 		vars->arr[vars->k] = '\0';
@@ -59,13 +59,13 @@ void	assign_after_var(char *str, t_quote_vars *vars, int *i)
 {
 	vars->k = 0;
 	while (str[vars->j] && str[vars->j] != '"' && str[vars->j] != '\''
-		&& str[vars->j] != '$' && str[vars->j] != '/' && str[vars->j] != '?')
+		&& str[vars->j] != '$' && str[vars->j] != '/' && str[vars->j] != '?' && str[vars->j] != ' ')
 	{
 		vars->k++;
 		vars->j++;
 	}
 	if (vars->j == (*i) && str[vars->j] != '$' && str[vars->j] != '\''
-		&& str[vars->j] != '/' && str[vars->j] != '?')
+		&& str[vars->j] != '/' && str[vars->j] != '?'  && str[vars->j] != ' ')
 	{
 		if (vars->arr)
 			free(vars->arr);
