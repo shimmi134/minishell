@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:25:13 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/24 16:52:14 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:28:50 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ void	wait_children(int *pids, int count, int *last_status_ptr, int *fd_val)
 			if (last_status_ptr)
 				*last_status_ptr = WEXITSTATUS(status);
 		}
+		else if (WTERMSIG(status) == SIGINT)
+			*last_status_ptr = 130;
 		else
 		{
 			if (last_status_ptr)
