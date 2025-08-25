@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/25 20:45:10 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/25 21:01:50 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,10 +122,11 @@ int						is_word(char *str);
 int						is_token(char c);
 void					handle_nested_var(t_struct_var *structs,
 							t_quote_vars *vars, char *str, int *i);
-							int	wait_status(pid_t pid);
-						void allocate_in_single(t_quote_vars *vars, char *str, int *i);
+int						wait_status(pid_t pid);
+void					allocate_in_single(t_quote_vars *vars, char *str,
+							int *i);
 
-int	wait_status_2(pid_t pid);
+int						wait_status_2(pid_t pid);
 void					flush_arr_in_var(t_quote_vars *vars,
 							t_struct_var *structs);
 void					handle_nested_slash(t_struct_var *structs,
@@ -198,7 +199,7 @@ int						custom_exit(int *exit_status, t_env *env,
 int						pre_struct_exit(t_cmd *t_head, int *exit_status,
 							t_env *env, t_token *head);
 int						is_sal(char *str);
-
+void					status_pointer(int status, int *last_status_ptr);
 void					exit_message(t_shell *elem);
 void					do_exit(t_shell *element);
 void					free_combined(int *exit_status, t_env *env);

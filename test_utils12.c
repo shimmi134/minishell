@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 16:55:28 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/25 20:31:27 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 21:01:25 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,28 @@ void	signals_child(void)
 {
 	signal(SIGQUIT, SIG_DFL);
 	signal(SIGINT, SIG_DFL);
+}
+
+void	status_pointer(int status, int *last_status_ptr)
+{
+	if (WIFEXITED(status))
+	{
+		if (last_status_ptr)
+			*last_status_ptr = WEXITSTATUS(status);
+	}
+	else if (WTERMSIG(status) == SIGINT)
+	{
+		printf("\n");
+		*last_status_ptr = 130;
+	}
+	else if (WTERMSIG(status) == SIGQUIT)
+	{
+		printf("Quit (core dumped)\n");
+		*last_status_ptr = 131;
+	}
+	else
+	{
+		if (last_status_ptr)
+			*last_status_ptr = 127;
+	}
 }
