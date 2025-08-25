@@ -80,7 +80,6 @@ char *append_while(t_token **token)
 			arr = ft_strjoin(tmp, tmp2);
 			free(tmp);
 			free(tmp2);
-			printf("arr = %s\n", arr);
 			(*token)->new_word = 1;
 		}
 		else
