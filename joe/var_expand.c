@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:53:16 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/25 22:10:28 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/25 22:29:13 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*expand_var(char *str, t_cmd *cmd, t_env *env)
 		if (!ft_strcmp(str, env->key))
 		{
 			if (env->hidden)
-				return(NULL);
+				return (NULL);
 			val = ft_strdup(env->value);
 			return (val);
 		}

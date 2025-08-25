@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:07:51 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/25 22:21:13 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 22:29:02 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	do_pwd(t_env **env)
 	t_env	*temp;
 
 	buf = getcwd(NULL, 0);
-	temp = in_env("PWD", env); 
+	temp = in_env("PWD", env);
 	if (!buf)
 		buf = ft_strdup(temp->value);
 	if (printf("%s\n", buf) == -1)
