@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 22:14:12 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/25 22:00:49 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/25 22:04:02 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,8 @@ char	*append_while(t_token **token)
 	arr = NULL;
 	while (*token && (*token)->type == TOKEN_WORD)
 	{
-		if ((*token)->next && !(*token)->next->new_word && (*token)->next->type == TOKEN_WORD)
+		if ((*token)->next && !(*token)->next->new_word
+			&& (*token)->next->type == TOKEN_WORD)
 		{
 			if (!arr)
 				tmp = ft_strdup((*token)->value);
@@ -83,7 +84,7 @@ char	*append_while(t_token **token)
 			(*token)->new_word = 1;
 		}
 		else
-				return (ft_strdup((*token)->value));
+			return (ft_strdup((*token)->value));
 	}
 	return (arr);
 }
