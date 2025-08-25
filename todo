@@ -1,7 +1,29 @@
 unset SHELL
 
+
+unset 
+
 *BOOM
+
+
+cat 
+
+
+^c
+minishell> minishell> 
+
 
 echo hi >> sami/shimi
 
 (shoudnt work)
+
+
+
+
+After doing unset LANG it also unsets LANGUAGE *sobs*
+
+
+
+printf 'hello world' >/dev/null | cat -e 
+
+when outfile has a / it doesnt redirect and just prints when it shouldnt

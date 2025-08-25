@@ -1,15 +1,3 @@
-echo "$USE'"
+"echo $ "
 
-echo ' "test"'
-
-echo "$U"
-
-<< ''""
-
-|
-
-cat -e
-^C
-
-echo "$''"
-echo '$USER'
+segs in init
