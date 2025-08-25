@@ -145,7 +145,7 @@ int	init_execute(t_token *node, t_token *head, t_env *env, int *exit_status)
 //	exit (0);
 	t_head = init_cmds(node, *exit_status, env);
 	//exit(0);
-//	print_cmd_list(t_head);
+	print_cmd_list(t_head);
 	if (pre_struct_exit(t_head, exit_status, env, head))
 		return (1);
 	do_struct(&element, t_head, exit_status);
