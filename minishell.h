@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/25 21:01:50 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 22:19:56 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ typedef struct s_env
 {
 	char				*key;
 	char				*value;
+	int					hidden;
 	struct s_env		*next;
 }						t_env;
 
@@ -167,7 +168,7 @@ int						do_echo(t_shell *elem);
 void					handle_nested_status(t_struct_var *structs,
 							t_quote_vars *vars, char *str, int *i);
 void					add_status(t_struct_var *structs, t_quote_vars *vars);
-int						do_pwd(void);
+int						do_pwd(t_env **env);
 int						do_env(t_env **env, t_shell *elem);
 int						do_unset(t_shell *elem, t_env **env);
 int						ft_isalnum(int c);

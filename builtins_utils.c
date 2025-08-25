@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:56:30 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/25 15:34:54 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 22:25:33 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ void	good_export(char *arg, t_env **env, char *str)
 	{
 		if (ft_strcmp(pos, nd->key) == 0)
 		{
+			if (nd->hidden)
+				nd->hidden = 0;
 			free(nd->value);
 			nd->value = ft_strdup((str + 1));
 			break ;
@@ -109,6 +111,7 @@ t_env	*create_env_node(char *arg, int flag, char *str)
 	if (!flag)
 	{
 		node->key = ft_strdup(arg);
+		node->hidden = 0;
 		node->value = NULL;
 		node->next = NULL;
 	}
@@ -116,6 +119,7 @@ t_env	*create_env_node(char *arg, int flag, char *str)
 	{
 		node->key = ft_dup_upto(arg, '=');
 		node->value = ft_strdup((str + 1));
+		node->hidden = 0;
 		node->next = NULL;
 	}
 	return (node);

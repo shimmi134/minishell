@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:26:05 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/24 17:34:24 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 22:01:04 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ t_env	*create_node(char *env)
 		return (NULL);
 	node->key = ft_strdup(split[0]);
 	node->value = join_split(split);
+	node->hidden = 0;
 	node->next = NULL;
 	while (split[i])
 		free(split[i++]);
