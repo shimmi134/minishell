@@ -317,7 +317,7 @@ t_token					*add_word(char *str, int *i);
 void					assign_args(t_token *tokens, t_cmd **cmds);
 void					quote_if(char *str, t_token **head, t_token **current,
 							int *i);
-							void	append_while(t_token **token);
+char 					*append_while(t_token **token);
 void					add_quoted_word_2(char *str, int *i, int type,
 							t_struct_var *structs);
 void					quoted_arr_len(char *str, t_quote_vars *vars);

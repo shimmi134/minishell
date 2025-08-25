@@ -66,7 +66,7 @@ int	pre_exec(char *line, t_env *env, int *exit_status)
 		node = lexer(line, env);
 		line = NULL;
 		head = node;
-		//print_list(node);
+		print_list(node);
 		if (check_tokens(head))
 			if (init_execute(node, head, env, exit_status) == 1)
 				return (1);

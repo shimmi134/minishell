@@ -60,7 +60,7 @@ void	add_append(t_token **tokens, t_cmd **cmds)
 	}
 }
 
-void	append_while(t_token **token)
+char *append_while(t_token **token)
 {
 	char	*arr;
 	char	*tmp;
@@ -85,4 +85,5 @@ void	append_while(t_token **token)
 		else
 			break ;
 	}
+	return (arr);
 }

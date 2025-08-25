@@ -72,7 +72,7 @@ void	handle_append(t_token **token, t_cmd **cmd)
 		*token = (*token)->next;
 	if ((*token)->next && !(*token)->next->new_word)
 	{
-		append_while(token);
+		arr = append_while(token);
 	}
 	else
 		arr = ft_strdup((*token)->value);
