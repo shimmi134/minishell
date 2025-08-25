@@ -11,3 +11,6 @@ echo hi >> sami/shimi
 printf 'hello world' >/dev/null | cat -e 
 
 when outfile has a / it doesnt redirect and just prints when it shouldnt
+
+
+Whenever joe corrects the outfile thing I need to make it so it doesn't exit :3
