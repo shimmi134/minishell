@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/25 20:31:24 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:32:50 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,9 @@ int						is_word(char *str);
 int						is_token(char c);
 void					handle_nested_var(t_struct_var *structs,
 							t_quote_vars *vars, char *str, int *i);
+							int	wait_status(pid_t pid);
+
+int	wait_status_2(pid_t pid);
 void					flush_arr_in_var(t_quote_vars *vars,
 							t_struct_var *structs);
 void					handle_nested_slash(t_struct_var *structs,

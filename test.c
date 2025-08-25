@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/25 20:31:38 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 20:33:03 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 		perror("fork");
 	if (pid < 0)
 		exit(1);
+		
 	if (pid == 0)
 	{
 		signals_child();
@@ -37,6 +38,9 @@ pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 		child_process(elem, env, *prev_fd, next_write);
 		exit(1);
 	}
+	signal(SIGINT, SIG_IGN);
+	if (wait_status_2(pid) == -1)
+			return (-1);
 	close_prev_next(prev_fd, next_read, next_write);
 	return (pid);
 }
