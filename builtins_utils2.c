@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 13:21:28 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/23 17:48:04 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 15:42:32 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ int	do_unset(t_shell *elem, t_env **env)
 	prev = nd;
 	while (nd)
 	{
-		if (!ft_strncmp(elem->command->args[0], nd->key,
-				ft_strlen(elem->command->args[0])))
+		if (elem->command->args[0] && ft_strcmp(elem->command->args[0],
+				nd->key) == 0)
 		{
 			delete_node(env, nd, prev);
 			break ;

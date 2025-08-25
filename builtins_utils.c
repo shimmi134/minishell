@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:56:30 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/23 15:59:03 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/25 15:34:54 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	good_export(char *arg, t_env **env, char *str)
 	pos = ft_dup_upto(arg, '=');
 	while (nd)
 	{
-		if (ft_strncmp(pos, nd->key, ft_strlen(nd->key)) == 0)
+		if (ft_strcmp(pos, nd->key) == 0)
 		{
 			free(nd->value);
 			nd->value = ft_strdup((str + 1));
