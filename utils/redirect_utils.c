@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 22:14:12 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/25 22:04:02 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/08/26 20:08:16 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ void	handle_redirect(t_token **token, t_cmd **cmd, int type)
 	if (arr)
 	{
 		if (type == TOKEN_REDIRECT_IN)
-			(*cmd)->infile = ft_strdup(arr);
+			(*cmd)->infile = arr;
 		else
-			(*cmd)->outfile = ft_strdup(arr);
+			(*cmd)->outfile = arr;
 	}
 }
 
