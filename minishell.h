@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/25 22:19:56 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/26 18:47:15 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ typedef struct s_env
 	char				*key;
 	char				*value;
 	int					hidden;
+	char				*pwd_copy;
 	struct s_env		*next;
 }						t_env;
 

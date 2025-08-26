@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/25 20:28:59 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/26 18:50:19 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,9 @@ t_env	*free_env_list_tmp(t_env *env)
 		if (env->key)
 			free(env->key);
 		if (env->value)
-		{
 			free(env->value);
-		}
+		if (env->pwd_copy)
+			free(env->pwd_copy);
 		free(env);
 		env = tmp;
 	}
