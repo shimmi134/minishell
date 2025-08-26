@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils4.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:07:51 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/25 22:29:02 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/26 18:48:05 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	change_path(t_env *temp, t_shell *elem)
 {
@@ -87,12 +87,10 @@ int	do_echo(t_shell *elem)
 int	do_pwd(t_env **env)
 {
 	char	*buf;
-	t_env	*temp;
 
 	buf = getcwd(NULL, 0);
-	temp = in_env("PWD", env);
 	if (!buf)
-		buf = ft_strdup(temp->value);
+		buf = ft_strdup((*env)->pwd_copy);
 	if (printf("%s\n", buf) == -1)
 		return (1);
 	if (buf)

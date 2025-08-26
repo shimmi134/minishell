@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils3.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:01:45 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/25 21:59:57 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/26 18:55:59 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	cd_home(t_shell *elem, t_env **env)
 {
@@ -110,5 +110,8 @@ int	do_cd(t_shell *elem, t_env **env)
 	if (i == -1)
 		return (printf("cd: %s: %s\n", strerror(errno), elem->command->args[0]),
 			1);
+	if ((*env)->pwd_copy)
+		free((*env)->pwd_copy);
+	(*env)->pwd_copy = ft_strdup(in_env("PWD", env)->value);
 	return (i);
 }

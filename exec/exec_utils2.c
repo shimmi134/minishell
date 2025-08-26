@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_utils2.c                                      :+:      :+:    :+:   */
+/*   exec_utils2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shimi-be <shimi-be@student.42barcelon      +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 13:26:05 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/25 22:01:04 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/26 18:49:13 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	count_commands(t_shell *sh)
 {
@@ -82,6 +82,7 @@ t_env	*create_node(char *env)
 		return (NULL);
 	node->key = ft_strdup(split[0]);
 	node->value = join_split(split);
+	node->pwd_copy = NULL;
 	node->hidden = 0;
 	node->next = NULL;
 	while (split[i])
