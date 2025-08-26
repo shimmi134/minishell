@@ -6,7 +6,7 @@
 #    By: shimi-be <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/11 11:53:14 by shimi-be          #+#    #+#              #
-#    Updated: 2025/08/26 18:37:55 by shimi-be         ###   ########.fr        #
+#    Updated: 2025/08/26 19:04:59 by shimi-be         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,10 @@ SRC = exec/exec_utils.c exec/exec_utils2.c exec/exec_utils3.c exec/exec_utils4.c
 	  exec/exec_utils9.c exec/exec_utils10.c exec/exec_utils11.c exec/exec_utils12.c\
 	  builtin/builtins_utils.c builtin/builtins_utils2.c builtin/builtins_utils3.c	\
 	  builtin/builtins_utils4.c builtin/builtins_utils5.c builtin/builtins_utils6.c	\
-	  $(wildcard joe/*.c) main.c													
+
+
+
+main.c													
 
 LIB = libft.a
 FLAGS = -Wall -Werror -Wextra
