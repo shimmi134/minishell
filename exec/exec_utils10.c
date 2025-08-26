@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	do_heredoc(t_cmd *t_head, t_env *env, int *exit_status, int *fd_val)
 {
