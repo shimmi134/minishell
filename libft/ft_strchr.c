@@ -6,7 +6,7 @@
 /*   By: shimi-be <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:10:22 by shimi-be          #+#    #+#             */
-/*   Updated: 2024/09/28 14:11:53 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/07/19 14:48:41 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*ft_strchr(const char *s, int c)
 	while (*s != '\0')
 	{
 		if (*s == (unsigned char)c)
-			return ((char *)s);
+			return ((char *)s++);
 		s++;
 	}
 	if ((unsigned char)c == '\0')

@@ -1,23 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shimi-be <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/11 12:08:59 by shimi-be          #+#    #+#             */
-/*   Updated: 2024/09/13 14:27:18 by shimi-be         ###   ########.fr       */
+/*   Created: 2025/08/21 14:51:38 by shimi-be          #+#    #+#             */
+/*   Updated: 2025/08/21 14:51:52 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
-size_t	ft_strlen(const char *s)
+int	ft_strcmp(char *s1, char *s2)
 {
-	size_t	i;
+	int	i;
 
+	if (!s1)
+		return (1);
 	i = 0;
-	while (s && s[i])
+	while (s1[i] != '\0' && s2[i] != '\0')
+	{
+		if (s1[i] != s2[i])
+			return (s1[i] - s2[i]);
 		i++;
-	return (i);
+	}
+	return (s1[i] - s2[i]);
 }

@@ -1,49 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   var_expand.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/11 03:07:16 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 18:04:18 by joshapir         ###   ########.fr       */
+/*   Created: 2025/08/21 18:53:16 by joshapir          #+#    #+#             */
+/*   Updated: 2025/08/25 22:29:13 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*ft_strdup_char(char c)
+char	*expand_var(char *str, t_cmd *cmd, t_env *env)
 {
+	char	*val;
 	int		i;
-	char	*dup;
 
 	i = 0;
-	dup = malloc(2);
-	i = 0;
-	dup[0] = c;
-	dup[1] = '\0';
-	return (dup);
-}
-
-char	*ft_strdup(char *str)
-{
-	int		i;
-	char	*dup;
-
-	i = 0;
-	if (!str)
-		return (NULL);
-	while (str[i])
-		i++;
-	dup = malloc(sizeof(char) * (i + 1));
-	if (!dup)
-		exit(0);
-	i = 0;
-	while (str[i])
+	while (env)
 	{
-		dup[i] = str[i];
+		if (!ft_strcmp(str, env->key))
+		{
+			if (env->hidden)
+				return (NULL);
+			val = ft_strdup(env->value);
+			return (val);
+		}
+		else if (cmd && str[0] == '?' && !str[1])
+		{
+			cmd->exit_status2 = 1;
+			return (ft_itoa(cmd->exit_code));
+		}
+		env = env->next;
 		i++;
 	}
-	dup[i] = '\0';
-	return (dup);
+	return (NULL);
 }

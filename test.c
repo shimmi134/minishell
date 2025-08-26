@@ -3,417 +3,139 @@
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/05/19 15:50:22 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/26 17:16:48 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <sys/wait.h>
+
 #include "minishell.h"
-#include <readline/readline.h>
-#include <errno.h>
 
-void	delete_node(t_env **env, t_env *target, t_env *prev)
+pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 {
-	if (prev == target)
-		*env = target->next;
-	else
-		prev->next = target->next;
-	free(target);
-}
+	int		next_pipe[2];
+	pid_t	pid;
+	int		need_next;
+	int		next_read;
+	int		next_write;
 
-int	count_len(char **sp)
-{
-	int	i;
-
-	i = 0;
-	while (sp[i])
-		i++;
-	return (i);
-}
-
-void	addlast(t_env **env, t_env *add)
-{
-	t_env	*temp;
-
-	temp = *env;
-	while (temp->next != NULL)
-		temp = temp->next;
-	temp->next = add;
-}
-
-t_env	*create_node(char *env)
-{
-	char	**split;
-	t_env	*node;
-
-	split = ft_split(env, '=');
-	if (!split)
-		return (NULL);
-	node = malloc(sizeof(t_env));
-	if (!node)
-		return (NULL);
-	node->key = split[0];
-	node->value = split[1];
-	return (node);
-}
-
-int ft_strspn(char *str, char *sep)
-{
-	int	i;
-	int	j;
-
-	if (!str || !sep)
-		return (0);
-	i = 0;
-	while (str[i])
+	init_rw(elem, &need_next, &next_read, &next_write);
+	next_pipe[0] = -1;
+	next_pipe[1] = -1;
+	prepare_pipe(next_pipe, need_next, &next_read, &next_write);
+	pid = fork();
+	if (pid < 0)
+		perror("fork");
+	if (pid < 0)
+		exit(1);
+	if (pid == 0)
 	{
-		j = 0;
-		while (sep[j])
-		{
-			if (sep[j] == str[i])
-				break;
-			j++;
-		}
-		if (!sep[j])
-			return (i);
-		i++;
-	}
-	return (i);
-}
-
-void	do_builtins(t_shell *elem, t_env **env)
-{
-	char	*buf;
-	t_env	*nd;
-	int		i;
-	t_env	*prev;
-	int		newline;
-	char	**split;
-	t_env	*node;
-	t_env	*tmp;
-	char	*str;
-	t_env	*temp;
-
-	i = 0;
-	if (!ft_strncmp(elem->command->cmd, "pwd", 3))
-	{
-		buf = getcwd(NULL, 0);
-		if (!buf)
-			perror("getcwd");
-		else
-			printf("%s\n", buf);
-		free(buf);
-	}
-	else if (!ft_strncmp(elem->command->cmd, "kill", 4))
-	{
-		// kill(t_pid val_of_child, signal) MOst likely need to do in loop or smth
-		exit(0);
-	}
-	else if (!ft_strncmp(elem->command->cmd, "env", 3))
-	{
-		nd = (*env);
-		while (nd)
-		{
-			if (nd->value != NULL)
-				printf("%s=%s\n", nd->key, nd->value);
-			nd = nd->next;
-		}
-	}
-	else if (!ft_strncmp(elem->command->cmd, "unset", 5))
-	{
-		nd = (*env);
-		prev = nd;
-		while (nd)
-		{
-			if (!ft_strncmp(elem->command->args[1], nd->key, ft_strlen(elem->command->args[1])))
-			{
-				delete_node(env, nd, prev);
-				break ;
-			}
-			prev = nd;
-			nd = nd->next;
-		}
-	}
-	else if (!ft_strncmp(elem->command->cmd, "echo", 4))
-	{
-//		printf("[%s]\n", elem->command->args[0]);
-//		printf("[%s]\n", elem->command->args[1]);
-		newline = 1;
-		i = 0;
-		while (i < count_len(elem->command->args) && !ft_strncmp(elem->command->args[i], "-n", 2) && ft_strlen(elem->command->args[i]) == ft_strspn(elem->command->args[i], "-n"))
-		{
-			newline = 0;
-			i++;
-		}
-		while (i < count_len(elem->command->args))
-		{
-			printf("%s", elem->command->args[i]);
-			if (i < count_len(elem->command->args) - 1)
-				printf(" ");
-			i++;
-		}
-		if (newline)
-			printf("\n");
-	}
-	else if (!ft_strncmp(elem->command->cmd, "export", 6))
-	{
-		split = ft_split(elem->command->args[0], '=');
-		node = create_node(elem->command->args[0]);
-		if (split)
-		{
-			if (split[0][(int)ft_strlen(split[0]) - 1] != '+')
-			{
-				nd = (*env);
-				while (nd)
-				{
-					if (!ft_strncmp(split[0],nd->key, ft_strlen(split[0])))
-					{
-						nd->value = node->value;
-						break;
-					}
-					nd = nd->next;
-				}
-				if (!nd)
-					addlast(env, node);
-			}
-			else
-			{
-				nd = (*env);
-				split[0] = ft_strtrim(split[0], "+");
-				while (nd != NULL)
-				{
-					if (!ft_strncmp(nd->key, split[0], ft_strlen(split[0])))
-					{
-						nd->value = ft_strjoin(nd->value, split[1]);
-						break ;
-					}
-					nd = nd->next;
-				}
-				if (nd == NULL)
-				{
-					node->key = split[0];
-					node->value = split[1];
-					addlast(env, node);
-				}
-			}
-		}
-		else
-		{
-			tmp = *env;
-			while (tmp)
-			{
-				printf("declare -x %s", tmp->key);
-				if (tmp->value)
-					printf("=\"%s\"", tmp->value);
-				printf("\n");
-				tmp = tmp->next;
-			}
-		}
-	}
-	else if (!ft_strncmp(elem->command->cmd, "cd", 2))
-	{
-		char *oldpwd = getcwd(NULL, 0);
-		i = chdir(elem->command->args[1]);
-		if (i != -1)
-		{
-			str = getcwd(NULL, 0);
-			temp = *env;
-			while (temp)
-			{
-				if (!ft_strncmp(temp->key, "PWD", 3))
-					temp->value = str;
-				else if (!ft_strncmp(temp->key, "OLDPWD", ft_strlen(temp->key)))
-					temp->value = oldpwd;
-				temp = temp->next;
-			}
-		}
-		// return (i);
-	}
-}
-
-char	*get_paths(t_env **env)
-{
-	t_env *nd;
-
-	nd = *env;
-	while (nd)
-	{
-		if (ft_strncmp(nd->key, "PATH", 4) == 0)
-			return (nd->value);
-		nd = nd->next;
-	}
-	return (NULL);
-}
-
-char	*try_paths(char	**split, char *comm)
-{
-	char	*temp;
-	char	*temp2;
-	int		i;
-	
-	i = 0;
-	while (split[i])
-	{
-		temp = ft_strjoin("/", comm);
-		temp2 = ft_strjoin(split[i], temp);
-		if (access(temp2, F_OK) == 0)
-			return free(temp), temp2;
-		free(temp2);
-		free(temp);
-		i++;
-	}
-	return (NULL);
-}
-
-char **join_args(char *cmd, char**args)
-{
-	int	len;
-	int	i;
-	char	**final_args;
-
-	i = 1;
-	len = count_len(args) + 1;
-	final_args = malloc((len+1) * sizeof(char *));
-	if (!final_args)
-		return NULL;
-	final_args[0] = cmd;
-	final_args[len] = NULL;
-	while (i < len)
-	{
-		final_args[i] =  args[i-1];
-		i++;
-	}
-	return final_args;
-}
-
-void exec_command(t_shell *elem, t_env **env, char **envp)
-{
-	char	*path;
-	char	*paths;
-	char	**args;
-	char	**split;
-
-	if (access(elem->command->cmd, F_OK) != 0)
-	{
-		paths = get_paths(env);
-		if (!paths)
-			exit(1);
-		split = ft_split(paths, ':');
-		path = try_paths(split, elem->command->cmd);
-		if (!path)
-		{
-			perror(elem->command->cmd);
-			exit(errno);
-		}
-	}
-	else
-		path = elem->command->cmd;
-	args = join_args(elem->command->cmd, elem->command->args);
-	execve(path, args, envp);
-	printf("Error: %s\n", strerror(errno));
-	exit(127);
-}
-
-void	do_commands(t_shell *elem, t_env **env, char **envp)
-{
-	int id;
-
-	id = fork();
-	if (id == -1)
-	{
-		perror("fork: ");
+		if (next_read != -1)
+			close(next_read);
+		child_process(elem, env, *prev_fd, next_write);
 		exit(1);
 	}
-	if (id == 0) // child
-		exec_command(elem, env, envp);
-	else
-		wait(NULL);
+	signal(SIGINT, SIG_IGN);
+	close_prev_next(prev_fd, next_read, next_write);
+	return (pid);
 }
 
-void	do_element(t_shell *elem, t_env **env, char**envp)
+void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
+		int **last_status_ptr_out)
 {
-	if (!ft_strncmp(elem->type, "built-in", ft_strlen(elem->type)))
-		do_builtins(elem, env);
-	else if (!ft_strncmp(elem->type, "command", ft_strlen(elem->type)))
-		do_commands(elem, env, envp);
-}
+	int	*pids;
+	int	pid;
+	int	count;
 
-t_env	*copy_env(char *envp[])
-{
-	t_env	*head;
-	t_env	*node;
-	t_env	*nnode;
-	int		i;
-
-	head = create_node(envp[0]);
-	if (!head)
-		return (NULL);
-	i = 2;
-	node = create_node(envp[1]);
-	if (!node)
-		return (NULL);
-	head->next = node;
-	while (envp[i])
+	count = 0;
+	pids = calloc((count_commands(elem)) + 1, sizeof(int));
+	while (elem && elem->type)
 	{
-		nnode = create_node(envp[i]);
-		if (!nnode)
-			return (NULL);
-		node->next = nnode;
-		node = node->next;
-		i++;
+		if (elem->command->heredoc)
+		{
+			do_heredoc(elem->command, *env, elem->exit_status_code, fd_val);
+			break ;
+		}
+		if (execute_loop_loop(elem, env, last_status_ptr_out, fd_val) == 0)
+		{
+			pid = command_fork(elem, env, fd_val);
+			pids[count++] = (int)pid;
+			*last_status_ptr_out = elem->exit_status_code;
+			elem = elem->next;
+		}
+		else
+			break ;
 	}
-	return (head);
+	wait_children(pids, count, *last_status_ptr_out, fd_val);
 }
 
-char	*get_element(char *line)
+void	do_commands(t_shell *elem, t_env **env, int fd_val)
 {
-	char **split = ft_split(line, ' ');
-	if (!ft_strncmp(split[0], "pwd", 4) || !ft_strncmp(split[0], "kill", 5)
-		|| !ft_strncmp(split[0], "env", 4) || !ft_strncmp(split[0], "unset",
-			6) || !ft_strncmp(split[0], "echo", 5) || !ft_strncmp(split[0],
-			"export", 6) || !ft_strncmp(split[0], "cd", 2))
-	{
-		return ("built-in");
-	}
-	else{
-		return ("command");
-	}
+	int	old_stdout;
+	int	old_stdin;
+	int	*last_status_ptr;
+
+	old_stdout = -1;
+	old_stdin = -1;
+	old_stdout = dup(STDOUT_FILENO);
+	old_stdin = dup(STDIN_FILENO);
+	execute_loop(elem, env, &fd_val, &last_status_ptr);
+	if (old_stdout != -1)
+		dup2(old_stdout, STDOUT_FILENO);
+	if (old_stdout != -1)
+		close(old_stdout);
+	if (old_stdin != -1)
+		dup2(old_stdin, STDIN_FILENO);
+	if (old_stdin != -1)
+		close(old_stdin);
 }
-// TODO:
-// Make it so I transform all of line into nodes of t_shell
-//
-int	main(int ac, char *argv[], char *envp[])
+
+int	init_execute(t_token *node, t_token *head, t_env *env, int *exit_status)
 {
+	t_cmd	*t_head;
 	t_shell	*element;
-	t_cmd	*command;
-	t_token *node;
-	t_token *head;
-	t_env	*env;
-	char	*line;
-	char	**split;
 
+	element = NULL;
+	t_head = init_cmds(node, *exit_status, env);
+	if (pre_struct_exit(t_head, exit_status, env, head))
+		return (1);
+	do_struct(&element, t_head, exit_status);
+	do_commands(element, &env, -1);
+	if (t_head)
+		free_cmds(t_head);
+	if (element != NULL)
+	{
+		free_shell(element);
+		element = NULL;
+	}
+	return (0);
+}
+
+int	main(int argc, char *argv[], char *envp[])
+{
+	char	*line;
+	t_env	*env;
+	int		*exit_status;
+
+	if (!pre_start_check(argc, argv, envp))
+		return (1);
+	exit_status = (int *)malloc(sizeof(int));
+	*exit_status = 0;
 	env = copy_env(envp);
-	split = argv;
 	while (1)
 	{
-		line = readline(">>> ");
-		if (ft_strncmp(line, "", 1))
-		{
-			node = lexer(line);
-			head = node;
-			if (check_tokens(head))
-			{
-				command = init_cmds(node,env);
-				element = malloc(sizeof(t_shell));
-				element->command = malloc (sizeof(t_cmd));
-				element->command = command;
-				element->type = get_element(command->cmd);
-				element->command->args = command->args;
-				ac = count_len(command->args);
-				do_element(element, &env, envp);
-			}
-		}
+		if (!env)
+			return (printf("Error, copying the env.\n"), 1);
+		signal(SIGINT, handle_sigint);
+		signal(SIGQUIT, SIG_IGN);
+		line = readline("\033[1;34mminishell>\033[0m ");
+		if (check_line(line) == 1)
+			break ;
+		if (pre_exec(line, env, exit_status) == 1)
+			break ;
 	}
+	clear_history();
+	free_combined(exit_status, env);
+	return (0);
 }
