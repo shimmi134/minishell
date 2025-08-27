@@ -50,7 +50,11 @@ void	good_export(char *arg, t_env **env, char *str)
 		if (ft_strcmp(pos, nd->key) == 0)
 		{
 			if (nd->hidden)
+			{
 				nd->hidden = 0;
+				printf("Gothere\n");
+				break;
+			}
 			free(nd->value);
 			nd->value = ft_strdup((str + 1));
 			break ;
@@ -63,6 +67,14 @@ void	good_export(char *arg, t_env **env, char *str)
 		nd = create_env_node(arg, 1, str);
 		addlast(env, nd);
 	}
+}
+
+void	change_flag(char	*str, t_env **env)
+{
+	t_env	*node;
+
+	node = in_env(str, env);
+	node->hidden = 2;
 }
 
 int	do_export(t_shell *elem, t_env **env)
@@ -85,6 +97,9 @@ int	do_export(t_shell *elem, t_env **env)
 			else if (str == NULL && !in_env(elem->command->args[i], env)
 				&& correct_export(elem->command->args[i]))
 				create_and_add(env, elem->command->args[i]);
+			else if (str == NULL && in_env(elem->command->args[i], env)
+				&& correct_export(elem->command->args[i]))
+				change_flag(elem->command->args[i], env);
 			i++;
 		}
 	}

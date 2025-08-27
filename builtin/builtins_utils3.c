@@ -64,12 +64,15 @@ int	cd_back(t_env **env, char *oldpwd)
 int	cd_correct(t_env **env, char *oldpwd)
 {
 	char	*str;
+	char	*tstr;
 	t_env	*temp;
 
 	str = getcwd(NULL, 0);
+	tstr = NULL;
 	temp = in_env("PWD", env);
 	if (temp != NULL)
 	{
+		tstr = ft_strdup(temp->value);
 		free(temp->value);
 		temp->value = str;
 	}
@@ -79,23 +82,90 @@ int	cd_correct(t_env **env, char *oldpwd)
 	if (temp != NULL)
 	{
 		free(temp->value);
-		temp->value = oldpwd;
+		temp->value = tstr;
 	}
 	else
-		free(oldpwd);
+		free(tstr);
+	free(oldpwd);
 	return (0);
+}
+
+char	*ft_strrchr(const char *s, int c)
+{
+	const char	*chr;
+
+	chr = NULL;
+	while (*s)
+	{
+		if ((unsigned char)*s == (unsigned char)c)
+			chr = s;
+		s++;
+	}
+	if ((unsigned char)c == '\0')
+		return ((char *)s);
+	return ((char *)chr);
+}
+
+char	*delete_last(char *str)
+{
+	char	*str2;
+	int		len;
+	int		i;
+
+	str2 = ft_strrchr(str, '/');
+	len = str2 - str;
+	str2 = malloc(len+1);
+	if (!str2)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		str2[i] = str[i];
+		i++;
+	}
+	str2[i] = '\0';
+	return (str2);
+
 }
 
 void	pwd_copy_for_env(t_env **env)
 {
 	t_env	*node;
+	char	*str;
+	char	*str2;
+	int		flag;
 
 	node = *env;
+	flag = 0;
 	while (node)
 	{
-		if (node->pwd_copy)
-			free(node->pwd_copy);
-		node->pwd_copy = ft_strdup(in_env("PWD", env)->value);
+		if (in_env("PWD", env)->value != NULL)
+		{
+			if (node->pwd_copy)
+				free(node->pwd_copy);
+			node->pwd_copy = ft_strdup(in_env("PWD", env)->value);
+			if (node->hidden == 2)
+				node->hidden = 0;
+			if (ft_strcmp("OLDPWD", node->key) == 0 && flag)
+			{
+				if (node->value)
+					free(node->value);
+				node->value = delete_last(node->pwd_copy);
+			}
+		}
+		else
+		{
+			flag = 1;
+			str = node->pwd_copy;
+			node->pwd_copy = ft_strjoin(node->pwd_copy, "/..");
+			if (ft_strcmp("PWD", node->key) == 0)
+			{
+				str2 = node->value;
+				node->value = ft_strdup(node->pwd_copy);
+				free(str2);
+			}
+			free(str);
+		}
 		node = node->next;
 	}
 }
