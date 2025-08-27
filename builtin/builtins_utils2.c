@@ -25,7 +25,7 @@ int	do_unset(t_shell *elem, t_env **env)
 				nd->key) == 0 && ft_strcmp(nd->key, "PWD") != 0)
 		{
 			delete_node(env, nd, prev);
-			break ;
+			return (0);	
 		}
 		if (ft_strcmp(nd->key, "PWD") == 0 && ft_strcmp(elem->command->args[0],
 				"PWD") == 0)

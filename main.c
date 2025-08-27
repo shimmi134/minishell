@@ -91,17 +91,17 @@ void	do_commands(t_shell *elem, t_env **env, int fd_val)
 		close(old_stdin);
 }
 
-int	init_execute(t_token *node, t_token *head, t_env *env, int *exit_status)
+int	init_execute(t_token *node, t_token *head, t_env **env, int *exit_status)
 {
 	t_cmd	*t_head;
 	t_shell	*element;
 
 	element = NULL;
-	t_head = init_cmds(node, *exit_status, env);
-	if (pre_struct_exit(t_head, exit_status, env, head))
+	t_head = init_cmds(node, *exit_status, *env);
+	if (pre_struct_exit(t_head, exit_status, *env, head))
 		return (1);
 	do_struct(&element, t_head, exit_status);
-	do_commands(element, &env, -1);
+	do_commands(element, env, -1);
 	if (t_head)
 		free_cmds(t_head);
 	if (element != NULL)
@@ -132,7 +132,7 @@ int	main(int argc, char *argv[], char *envp[])
 		line = readline("\033[1;34mminishell>\033[0m ");
 		if (check_line(line) == 1)
 			break ;
-		if (pre_exec(line, env, exit_status) == 1)
+		if (pre_exec(line, &env, exit_status) == 1)
 			break ;
 	}
 	clear_history();

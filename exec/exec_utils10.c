@@ -53,7 +53,7 @@ void	free_combined(int *exit_status, t_env *env)
 		env = free_env_list_tmp(env);
 }
 
-int	pre_exec(char *line, t_env *env, int *exit_status)
+int	pre_exec(char *line, t_env **env, int *exit_status)
 {
 	t_token	*head;
 	t_token	*node;
@@ -63,7 +63,7 @@ int	pre_exec(char *line, t_env *env, int *exit_status)
 		add_history(line);
 	if (line != NULL && *line && check_quotes(line))
 	{
-		node = lexer(line, env);
+		node = lexer(line, *env);
 		line = NULL;
 		head = node;
 		if (check_tokens(head) == 1)

@@ -155,9 +155,9 @@ int						valiaa(char *str);
 int						close_parent(int prev_fd, int has_next, int *next_pipe);
 int						execute_loop_loop(t_shell *elem, t_env **env,
 							int **last_status_ptr_out, int *fd_val);
-int						init_execute(t_token *node, t_token *head, t_env *env,
+int						init_execute(t_token *node, t_token *head, t_env **env,
 							int *exit_status);
-int						pre_exec(char *line, t_env *env, int *exit_status);
+int						pre_exec(char *line, t_env **env, int *exit_status);
 int						check_line(char *str);
 int						execute_pipe_command(int *fd_val, t_env *env,
 							t_shell *element);

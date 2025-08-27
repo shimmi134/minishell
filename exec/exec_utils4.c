@@ -19,8 +19,10 @@ void	delete_node(t_env **env, t_env *target, t_env *prev)
 	else
 		prev->next = target->next;
 	free(target->key);
+	free(target->pwd_copy);
 	free(target->value);
 	free(target);
+	target = NULL;
 }
 
 int	ft_lensplit(char **split)

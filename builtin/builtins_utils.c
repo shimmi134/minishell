@@ -112,6 +112,7 @@ t_env	*create_env_node(char *arg, int flag, char *str)
 	{
 		node->key = ft_strdup(arg);
 		node->hidden = 0;
+		node->pwd_copy = NULL;
 		node->value = NULL;
 		node->next = NULL;
 	}
@@ -119,6 +120,7 @@ t_env	*create_env_node(char *arg, int flag, char *str)
 	{
 		node->key = ft_dup_upto(arg, '=');
 		node->value = ft_strdup((str + 1));
+		node->pwd_copy = NULL;
 		node->hidden = 0;
 		node->next = NULL;
 	}

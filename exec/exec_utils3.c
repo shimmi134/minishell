@@ -12,6 +12,21 @@
 
 #include "../minishell.h"
 
+t_env	*dup_node(t_env *env)
+{
+	t_env	*dup;
+
+	dup = malloc(sizeof(t_env));
+	if (!dup)
+		return (NULL);
+	dup->key = ft_strdup(env->key);
+	dup->value = ft_strdup(env->value);
+	dup->pwd_copy = ft_strdup(env->pwd_copy);
+	dup->next = NULL;
+
+	return (dup);
+}
+
 void	perr_exit(int errnum, char *cmd)
 {
 	perror(cmd);
@@ -29,12 +44,7 @@ t_env	*duplicate_env(t_env *env)
 	last = NULL;
 	while (env != NULL)
 	{
-		dup = malloc(sizeof(t_env));
-		if (!dup)
-			return (NULL);
-		dup->key = ft_strdup(env->key);
-		dup->value = ft_strdup(env->value);
-		dup->next = NULL;
+		dup = dup_node(env);
 		env = env->next;
 		if (head == NULL)
 			head = dup;

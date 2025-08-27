@@ -45,7 +45,7 @@ char	*try_paths(char **split, char *comm)
 	int		i;
 
 	i = 0;
-	while (split[i])
+	while (split && split[i])
 	{
 		temp = ft_strjoin("/", comm);
 		temp2 = ft_strjoin(split[i], temp);
@@ -79,6 +79,12 @@ char	**join_args(char *cmd, char **args)
 	return (final_args);
 }
 
+void no_path_error(t_shell *elem)
+{
+	printf("%s: no such file or directory\n",elem->command->cmd);
+	exit(127);
+}
+
 void	exec_command(t_shell *elem, t_env **env, char **envp)
 {
 	char	*path;
@@ -93,7 +99,7 @@ void	exec_command(t_shell *elem, t_env **env, char **envp)
 	{
 		paths = get_paths(env);
 		if (!paths)
-			exit(1);
+			no_path_error(elem);
 		split = ft_split(paths, ':');
 		path = try_paths(split, elem->command->cmd);
 		if (!path)
