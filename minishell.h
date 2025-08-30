@@ -170,11 +170,9 @@ int						is_sal(char *str);
 int						init_quote_vars(char **arr, int *quote, int type,
 							int *i);
 int						find_char_pos(char *str, char c);
-int						assign_concat_flag(char *str, int i, t_token **current);
 int						open_and_dup_outfile(char *path, int append);
 int						copy_pwd_env_np(t_env *node);
 int						correct_export(char *str);
-int						unset_check(t_shell *elem, t_env *node, int i);
 int						unset_loop(t_shell *elem, t_env *prev, t_env **env,
 							int i);
 void					change_flag(char *str, t_env **env);
@@ -352,12 +350,12 @@ t_env					*in_env(char *str, t_env **env);
 t_env					*create_env_node(char *arg, int flag, char *str);
 t_cmd					*new_cmd_token(t_token *tokens);
 t_cmd					*init_cmds(t_token *tokens, int exit_code, t_env *env);
+t_type					find_token_type(char *str);
 size_t					ft_strlen(const char *s);
 t_token					*new_token(t_type type, char *value, int flag,
 							int new_word);
 t_token					*lexer(char *str, t_env *env);
 t_token					*add_word(char *str, int *i);
-t_type					find_token_type(char *str);
 t_token					*assign_word_arr(char *arr, int new_word);
 t_token					*handle_no_quote(char *str, t_token *head,
 							t_token **current, int *i);
