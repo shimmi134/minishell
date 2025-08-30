@@ -114,14 +114,11 @@ typedef struct s_struct_var
 	t_token				**current;
 }						t_struct_var;
 
-int						if_valid(char *str);
 int						has_token(char *str);
 int						skip(char *str, int i);
 int						is_word(char *str);
 int						is_token(char c);
 int						wait_status(pid_t pid);
-
-int						wait_status_2(pid_t pid);
 int						check_tokens(t_token *tokens);
 int						arg_count(t_token *tokens);
 int						token_loop(t_token *tokens);
@@ -136,7 +133,6 @@ int						ft_strspn(char *str, char *sep);
 int						ft_atoi(const char *nptr);
 int						ft_lensplit(char **split);
 int						do_builtins(t_shell *elem, t_env **env);
-int						corr_input(t_shell *elem);
 int						do_export(t_shell *elem, t_env **env);
 int						do_cd(t_shell *elem, t_env **env);
 int						init_heredoc(t_heredoc *hd_temp, t_env *env,
@@ -150,9 +146,9 @@ int						ft_isdigit(int c);
 int						env_len(t_env *env);
 int						run_builtin(t_shell *elem, t_env **env);
 int						export_error(char *arg);
-int						assign_concat_flag(char *str, int i, t_token **current);
+int						was_hidden(t_env *node);
 int						valiaa(char *str);
-int						close_parent(int prev_fd, int has_next, int *next_pipe);
+int						export_loop(t_shell *elem, t_env **env);
 int						execute_loop_loop(t_shell *elem, t_env **env,
 							int **last_status_ptr_out, int *fd_val);
 int						init_execute(t_token *node, t_token *head, t_env **env,
@@ -176,7 +172,14 @@ int						init_quote_vars(char **arr, int *quote, int type,
 int						find_char_pos(char *str, char c);
 int						assign_concat_flag(char *str, int i, t_token **current);
 int						open_and_dup_outfile(char *path, int append);
+int						copy_pwd_env_np(t_env *node);
+int						correct_export(char *str);
+void					change_flag(char	*str, t_env **env);
+void					good_export(char *arg, t_env **env, char *str);
+void					copy_pwd_env_p(t_env **env, t_env *node, int flag);
+void					pwd_copy_for_env(t_env **env);
 void					add_space(t_struct_var *structs, t_quote_vars *vars);
+void					no_path_error(t_shell *elem);
 void					handle_nested_space(t_struct_var *structs,
 							t_quote_vars *vars, char *str, int *i);
 void					allocate_arr(t_quote_vars *vars);
@@ -247,16 +250,10 @@ void					create_shlvl(t_env *tail);
 void					init_env_vals(t_env **head, int *i, int *shlvl);
 void					change_path(t_env *temp, t_shell *elem);
 void					handle_single(t_quote_vars *vars, int *i, char *str);
-void					print_cmd_list(t_cmd *head);
 void					cmd_loop(t_token **tokens, t_cmd **cmds, int type,
 							t_env *envp);
 void					free_cmds(t_cmd *head);
 void					handle_sigint(int sig_num);
-void					do_infile(char *infile);
-void					do_outfile(char *outfile, int append);
-void					close_and_open_child(int prev_fd, int has_next,
-							int *next_pipe);
-void					execute_command(t_shell *elem, t_env **env);
 void					perr_exit(int errnum, char *cmd);
 void					exec_command(t_shell *elem, t_env **env, char **envp);
 void					delete_node(t_env **env, t_env *target, t_env *prev);
@@ -324,18 +321,16 @@ void					handle_varible(t_cmd **cmd, t_token **token,
 void					fill_arr(char *str, int *i, t_quote_vars *vars);
 void					delimiter_message(char *str);
 char					quote_type(int type);
+char					*delete_last(char *str);
 char					*ft_strdup(char *str);
 char					*ft_strdup_char(char c);
 char					*ft_strdup_char(char c);
-char					*add_quoted_word(char *str, int *i, int type,
-							t_token **current);
 char					*expand_var(char *str, t_cmd *cmd, t_env *env);
 char					*correct_shlvl(char *split);
 char					**ft_split(char const *s, char c);
 char					*ft_strjoin(char const *s1, char const *s2);
 char					*ft_strtrim(char const *s1, char const *set);
 char					*ft_strchr(const char *s, int c);
-char					*expand_with_quotes(char *str, t_env *env);
 char					*ft_itoa(int n);
 char					*copy_upto(int i, char *str);
 char					*copy_from_var(int i, char *str);
@@ -347,12 +342,13 @@ char					**create_envp(t_env *env);
 char					**ft_strdup_double(char **str);
 pid_t					command_fork(t_shell *elem, t_env **env, int *prev_fd);
 t_env					*free_env_list_tmp(t_env *env);
-t_cmd					*new_cmd_token(t_token *tokens);
-t_cmd					*init_cmds(t_token *tokens, int exit_code, t_env *env);
+t_env					*dup_node(t_env *env);
 t_env					*copy_env(char *envp[]);
 t_env					*create_node(char *env);
 t_env					*in_env(char *str, t_env **env);
 t_env					*create_env_node(char *arg, int flag, char *str);
+t_cmd					*new_cmd_token(t_token *tokens);
+t_cmd					*init_cmds(t_token *tokens, int exit_code, t_env *env);
 size_t					ft_strlen(const char *s);
 t_token					*new_token(t_type type, char *value, int flag,
 							int new_word);

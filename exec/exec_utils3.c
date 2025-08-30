@@ -1,31 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_utils3.c                                      :+:      :+:    :+:   */
+/*   exec_utils3.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 14:56:49 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/18 14:58:46 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/30 17:22:20 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-t_env	*dup_node(t_env *env)
-{
-	t_env	*dup;
-
-	dup = malloc(sizeof(t_env));
-	if (!dup)
-		return (NULL);
-	dup->key = ft_strdup(env->key);
-	dup->value = ft_strdup(env->value);
-	dup->pwd_copy = ft_strdup(env->pwd_copy);
-	dup->next = NULL;
-
-	return (dup);
-}
 
 void	perr_exit(int errnum, char *cmd)
 {

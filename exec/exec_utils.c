@@ -79,12 +79,6 @@ char	**join_args(char *cmd, char **args)
 	return (final_args);
 }
 
-void no_path_error(t_shell *elem)
-{
-	printf("%s: no such file or directory\n",elem->command->cmd);
-	exit(127);
-}
-
 void	exec_command(t_shell *elem, t_env **env, char **envp)
 {
 	char	*path;

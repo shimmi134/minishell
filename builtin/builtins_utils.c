@@ -49,12 +49,8 @@ void	good_export(char *arg, t_env **env, char *str)
 	{
 		if (ft_strcmp(pos, nd->key) == 0)
 		{
-			if (nd->hidden)
-			{
-				nd->hidden = 0;
-				printf("Gothere\n");
-				break;
-			}
+			if (was_hidden(nd))
+				break ;
 			free(nd->value);
 			nd->value = ft_strdup((str + 1));
 			break ;
@@ -69,43 +65,13 @@ void	good_export(char *arg, t_env **env, char *str)
 	}
 }
 
-void	change_flag(char	*str, t_env **env)
-{
-	t_env	*node;
-
-	node = in_env(str, env);
-	node->hidden = 2;
-}
-
 int	do_export(t_shell *elem, t_env **env)
 {
-	char	*str;
-	int		i;
-	int		ret_val;
-
-	ret_val = 0;
 	if ((ft_lensplit(elem->command->args) >= 1))
-	{
-		i = 0;
-		while (i < ft_lensplit(elem->command->args))
-		{
-			str = ft_strchr(elem->command->args[i], '=');
-			if (correct_export(elem->command->args[i]) == -1)
-				ret_val = export_error(elem->command->args[i]);
-			else if (str != NULL && *(str - 1) != '+')
-				good_export(elem->command->args[i], env, str);
-			else if (str == NULL && !in_env(elem->command->args[i], env)
-				&& correct_export(elem->command->args[i]))
-				create_and_add(env, elem->command->args[i]);
-			else if (str == NULL && in_env(elem->command->args[i], env)
-				&& correct_export(elem->command->args[i]))
-				change_flag(elem->command->args[i], env);
-			i++;
-		}
-	}
+		return (export_loop(elem, env));
 	else
 		sort_list(*env);
-	return (ret_val);
+	return (0);
 }
 
 void	create_and_add(t_env **env, char *str)
