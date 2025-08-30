@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/26 19:32:56 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/08/30 18:32:31 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,10 @@ int						assign_concat_flag(char *str, int i, t_token **current);
 int						open_and_dup_outfile(char *path, int append);
 int						copy_pwd_env_np(t_env *node);
 int						correct_export(char *str);
-void					change_flag(char	*str, t_env **env);
+int						unset_check(t_shell *elem, t_env *node, int i);
+int						unset_loop(t_shell *elem, t_env *prev, t_env **env,
+							int i);
+void					change_flag(char *str, t_env **env);
 void					good_export(char *arg, t_env **env, char *str);
 void					copy_pwd_env_p(t_env **env, t_env *node, int flag);
 void					pwd_copy_for_env(t_env **env);
