@@ -114,6 +114,8 @@ typedef struct s_struct_var
 	t_token				**current;
 }						t_struct_var;
 
+extern volatile sig_atomic_t	g_exit_code;
+
 int						has_token(char *str);
 int						skip(char *str, int i);
 int						is_word(char *str);
@@ -360,4 +362,5 @@ t_token					*assign_word_arr(char *arr, int new_word);
 t_token					*handle_no_quote(char *str, t_token *head,
 							t_token **current, int *i);
 t_heredoc				*init_heredoc_struct(t_cmd *cmd);
+
 #endif

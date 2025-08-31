@@ -74,6 +74,7 @@ void	handle_sigint(int sig_num)
 	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_redisplay();
+	g_exit_code = 130;
 }
 
 t_env	*free_env_list_tmp(t_env *env)

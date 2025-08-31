@@ -94,7 +94,9 @@ int	pre_struct_exit(t_cmd *t_head, int *exit_status, t_env *env, t_token *head)
 		if (t_head->args && t_head->args[0] != NULL)
 			exit(custom_exit(exit_status, env, t_head));
 		free_cmds(t_head);
-		return (1);
+		free_env_list_tmp(env);
+		free(exit_status);
+		exit (0);
 	}
 	return (0);
 }

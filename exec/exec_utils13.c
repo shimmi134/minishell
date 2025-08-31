@@ -31,3 +31,12 @@ t_env	*dup_node(t_env *env)
 	dup->next = NULL;
 	return (dup);
 }
+
+void	check_code(int *exit_status)
+{
+	if (g_exit_code)
+	{
+		*exit_status = g_exit_code;
+		g_exit_code = 0;
+	}
+}

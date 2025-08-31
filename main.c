@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+volatile sig_atomic_t	g_exit_code = 0;
+
 pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 {
 	int		next_pipe[2];
@@ -130,6 +132,7 @@ int	main(int argc, char *argv[], char *envp[])
 		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN);
 		line = readline("\033[1;34mminishell>\033[0m ");
+		check_code(exit_status);
 		if (check_line(line) == 1)
 			break ;
 		if (pre_exec(line, &env, exit_status) == 1)
