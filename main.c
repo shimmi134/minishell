@@ -57,6 +57,8 @@ void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
 		if (elem->command->heredoc)
 		{
 			do_heredoc(elem->command, *env, elem->exit_status_code, fd_val);
+			shift_left_and_free(elem->command->heredoc_delim);
+			print_cmd_list(elem->command);
 			break ;
 		}
 		if (execute_loop_loop(elem, env, last_status_ptr_out, fd_val) == 0)
@@ -65,6 +67,7 @@ void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
 			pids[count++] = (int)pid;
 			*last_status_ptr_out = elem->exit_status_code;
 			elem = elem->next;
+			
 		}
 		else
 			break ;
@@ -93,6 +96,56 @@ void	do_commands(t_shell *elem, t_env **env, int fd_val)
 		close(old_stdin);
 }
 
+void print_cmd_list(t_cmd *head) 
+{
+    int i;
+
+    i = 0;
+    t_cmd *current = head;
+    while (current != NULL) 
+	{
+        printf("\n-----------------------\n");
+        if (current->cmd)
+            printf("cmd = %s\n", current->cmd);
+		 if (current->append)
+		 	printf("[append]");
+         if (current->heredoc)
+		 	printf("[heredoc] ");
+			 if (current->heredoc_delim && current->heredoc_delim[0])
+			 {
+				i = 0;
+				 while (current->heredoc_delim[i])
+				 {
+					 if (current->heredoc_delim[i])
+						 printf("heredoc_delim[%d] = %s\n", i, current->heredoc_delim[i]);
+					 else
+						 printf("heredoc_delim[%d] is NULL\n", i);
+						 i++;
+				 }
+			 }
+			 
+		if (current->infile)
+		 	printf("infile = %s\n", current->infile);
+        if (current->outfile)
+			printf("outfile = %s\n", current->outfile);
+        if (current->args[i])
+           printf("args = ");
+       while(current->args[i])
+       {
+            if (current->args[i][0] == '\0')
+                printf("[empty]\n");
+            else
+                printf("%s ", current->args[i]);
+            i++;
+       }
+        current = current->next;
+        i = 0;
+    }
+    printf("\n-----------------------\n");
+    //printf("NULL\n");
+}
+
+
 int	init_execute(t_token *node, t_token *head, t_env **env, int *exit_status)
 {
 	t_cmd	*t_head;
@@ -100,6 +153,7 @@ int	init_execute(t_token *node, t_token *head, t_env **env, int *exit_status)
 
 	element = NULL;
 	t_head = init_cmds(node, *exit_status, *env);
+	print_cmd_list(t_head);
 	if (pre_struct_exit(t_head, exit_status, *env, head))
 		return (1);
 	do_struct(&element, t_head, exit_status);

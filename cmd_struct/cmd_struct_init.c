@@ -12,6 +12,29 @@
 
 #include "../minishell.h"
 
+void init_heredoc_delim(t_token *tokens, t_cmd **cmds)
+{
+	t_token *token;
+	int i;
+
+	i = 0;
+	token = tokens;
+	// if ((*cmds)->heredoc)
+	// 	return ;
+	while (tokens)
+	{
+		if (tokens->type == TOKEN_HEREDOC)
+			i++;
+		tokens = tokens->next;		
+	}
+	if (i > 0)
+	{
+		(*cmds)->heredoc_delim = calloc(i + 1, sizeof(char *));
+		(*cmds)->heredoc_delim[i] = NULL;
+	}
+	else
+		(*cmds)->heredoc_delim = NULL;
+}
 t_cmd	*new_cmd_token(t_token *tokens)
 {
 	int		count;
@@ -29,7 +52,7 @@ t_cmd	*new_cmd_token(t_token *tokens)
 	cmd->args[0] = NULL;
 	cmd->infile = NULL;
 	cmd->outfile = NULL;
-	cmd->heredoc_delim = NULL;
+	init_heredoc_delim(tokens, &cmd);
 	cmd->heredoc_quoted = 0;
 	cmd->append = 0;
 	cmd->heredoc = 0;

@@ -31,7 +31,7 @@ t_heredoc	*init_heredoc_struct(t_cmd *cmd)
 	}
 	else
 		heredoc->args = NULL;
-	heredoc->heredoc_delim = ft_strdup(cmd->heredoc_delim);
+	heredoc->heredoc_delim = ft_strdup(cmd->heredoc_delim[0]);
 	heredoc->heredoc_fd = cmd->heredoc_fd;
 	heredoc->heredoc_quoted = cmd->heredoc_quoted;
 	heredoc->next = NULL;

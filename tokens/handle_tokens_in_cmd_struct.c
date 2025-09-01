@@ -12,12 +12,32 @@
 
 #include "../minishell.h"
 
+int end_of_delim(t_cmd **cmd)
+{
+    int i = 0;
+
+    if (!cmd || !*cmd || !(*cmd)->heredoc_delim)
+        return 0;  // nothing to count
+
+    while ((*cmd)->heredoc_delim[i])
+    {
+ //       printf("heredoc_delim[%d] = %s\n", i, (*cmd)->heredoc_delim[i]);
+        i++;
+    }
+
+//    printf("i at end of loop = %d\n", i);
+    return i;
+}
+
 void	handle_heredoc(t_cmd **cmd, t_token **token)
 {
+	int i;
+
+	i = end_of_delim(cmd);
 	(*cmd)->heredoc = 1;
 	if ((*token)->next)
 		*token = (*token)->next;
-	(*cmd)->heredoc_delim = ft_strdup((*token)->value);
+	(*cmd)->heredoc_delim[i] = ft_strdup((*token)->value);
 	if ((*token)->inside_single || (*token)->inside_double)
 		(*cmd)->heredoc_quoted = 1;
 }

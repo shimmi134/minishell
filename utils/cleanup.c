@@ -29,10 +29,28 @@ void	free_tokens(t_token *head)
 
 void	free_if(t_cmd **head, t_cmd **tmp, int i)
 {
+	int j;
 	if ((*head)->cmd)
 		free((*head)->cmd);
 	if ((*head)->heredoc_delim)
-		free((*head)->heredoc_delim);
+	{
+		j = 0;
+		while ((*head)->heredoc_delim[j])
+		{
+			if ((*head)->heredoc_delim[j])
+			{
+				free((*head)->heredoc_delim[j]);
+				(*head)->heredoc_delim[j] = NULL;
+			}
+			j++;
+		}
+		if ((*head)->heredoc_delim)
+		{
+			free((*head)->heredoc_delim);
+			(*head)->heredoc_delim = NULL;
+		}
+
+	}
 	if ((*head)->infile)
 		free((*head)->infile);
 	if ((*head)->outfile)

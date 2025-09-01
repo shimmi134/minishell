@@ -13,6 +13,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include <stdio.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <readline/history.h>
@@ -20,7 +21,7 @@
 # include <signal.h>
 # include <stdbool.h>
 # include <stddef.h>
-# include <stdio.h>
+
 # include <stdlib.h>
 # include <string.h>
 # include <sys/wait.h>
@@ -59,7 +60,7 @@ typedef struct s_command
 	char				*outfile;
 	int					append;
 	int					heredoc;
-	char				*heredoc_delim;
+	char				**heredoc_delim;
 	int					heredoc_fd;
 	int					heredoc_quoted;
 	int					exit_status;
@@ -312,6 +313,7 @@ void					assign_args(t_token *tokens, t_cmd **cmds);
 void					quote_if(char *str, t_token **head, t_token **current,
 							int *i);
 void					shift_left(char **arr);
+void					shift_left_and_free(char **arr);
 void					handle_join(t_cmd *cmds, int i);
 void					type_if(int type, t_cmd **cmds, t_token **tokens,
 							t_env *envp);
@@ -362,5 +364,7 @@ t_token					*assign_word_arr(char *arr, int new_word);
 t_token					*handle_no_quote(char *str, t_token *head,
 							t_token **current, int *i);
 t_heredoc				*init_heredoc_struct(t_cmd *cmd);
+void print_cmd_list(t_cmd *head) ;
+void        check_code(int *exit_status);
 
 #endif
