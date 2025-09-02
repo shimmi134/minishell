@@ -24,8 +24,8 @@ void	shift_left_and_free(char **arr)
 		arr[i] = arr[i + 1];
 		i++;
 	}
-	if (i == 0 && arr[i])
-		free(arr[i]);
+//	if (i == 0 && arr[i])
+//		free(arr[i]);
 	arr[i] = NULL;
 }
 void	shift_left(char **arr)

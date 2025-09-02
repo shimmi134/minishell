@@ -56,9 +56,11 @@ void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
 	{
 		if (elem->command->heredoc)
 		{
-			do_heredoc(elem->command, *env, elem->exit_status_code, fd_val);
-			shift_left_and_free(elem->command->heredoc_delim);
-			print_cmd_list(elem->command);
+			while (elem->command->heredoc_delim[0])
+			{
+				do_heredoc(elem->command, *env, elem->exit_status_code, fd_val);
+				shift_left(elem->command->heredoc_delim);
+			}
 			break ;
 		}
 		if (execute_loop_loop(elem, env, last_status_ptr_out, fd_val) == 0)
