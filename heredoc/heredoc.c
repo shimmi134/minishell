@@ -20,7 +20,12 @@ t_heredoc	*init_heredoc_struct(t_cmd *cmd)
 	if (!heredoc)
 		return (NULL);
 	if (cmd->cmd)
-		heredoc->cmd = ft_strdup(cmd->cmd);
+	{
+		if (cmd->heredoc_delim[1])
+			heredoc->cmd = NULL;
+		else
+			heredoc->cmd = ft_strdup(cmd->cmd);
+	}
 	else
 		heredoc->cmd = NULL;
 	if (cmd->args[0])
