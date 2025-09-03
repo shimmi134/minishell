@@ -59,7 +59,7 @@ void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
 			while (elem->command->heredoc_delim[0])
 			{
 				do_heredoc(elem->command, *env, elem->exit_status_code, fd_val);
-				shift_left(elem->command->heredoc_delim);
+				shift_left_and_free(elem->command->heredoc_delim);
 			}
 			break ;
 		}
@@ -154,7 +154,7 @@ int	init_execute(t_token *node, t_token *head, t_env **env, int *exit_status)
 	t_shell	*element;
 
 	element = NULL;
-	t_head = init_cmds(node, *exit_status, *env);
+t_head = init_cmds(node, *exit_status, *env);
 	print_cmd_list(t_head);
 	if (pre_struct_exit(t_head, exit_status, *env, head))
 		return (1);

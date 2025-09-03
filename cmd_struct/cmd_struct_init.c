@@ -30,6 +30,8 @@ void init_heredoc_delim(t_token *tokens, t_cmd **cmds)
 	if (i > 0)
 	{
 		(*cmds)->heredoc_delim = calloc(i + 1, sizeof(char *));
+		if (!(*cmds)->heredoc_delim)
+			exit (0);
 		(*cmds)->heredoc_delim[i] = NULL;
 	}
 	else
