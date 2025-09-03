@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:19:05 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/09/03 20:30:19 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/03 20:56:22 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ char *copy_between(char *str)
 char	*ret_exp(int i, char *str, t_env *env, char *tmp)
 {
 	char	*tmp2;
+	char	*tmp3;
 	char	*expanded;
 
 	expanded = NULL;
@@ -101,10 +102,12 @@ char	*ret_exp(int i, char *str, t_env *env, char *tmp)
 			tmp2 = expanded;
 		if (strchr(&str[i], '$'))
 		{
-		char *tmp3 = copy_between(&str[i]);
+			tmp3 = copy_between(&str[i]);
 			if (tmp3)
 				tmp2 = ft_strjoin (tmp2, tmp3);
 			tmp2 = ft_strjoin (tmp2, heredoc_expand(&str[i], 1, env));
+			if (tmp3)
+				free(tmp3);
 		}
 		return (tmp2);
 	}
