@@ -78,3 +78,18 @@ int	incorr_env(t_shell *elem)
 	return (str && ft_strncmp(str, "-i", 2) == 0 && str2 && ft_strncmp(str2,
 			"./minishell", ft_strlen(str2)) == 0);
 }
+
+char	*change_pwd(t_env *temp, char *str, char *arg)
+{
+	char	*tstr;
+	
+	tstr = ft_strdup(temp->value);
+	if (ft_strcmp(".", arg) != 0)
+	{
+		free(temp->value);
+		temp->value = str;
+	}
+	else
+		free(str);
+	return (tstr);
+}
