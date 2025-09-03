@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:21:23 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/23 16:00:54 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/09/03 20:30:34 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	write_expand(char *line, t_env *env, int pipefd)
 {
 	char	*tmp;
 
-	tmp = heredoc_expand(line, env);
+	tmp = heredoc_expand(line, 0, env);
 	if (tmp)
 		write(pipefd, tmp, ft_strlen(tmp));
 	write(pipefd, "\n", 1);

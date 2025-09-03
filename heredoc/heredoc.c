@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 04:43:52 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/25 20:51:24 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/03 20:20:03 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,16 @@ t_heredoc	*init_heredoc_struct(t_cmd *cmd)
 	return (heredoc);
 }
 
-char	*heredoc_expand(char *str, t_env *env)
+char	*heredoc_expand(char *str, int flag, t_env *env)
 {
 	int		i;
 	char	*tmp;
 
+	tmp = NULL;
 	i = 0;
 	i = calc_dollar(str);
-	tmp = copy_upto(i, str);
+	if (!flag)
+		tmp = copy_upto(i, str);
 	i++;
 	if (str[i])
 		return (ret_exp(i, str, env, tmp));

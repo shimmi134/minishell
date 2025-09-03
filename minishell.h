@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/30 18:32:31 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/09/03 20:22:21 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -338,10 +338,10 @@ char					*ft_strtrim(char const *s1, char const *set);
 char					*ft_strchr(const char *s, int c);
 char					*ft_itoa(int n);
 char					*copy_upto(int i, char *str);
-char					*copy_from_var(int i, char *str);
+char					*copy_from_var(int *i, char *str);
 char					*ret_exp(int i, char *str, t_env *env, char *tmp);
 char					*ft_dup_upto(char *str, char c);
-char					*heredoc_expand(char *str, t_env *env);
+char					*heredoc_expand(char *str, int flag, t_env *env);
 char					*append_while(t_token **token);
 char					**create_envp(t_env *env);
 char					**ft_strdup_double(char **str);

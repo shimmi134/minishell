@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:19:05 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/21 21:28:58 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/03 20:30:19 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,14 @@ char	*copy_upto(int i, char *str)
 	return (tmp);
 }
 
-char	*copy_from_var(int i, char *str)
+char	*copy_from_var(int *k, char *str)
 {
 	char	*tmp2;
 	int		j;
 
+int	i = *k;
 	j = 0;
-	while (str[i])
+	while (str[i] && str[i] != ' ' && str[i] != '$')
 	{
 		i++;
 		j++;
@@ -46,23 +47,46 @@ char	*copy_from_var(int i, char *str)
 	j = calc_dollar(str);
 	j++;
 	i = 0;
-	while (str[j])
+	while (str[j] && str[j] != ' ' && str[j] != '$')
 	{
 		tmp2[i] = str[j];
 		i++;
 		j++;
 	}
 	tmp2[i] = '\0';
+	*k = i;
+	(*k)++;
 	return (tmp2);
 }
 
+char *copy_between(char *str)
+{
+	char *tmp;
+	int i;
+
+	i = 0;
+
+	while (str[i] != '$')
+		i++;
+	if (i == 0)
+	return (NULL);
+	tmp = malloc(sizeof(char*) * i + 1);
+	i = 0;
+	while (str[i] != '$')
+	{
+		tmp[i] = str[i];
+		i++;
+	}
+	tmp[i] = '\0';
+	return(tmp);
+}
 char	*ret_exp(int i, char *str, t_env *env, char *tmp)
 {
 	char	*tmp2;
 	char	*expanded;
 
 	expanded = NULL;
-	tmp2 = copy_from_var(i, str);
+	tmp2 = copy_from_var(&i, str);
 	expanded = expand_var(tmp2, NULL, env);
 	if (tmp2)
 		free(tmp2);
@@ -75,6 +99,13 @@ char	*ret_exp(int i, char *str, t_env *env, char *tmp)
 		}
 		else
 			tmp2 = expanded;
+		if (strchr(&str[i], '$'))
+		{
+		char *tmp3 = copy_between(&str[i]);
+			if (tmp3)
+				tmp2 = ft_strjoin (tmp2, tmp3);
+			tmp2 = ft_strjoin (tmp2, heredoc_expand(&str[i], 1, env));
+		}
 		return (tmp2);
 	}
 	else
