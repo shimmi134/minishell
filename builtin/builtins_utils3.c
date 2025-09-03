@@ -61,7 +61,7 @@ int	cd_back(t_env **env, char *oldpwd)
 		return (free(str), printf("OLDPWD not set correctly.\n"), 1);
 }
 
-int	cd_correct(t_env **env, char *oldpwd)
+int	cd_correct(t_env **env, char *oldpwd, char *arg)
 {
 	char	*str;
 	char	*tstr;
@@ -71,11 +71,7 @@ int	cd_correct(t_env **env, char *oldpwd)
 	tstr = NULL;
 	temp = in_env("PWD", env);
 	if (temp != NULL)
-	{
-		tstr = ft_strdup(temp->value);
-		free(temp->value);
-		temp->value = str;
-	}
+		tstr = change_pwd(temp, str, arg);
 	else
 		free(str);
 	temp = in_env("OLDPWD", env);
@@ -107,7 +103,7 @@ int	do_cd(t_shell *elem, t_env **env)
 	oldpwd = getcwd(NULL, 0);
 	i = chdir(elem->command->args[0]);
 	if (i != -1)
-		i = cd_correct(env, oldpwd);
+		i = cd_correct(env, oldpwd, elem->command->args[0]);
 	else
 		return (free(oldpwd), printf("cd: %s: %s\n", strerror(errno),
 				elem->command->args[0]), 1);
