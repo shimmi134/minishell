@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:19:05 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/09/03 20:56:22 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/04 18:22:59 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,9 @@ char	*copy_from_var(int *k, char *str)
 {
 	char	*tmp2;
 	int		j;
+	int		i;
 
-int	i = *k;
+	i = *k;
 	j = 0;
 	while (str[i] && str[i] != ' ' && str[i] != '$')
 	{
@@ -55,22 +56,20 @@ int	i = *k;
 	}
 	tmp2[i] = '\0';
 	*k = j;
-//	(*k)++;
 	return (tmp2);
 }
 
-char *copy_between(char *str)
+char	*copy_between(char *str)
 {
-	char *tmp;
-	int i;
+	char	*tmp;
+	int		i;
 
 	i = 0;
-
 	while (str[i] != '$')
 		i++;
 	if (i == 0)
-	return (NULL);
-	tmp = malloc(sizeof(char*) * i + 1);
+		return (NULL);
+	tmp = malloc(sizeof(char *) * i + 1);
 	i = 0;
 	while (str[i] != '$')
 	{
@@ -78,8 +77,9 @@ char *copy_between(char *str)
 		i++;
 	}
 	tmp[i] = '\0';
-	return(tmp);
+	return (tmp);
 }
+
 char	*ret_exp(int i, char *str, t_env *env, char *tmp)
 {
 	char	*tmp2;
@@ -104,8 +104,8 @@ char	*ret_exp(int i, char *str, t_env *env, char *tmp)
 		{
 			tmp3 = copy_between(&str[i]);
 			if (tmp3)
-				tmp2 = ft_strjoin (tmp2, tmp3);
-			tmp2 = ft_strjoin (tmp2, heredoc_expand(&str[i], 1, env));
+				tmp2 = ft_strjoin(tmp2, tmp3);
+			tmp2 = ft_strjoin(tmp2, heredoc_expand(&str[i], 1, env));
 			if (tmp3)
 				free(tmp3);
 		}
@@ -123,10 +123,4 @@ int	calc_dollar(char *str)
 	while (str[i] != '$')
 		i++;
 	return (i);
-}
-
-void	delimiter_message(char *str)
-{
-	printf("bash: warning:");
-	printf("here-document delimited by end-of-file (wanted `%s`)\n", str);
 }

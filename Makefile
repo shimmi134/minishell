@@ -6,7 +6,7 @@
 #    By: shimi-be <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/11 11:53:14 by shimi-be          #+#    #+#              #
-#    Updated: 2025/08/26 19:17:25 by shimi-be         ###   ########.fr        #
+#    Updated: 2025/09/04 18:16:35 by shimi-be         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,10 +23,11 @@ SRC = exec/exec_utils.c exec/exec_utils2.c exec/exec_utils3.c exec/exec_utils4.c
 	  quotes/quotes_utils.c quotes/quote_utils3.c quotes/quote_helpers.c tokens/new_token.c			\
 	  tokens/handle_tokens_in_cmd_struct.c tokens/parsing.c tokens/token_type.c tokens/token_utils.c	\
 	  utils/allocate_utils.c utils/cleanup.c utils/redirect_utils.c utils/var_expand.c utils/assign_utils.c \
-	  utils/cmd_struct_utils.c utils/utils.c exec/exec_utils13.c builtin/builtins_utils7.c  main.c
+	  utils/cmd_struct_utils.c utils/cmd_struct_utils2.c utils/utils.c exec/exec_utils13.c builtin/builtins_utils7.c	\
+	  main.c
 
 LIB = libft.a
-FLAGS = #-Wall -Werror -Wextra
+FLAGS = -Wall -Werror -Wextra
 HEADER = minishell.h
 OBJ = $(SRC:.c=.o)
 

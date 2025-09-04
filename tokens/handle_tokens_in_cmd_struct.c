@@ -6,32 +6,15 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:35:25 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/26 20:12:02 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/04 18:20:52 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int end_of_delim(t_cmd **cmd)
-{
-    int i = 0;
-
-    if (!cmd || !*cmd || !(*cmd)->heredoc_delim)
-        return 0;  // nothing to count
-
-    while ((*cmd)->heredoc_delim[i])
-    {
- //       printf("heredoc_delim[%d] = %s\n", i, (*cmd)->heredoc_delim[i]);
-        i++;
-    }
-
-//    printf("i at end of loop = %d\n", i);
-    return i;
-}
-
 void	handle_heredoc(t_cmd **cmd, t_token **token)
 {
-	int i;
+	int	i;
 
 	i = end_of_delim(cmd);
 	(*cmd)->heredoc = 1;
@@ -99,14 +82,14 @@ void	handle_append(t_token **token, t_cmd **cmd)
 	if (arr)
 	{
 		(*cmd)->outfile = ft_strdup(arr);
-		free (arr);
+		free(arr);
 	}
 }
 
 void	assign_ctl_tokens(t_token **token, t_cmd **cmd, t_env *envp)
 {
-	int		type;
-	int		i;
+	int	type;
+	int	i;
 
 	i = 0;
 	type = (*token)->type;

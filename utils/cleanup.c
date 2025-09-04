@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/26 18:50:19 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/04 18:22:39 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ void	free_tokens(t_token *head)
 
 void	free_if(t_cmd **head, t_cmd **tmp, int i)
 {
-	int j;
+	int	j;
+
 	if ((*head)->cmd)
 		free((*head)->cmd);
 	if ((*head)->heredoc_delim)
@@ -49,7 +50,6 @@ void	free_if(t_cmd **head, t_cmd **tmp, int i)
 			free((*head)->heredoc_delim);
 			(*head)->heredoc_delim = NULL;
 		}
-
 	}
 	if ((*head)->infile)
 		free((*head)->infile);

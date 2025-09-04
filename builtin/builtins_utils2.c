@@ -82,7 +82,7 @@ int	incorr_env(t_shell *elem)
 char	*change_pwd(t_env *temp, char *str, char *arg)
 {
 	char	*tstr;
-	
+
 	tstr = ft_strdup(temp->value);
 	if (ft_strcmp(".", arg) != 0)
 	{

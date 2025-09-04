@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   new_token.c                                        :+:      :+:    :+:   */
+/*   cmd_struct_utils2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/11 03:06:03 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/21 17:52:25 by joshapir         ###   ########.fr       */
+/*   Created: 2025/09/04 18:40:06 by shimi-be          #+#    #+#             */
+/*   Updated: 2025/09/04 18:40:08 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	end_of_delim(t_cmd **cmd)
+void	shift_left_and_free(char **arr)
 {
 	int	i;
 
 	i = 0;
-	if (!cmd || !*cmd || !(*cmd)->heredoc_delim)
-		return (0);
-	while ((*cmd)->heredoc_delim[i])
+	if (!arr || !arr[0])
+		return ;
+	free(arr[0]);
+	while (arr[i + 1])
 	{
+		arr[i] = arr[i + 1];
 		i++;
 	}
-	return (i);
+	arr[i] = NULL;
 }

@@ -6,37 +6,36 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:34:22 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/24 21:31:47 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/04 18:18:48 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void init_heredoc_delim(t_token *tokens, t_cmd **cmds)
+void	init_heredoc_delim(t_token *tokens, t_cmd **cmds)
 {
-	t_token *token;
-	int i;
+	t_token	*token;
+	int		i;
 
 	i = 0;
 	token = tokens;
-	// if ((*cmds)->heredoc)
-	// 	return ;
 	while (tokens)
 	{
 		if (tokens->type == TOKEN_HEREDOC)
 			i++;
-		tokens = tokens->next;		
+		tokens = tokens->next;
 	}
 	if (i > 0)
 	{
 		(*cmds)->heredoc_delim = calloc(i + 1, sizeof(char *));
 		if (!(*cmds)->heredoc_delim)
-			exit (0);
+			exit(0);
 		(*cmds)->heredoc_delim[i] = NULL;
 	}
 	else
 		(*cmds)->heredoc_delim = NULL;
 }
+
 t_cmd	*new_cmd_token(t_token *tokens)
 {
 	int		count;
@@ -68,7 +67,7 @@ t_cmd	*new_cmd_token(t_token *tokens)
 
 void	assign_args(t_token *tokens, t_cmd **cmds)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while ((*cmds)->args[i])

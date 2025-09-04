@@ -60,3 +60,18 @@ void	handle_sigint_heredoc(int sig_int)
 	(void)sig_int;
 	exit(1);
 }
+
+void	heredoc_execute_loop(t_shell *elem, t_env **env, int *fd_val)
+{
+	while (elem->command->heredoc_delim[0])
+	{
+		do_heredoc(elem->command, *env, elem->exit_status_code, fd_val);
+		shift_left_and_free(elem->command->heredoc_delim);
+	}
+}
+
+void	delimiter_message(char *str)
+{
+	printf("bash: warning:");
+	printf("here-document delimited by end-of-file (wanted `%s`)\n", str);
+}

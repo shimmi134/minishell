@@ -6,45 +6,15 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:53:48 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/24 21:56:31 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/04 18:22:21 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-
-void shift_left_and_free(char **arr)
-{
-    int i = 0;
-
-    if (!arr || !arr[0])
-        return ;
-    free(arr[0]);
-    while (arr[i + 1])
-    {
-        arr[i] = arr[i + 1];
-        i++;
-    }
-    arr[i] = NULL;
-}
-// void	shift_left_and_free(char **arr)
-// {
-// 	int		i;
-
-// 	i = 0;
-// 	while (arr[i + 1])
-// 	{
-// 		free(arr[i]);
-// 		arr[i] = arr[i + 1];
-// 		i++;
-// 	}
-// //	if (i == 0 && arr[i])
-// //		free(arr[i]);
-// 	arr[i] = NULL;
-// }
 void	shift_left(char **arr)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while (arr[i + 1])
