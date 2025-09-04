@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/04 18:22:39 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/09/04 19:43:30 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,10 @@ void	free_tokens(t_token *head)
 	}
 }
 
-void	free_if(t_cmd **head, t_cmd **tmp, int i)
+void free_heredoc_delim(t_cmd **head)
 {
-	int	j;
-
-	if ((*head)->cmd)
-		free((*head)->cmd);
-	if ((*head)->heredoc_delim)
-	{
+	int j;
+	
 		j = 0;
 		while ((*head)->heredoc_delim[j])
 		{
@@ -50,7 +46,14 @@ void	free_if(t_cmd **head, t_cmd **tmp, int i)
 			free((*head)->heredoc_delim);
 			(*head)->heredoc_delim = NULL;
 		}
-	}
+}
+
+void	free_if(t_cmd **head, t_cmd **tmp, int i)
+{
+	if ((*head)->cmd)
+		free((*head)->cmd);
+	if ((*head)->heredoc_delim)
+		free_heredoc_delim(head);
 	if ((*head)->infile)
 		free((*head)->infile);
 	if ((*head)->outfile)
@@ -83,16 +86,6 @@ void	free_cmds(t_cmd *head)
 		head = tmp;
 		i = 0;
 	}
-}
-
-void	handle_sigint(int sig_num)
-{
-	(void)sig_num;
-	rl_replace_line("", 0);
-	write(1, "\n", 1);
-	rl_on_new_line();
-	rl_redisplay();
-	g_exit_code = 130;
 }
 
 t_env	*free_env_list_tmp(t_env *env)

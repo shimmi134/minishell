@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/04 18:31:36 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/09/04 20:00:24 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,6 +241,7 @@ void							dup_prev_to_stdin(int prev_fd);
 void							dup_next_to_stdout(int next_write);
 void							child_process(t_shell *elem, t_env **env,
 									int prev_fd, int next_write);
+void							assign_hd_struct_values(t_heredoc **heredoc, t_cmd *cmd);
 void							child_exec_or_builtin(t_shell *elem,
 									t_env **env);
 void							child_close_fds(int prev_fd, int next_read,

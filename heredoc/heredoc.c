@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 04:43:52 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/03 20:20:03 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/04 19:55:27 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,7 @@ t_heredoc	*init_heredoc_struct(t_cmd *cmd)
 	}
 	else
 		heredoc->args = NULL;
-	heredoc->heredoc_delim = ft_strdup(cmd->heredoc_delim[0]);
-	heredoc->heredoc_fd = cmd->heredoc_fd;
-	heredoc->heredoc_quoted = cmd->heredoc_quoted;
-	heredoc->next = NULL;
+	assign_hd_struct_values(&heredoc, cmd);
 	return (heredoc);
 }
 
