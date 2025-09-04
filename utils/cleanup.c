@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:40 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/04 19:43:30 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/04 20:12:11 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,25 +27,25 @@ void	free_tokens(t_token *head)
 	}
 }
 
-void free_heredoc_delim(t_cmd **head)
+void	free_heredoc_delim(t_cmd **head)
 {
-	int j;
-	
-		j = 0;
-		while ((*head)->heredoc_delim[j])
+	int	j;
+
+	j = 0;
+	while ((*head)->heredoc_delim[j])
+	{
+		if ((*head)->heredoc_delim[j])
 		{
-			if ((*head)->heredoc_delim[j])
-			{
-				free((*head)->heredoc_delim[j]);
-				(*head)->heredoc_delim[j] = NULL;
-			}
-			j++;
+			free((*head)->heredoc_delim[j]);
+			(*head)->heredoc_delim[j] = NULL;
 		}
-		if ((*head)->heredoc_delim)
-		{
-			free((*head)->heredoc_delim);
-			(*head)->heredoc_delim = NULL;
-		}
+		j++;
+	}
+	if ((*head)->heredoc_delim)
+	{
+		free((*head)->heredoc_delim);
+		(*head)->heredoc_delim = NULL;
+	}
 }
 
 void	free_if(t_cmd **head, t_cmd **tmp, int i)
