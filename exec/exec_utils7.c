@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_utils7.c                                      :+:      :+:    :+:   */
+/*   exec_utils7.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:22:28 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/25 22:20:27 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/09/04 21:21:30 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,11 @@ int	do_builtins(t_shell *elem, t_env **env)
 		return (do_echo(elem));
 	else if (!ft_strncmp(elem->command->cmd, "export", 6))
 		return (do_export(elem, env));
-	else if (!ft_strncmp(elem->command->cmd, "cd", 2))
+	else if (!ft_strcmp(elem->command->cmd, "cd"))
 		return (do_cd(elem, env));
-	return (0);
+	else
+		printf("%s: No such file or directory\n", elem->command->cmd);
+	return (127);
 }
 
 void	close_prev_next(int *prev_fd, int next_read, int next_write)

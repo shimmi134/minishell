@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/09/04 18:21:36 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/09/04 21:17:59 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,7 @@ int	main(int argc, char *argv[], char *envp[])
 		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN);
 		line = readline("\033[1;34mminishell>\033[0m ");
+		//line = "cd/";
 		check_code(exit_status);
 		if (check_line(line) == 1)
 			break ;
