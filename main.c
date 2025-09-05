@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/09/05 21:31:10 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/05 21:56:04 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,9 +144,7 @@ int	init_execute(t_token *node, t_token *head, t_env **env, int *exit_status)
 	t_shell	*element;
 
 	element = NULL;
-	printf("test1\n");
 	t_head = init_cmds(node, *exit_status, *env);
-	printf("test2\n");
 	print_cmd_list(t_head);
 	if (pre_struct_exit(t_head, exit_status, *env, head))
 		return (1);

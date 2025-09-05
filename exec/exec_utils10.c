@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 16:03:16 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/09/05 21:37:21 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/05 21:55:56 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,6 @@ int	pre_exec(char *line, t_env **env, int *exit_status)
 		print_list(node);
 		if (check_tokens(head) == 1)
 		{
-			printf("test\n");
 			if (init_execute(node, head, env, exit_status) == 1)
 				return (1);
 		}
