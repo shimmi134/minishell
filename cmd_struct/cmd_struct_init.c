@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:34:22 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/04 18:18:48 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/09/06 01:15:08 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ t_cmd	*new_cmd_token(t_token *tokens)
 	init_heredoc_delim(tokens, &cmd);
 	cmd->heredoc_quoted = 0;
 	cmd->append = 0;
+	cmd->append = 0;
 	cmd->heredoc = 0;
 	cmd->heredoc_fd = -1;
 	cmd->exit_status = 0;
@@ -78,6 +79,15 @@ void	assign_args(t_token *tokens, t_cmd **cmds)
 		i++;
 	}
 	(*cmds)->args[i] = NULL;
+	i = 0;
+	while ((*cmds)->args[i])
+		i++;
+	i = i - 1;
+	if (i > 0 && !tokens->new_word && tokens->type != TOKEN_VARIABLE)
+	{
+		handle_join(*cmds, i);
+		tokens->new_word = 1;
+	}
 }
 
 int	arg_count(t_token *tokens)

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 22:14:12 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/05 22:42:07 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/06 01:19:16 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,16 @@ void	handle_redirect(t_token **token, t_cmd **cmd, int type)
 		else
 			(*cmd)->outfile = arr;
 	}
+	(*cmd)->redirect = 1;
 }
 
 void	add_append(t_token **tokens, t_cmd **cmds)
 {
 	char	*cmd_prev;
 	char	**args_prev;
+	int		redirect;
 
+	redirect = (*cmds)->redirect;
 	if (!(*cmds)->cmd)
 	{
 		(*cmds)->cmd = (*cmds)->args[0];
@@ -48,13 +51,42 @@ void	add_append(t_token **tokens, t_cmd **cmds)
 	}
 	args_prev = ft_strdup_double((*cmds)->args);
 	cmd_prev = ft_strdup((*cmds)->cmd);
-	if ((*cmds)->cmd)
+	if ((*cmds)->cmd && !redirect)
 		free_and_null (&(*cmds)->cmd);	
 	(*cmds)->next = new_cmd_token(*tokens);
 	*cmds = (*cmds)->next;
 	(*cmds)->append = 1;
 	handle_append(tokens, cmds);
-	(*cmds)->cmd = cmd_prev;
+	if (!redirect)
+		(*cmds)->cmd = cmd_prev;
+	if (args_prev)
+	{
+		free((*cmds)->args);
+		(*cmds)->args = args_prev;
+	}
+}
+
+void	add_redirect(t_token **tokens, t_cmd **cmds)
+{
+	char	*cmd_prev;
+	char	**args_prev;
+	int		append;
+	
+	append = (*cmds)->append;
+	if (!(*cmds)->cmd)
+	{
+		(*cmds)->cmd = (*cmds)->args[0];
+		shift_left((*cmds)->args);
+	}
+	args_prev = ft_strdup_double((*cmds)->args);
+	cmd_prev = ft_strdup((*cmds)->cmd);
+	if ((*cmds)->cmd && !append)
+		free_and_null (&(*cmds)->cmd);	
+	(*cmds)->next = new_cmd_token(*tokens);
+	*cmds = (*cmds)->next;
+	handle_redirect(tokens, cmds, (*tokens)->type);
+	if (!append)
+		(*cmds)->cmd = cmd_prev;
 	if (args_prev)
 	{
 		free((*cmds)->args);
@@ -88,6 +120,7 @@ char	*append_while(t_token **token)
 				free(tmp);
 				free(tmp2);
 			}
+			
 			else
 				break ;
 		}
