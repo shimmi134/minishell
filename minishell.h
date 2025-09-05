@@ -153,7 +153,7 @@ int								env_len(t_env *env);
 int								run_builtin(t_shell *elem, t_env **env);
 int								export_error(char *arg);
 int								was_hidden(t_env *node);
-int								valiaa(char *str);
+int								valid_nl(char *str);
 int								export_loop(t_shell *elem, t_env **env);
 int								execute_loop_loop(t_shell *elem, t_env **env,
 									int **last_status_ptr_out, int *fd_val);
@@ -182,6 +182,9 @@ int								copy_pwd_env_np(t_env *node, char *arg);
 int								correct_export(char *str);
 int								unset_loop(t_shell *elem, t_env *prev,
 									t_env **env, int i);
+void							ft_putendl_fd(char *s, int fd);
+void							ft_putstr_fd(char *s, int fd);
+void							ft_putchar_fd(char c, int fd);
 void							heredoc_execute_loop(t_shell *elem, t_env **env,
 									int *fd_val);
 void							change_flag(char *str, t_env **env);
