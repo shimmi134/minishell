@@ -93,3 +93,23 @@ char	*change_pwd(t_env *temp, char *str, char *arg)
 		free(str);
 	return (tstr);
 }
+
+int	made_out_of(char *str)
+{
+	int	i;
+	int	len;
+
+	len = ft_strlen(str);
+	i = 0;
+	while (i < len && str[i])
+	{
+		if (i == 0 && str[i] != '.')
+			return (0);
+		else if (str[i] == '.' && str[i + 1] && str[i + 1] == '.')
+			return (0);
+		else if (str[i] != '.' && str[i] != '/')
+			return (0);
+		i++;
+	}
+	return (1);
+}

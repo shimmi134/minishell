@@ -59,11 +59,11 @@ char	*get_element(char *line)
 	char	**split;
 
 	split = ft_split(line, ' ');
-	if (split && (!ft_strncmp(split[0], "pwd", 4) || !ft_strncmp(split[0],
-				"env", 4) || !ft_strncmp(split[0], "unset", 6)
-			|| !ft_strncmp(split[0], "echo", 5) || !ft_strncmp(split[0],
-				"export", 6) || !ft_strncmp(split[0], "cd", 2)
-			|| !ft_strncmp(split[0], "exit", 4)))
+	if (split && (!ft_strcmp(split[0], "pwd") || !ft_strcmp(split[0],
+				"env") || !ft_strcmp(split[0], "unset")
+			|| !ft_strcmp(split[0], "echo") || !ft_strcmp(split[0],
+				"export") || !ft_strcmp(split[0], "cd")
+			|| !ft_strcmp(split[0], "exit")))
 	{
 		return (free_split(split), "built-in");
 	}

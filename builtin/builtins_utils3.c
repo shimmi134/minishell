@@ -107,6 +107,6 @@ int	do_cd(t_shell *elem, t_env **env)
 	else
 		return (free(oldpwd), printf("cd: %s: %s\n", strerror(errno),
 				elem->command->args[0]), 1);
-	pwd_copy_for_env(env);
+	pwd_copy_for_env(env, elem->command->args[0]);
 	return (i);
 }

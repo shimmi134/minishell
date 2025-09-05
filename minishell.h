@@ -116,6 +116,7 @@ typedef struct s_struct_var
 
 extern volatile sig_atomic_t	g_exit_code;
 
+int								made_out_of(char *str);
 int								end_of_delim(t_cmd **cmd);
 int								has_token(char *str);
 int								skip(char *str, int i);
@@ -176,7 +177,7 @@ int								init_quote_vars(char **arr, int *quote,
 									int type, int *i);
 int								find_char_pos(char *str, char c);
 int								open_and_dup_outfile(char *path, int append);
-int								copy_pwd_env_np(t_env *node);
+int								copy_pwd_env_np(t_env *node, char *arg);
 int								correct_export(char *str);
 int								unset_loop(t_shell *elem, t_env *prev,
 									t_env **env, int i);
@@ -186,7 +187,7 @@ void							change_flag(char *str, t_env **env);
 void							good_export(char *arg, t_env **env, char *str);
 void							copy_pwd_env_p(t_env **env, t_env *node,
 									int flag);
-void							pwd_copy_for_env(t_env **env);
+void							pwd_copy_for_env(t_env **env, char *arg);
 void							add_space(t_struct_var *structs,
 									t_quote_vars *vars);
 void							no_path_error(t_shell *elem);

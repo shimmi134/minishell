@@ -27,13 +27,21 @@ void	copy_pwd_env_p(t_env **env, t_env *node, int flag)
 	}
 }
 
-int	copy_pwd_env_np(t_env *node)
+int	copy_pwd_env_np(t_env *node, char *arg)
 {
 	char	*str;
 	char	*str2;
+	int		ret_val;
 
+	ret_val = 1;
 	str = node->pwd_copy;
-	node->pwd_copy = ft_strjoin(node->pwd_copy, "/..");
+	if (made_out_of(arg))
+	{
+		node->pwd_copy = ft_strdup (node->pwd_copy);
+		ret_val = 0;
+	}
+	else
+		node->pwd_copy = ft_strjoin(node->pwd_copy, "/..");
 	if (ft_strcmp("PWD", node->key) == 0)
 	{
 		str2 = node->value;
@@ -41,10 +49,10 @@ int	copy_pwd_env_np(t_env *node)
 		free(str2);
 	}
 	free(str);
-	return (1);
+	return (ret_val);
 }
 
-void	pwd_copy_for_env(t_env **env)
+void	pwd_copy_for_env(t_env **env, char *arg)
 {
 	t_env	*node;
 	int		flag;
@@ -56,7 +64,7 @@ void	pwd_copy_for_env(t_env **env)
 		if (in_env("PWD", env)->value != NULL)
 			copy_pwd_env_p(env, node, flag);
 		else
-			flag = copy_pwd_env_np(node);
+			flag = copy_pwd_env_np(node, arg);
 		node = node->next;
 	}
 }
