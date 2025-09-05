@@ -93,7 +93,7 @@ void	do_commands(t_shell *elem, t_env **env, int fd_val)
 		close(old_stdin);
 }
 
-void print_cmd_list(t_cmd *head) 
+/*void print_cmd_list(t_cmd *head) 
 {
     int i;
 
@@ -136,7 +136,7 @@ void print_cmd_list(t_cmd *head)
     }
     printf("\n-----------------------\n");
     //printf("NULL\n");
-}
+}*/
 
 int	init_execute(t_token *node, t_token *head, t_env **env, int *exit_status)
 {
@@ -144,10 +144,8 @@ int	init_execute(t_token *node, t_token *head, t_env **env, int *exit_status)
 	t_shell	*element;
 
 	element = NULL;
-	printf("test1\n");
 	t_head = init_cmds(node, *exit_status, *env);
-	printf("test2\n");
-	print_cmd_list(t_head);
+	//print_cmd_list(t_head);
 	if (pre_struct_exit(t_head, exit_status, *env, head))
 		return (1);
 	do_struct(&element, t_head, exit_status);

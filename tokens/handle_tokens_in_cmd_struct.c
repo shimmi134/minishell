@@ -75,9 +75,9 @@ void	handle_append(t_token **token, t_cmd **cmd)
 		*token = (*token)->next;
 	if ((*token)->next && !(*token)->next->new_word)
 	{
-		printf("goes here\n");
+		//printf("goes here\n");
 		arr = append_while(token);
-		printf("arr after func = %s\n", arr);
+		//printf("arr after func = %s\n", arr);
 	}
 	else
 		arr = ft_strdup((*token)->value);
