@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:35:25 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/05 22:08:35 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/05 22:21:38 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,6 @@ void	handle_append(t_token **token, t_cmd **cmd)
 		arr = ft_strdup((*token)->value);
 	if (arr)
 	{
-		if ((*cmd)->outfile) 
-			free((*cmd)->outfile);
 		(*cmd)->outfile = ft_strdup(arr);
 		free(arr);
 	}
@@ -101,12 +99,12 @@ void	assign_ctl_tokens(t_token **token, t_cmd **cmd, t_env *envp)
 		handle_heredoc(cmd, token);
 	else if (type == TOKEN_APPEND)
 	{
-//		if (!(*cmd)->append)
+		if (!(*cmd)->append)
 			handle_append(token, cmd);
-	//	else
-	//	{
-//			add_append(token, cmd);
-//		}
+		else
+		{
+			add_append(token, cmd);
+		}
 	}
 	else if (type == TOKEN_VARIABLE)
 		handle_varible(cmd, token, envp);

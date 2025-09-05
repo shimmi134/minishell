@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/09/05 21:56:04 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/05 22:22:24 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	do_commands(t_shell *elem, t_env **env, int fd_val)
 		close(old_stdin);
 }
 
-/*void print_cmd_list(t_cmd *head) 
+void print_cmd_list(t_cmd *head) 
 {
     int i;
 
@@ -136,7 +136,7 @@ void	do_commands(t_shell *elem, t_env **env, int fd_val)
     }
     printf("\n-----------------------\n");
     //printf("NULL\n");
-}*/
+}
 
 int	init_execute(t_token *node, t_token *head, t_env **env, int *exit_status)
 {
