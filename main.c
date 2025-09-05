@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/09/04 21:23:30 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/05 21:31:10 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,13 +93,61 @@ void	do_commands(t_shell *elem, t_env **env, int fd_val)
 		close(old_stdin);
 }
 
+void print_cmd_list(t_cmd *head) 
+{
+    int i;
+
+    i = 0;
+    t_cmd *current = head;
+    while (current != NULL) 
+	{
+        printf("\n-----------------------\n");
+        if (current->cmd)
+        {
+            if (current->cmd[0] == '\0')
+                printf("cmd = [empty]\n");
+            else
+                printf("cmd = %s\n", current->cmd);
+        }
+		 if (current->append)
+		 	printf("[append]");
+         if (current->heredoc)
+		 	printf("[heredoc] ");
+       // if (current->heredoc_delim)
+       //     printf("heredoc_delim = %s\n", current->heredoc_delim);
+		if (current->infile)
+		 	printf("infile = %s\n", current->infile);
+        if (current->outfile)
+			printf("outfile = %s\n", current->outfile);
+		if (current->exit_status)
+			printf("return exit status\n");
+        if (current->args[i])
+           printf("args = ");
+       while(current->args[i])
+       {
+            if (current->args[i][0] == '\0')
+                printf("[empty]\n");
+            else
+                printf("%s ", current->args[i]);
+            i++;
+       }
+        current = current->next;
+        i = 0;
+    }
+    printf("\n-----------------------\n");
+    //printf("NULL\n");
+}
+
 int	init_execute(t_token *node, t_token *head, t_env **env, int *exit_status)
 {
 	t_cmd	*t_head;
 	t_shell	*element;
 
 	element = NULL;
+	printf("test1\n");
 	t_head = init_cmds(node, *exit_status, *env);
+	printf("test2\n");
+	print_cmd_list(t_head);
 	if (pre_struct_exit(t_head, exit_status, *env, head))
 		return (1);
 	do_struct(&element, t_head, exit_status);

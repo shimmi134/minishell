@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 22:14:12 by joshapir          #+#    #+#             */
-/*   Updated: 2025/08/26 20:08:16 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/05 21:35:17 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,24 +67,29 @@ char	*append_while(t_token **token)
 	char	*tmp2;
 
 	arr = NULL;
-	while (*token && (*token)->type == TOKEN_WORD)
+	if (*token && (*token)->type == TOKEN_WORD)
 	{
-		if ((*token)->next && !(*token)->next->new_word
-			&& (*token)->next->type == TOKEN_WORD)
+		while (*token && (*token)->type == TOKEN_WORD)
 		{
-			if (!arr)
-				tmp = ft_strdup((*token)->value);
+			if ((*token)->next && !(*token)->next->new_word
+				&& (*token)->next->type == TOKEN_WORD)
+			{
+				if (!arr)
+					tmp = ft_strdup((*token)->value);
+				else
+					tmp = arr;
+				(*token)->new_word = 1;
+				*token = (*token)->next;
+				tmp2 = ft_strdup((*token)->value);
+				arr = ft_strjoin(tmp, tmp2);
+				free(tmp);
+				free(tmp2);
+			}
 			else
-				tmp = arr;
-			*token = (*token)->next;
-			tmp2 = ft_strdup((*token)->value);
-			arr = ft_strjoin(tmp, tmp2);
-			free(tmp);
-			free(tmp2);
-			(*token)->new_word = 1;
+				break ;
 		}
+	}
 		else
 			return (ft_strdup((*token)->value));
-	}
-	return (arr);
+		return (arr);
 }
