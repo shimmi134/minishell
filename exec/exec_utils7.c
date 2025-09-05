@@ -14,20 +14,18 @@
 
 int	do_builtins(t_shell *elem, t_env **env)
 {
-	if (!ft_strncmp(elem->command->cmd, "pwd", 3))
+	if (!ft_strcmp(elem->command->cmd, "pwd"))
 		return (do_pwd(env));
-	else if (!ft_strncmp(elem->command->cmd, "env", 3))
+	else if (!ft_strcmp(elem->command->cmd, "env"))
 		return (do_env(env, elem));
-	else if (!ft_strncmp(elem->command->cmd, "unset", 5))
+	else if (!ft_strcmp(elem->command->cmd, "unset"))
 		return (do_unset(elem, env));
-	else if (!ft_strncmp(elem->command->cmd, "echo", 4))
+	else if (!ft_strcmp(elem->command->cmd, "echo"))
 		return (do_echo(elem));
-	else if (!ft_strncmp(elem->command->cmd, "export", 6))
+	else if (!ft_strcmp(elem->command->cmd, "export"))
 		return (do_export(elem, env));
 	else if (!ft_strcmp(elem->command->cmd, "cd"))
 		return (do_cd(elem, env));
-	else
-		printf("%s: No such file or directory\n", elem->command->cmd);
 	return (127);
 }
 
@@ -96,9 +94,9 @@ void	child_outfile(t_shell *elem)
 int	pre_start_check(int ac, char **av, char **ep)
 {
 	if (ac != 1)
-		return (printf("Please only run the executable.\n"), 0);
+		return (ft_putstr_fd("Please only run the executable.\n",2), 0);
 	(void)av;
 	if (!ep || !ep[0])
-		return (printf("Error, no env detected.\n"), 0);
+		return (ft_putstr_fd("Error, no env detected.\n",2), 0);
 	return (1);
 }

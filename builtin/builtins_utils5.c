@@ -48,38 +48,8 @@ t_env	*in_env(char *str, t_env **env)
 
 int	export_error(char *arg)
 {
-	printf("export: '%s': not a valid identifier\n", arg);
+	ft_putstr_fd("export: '", 2);
+	ft_putstr_fd(arg, 2);
+	ft_putendl_fd("': not a valid identifier", 2);
 	return (1);
 }
-/*
-
-int* newline_order(t_shell *elem)
-{
-	int	j;
-	int	sep;
-	int	*arr;
-
-	arr = malloc*(sizeof(int)*2);
-	if (!arr)
-		return (NULL);
-	arr[0] = 0
-	while (arr[0] < count_len(elem->command->args))
-	{
-		j = 0;
-		sep = 0;
-		while (j < ft_strlen(elem->command->args[arr[0]))
-		{
-			if (elem->command->args[arr[0]][j] == 'n' && !sep)
-				sep = 1;
-			else if (elem->command->args[arr[0]][j] == 'n')
-				arr[1] = 0;
-			else if (elem->command->args[arr[0]][j] == '-' && sep)
-				arr[1] = 0;
-			j++;
-		}
-		if (arr[1] == 0)
-			break;
-		arr[0]++;
-	}
-	return (arr);
-}*/

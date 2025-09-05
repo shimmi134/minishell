@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-int	valiaa(char *str)
+int	valid_nl(char *str)
 {
 	int	i;
 	int	sep;

@@ -14,7 +14,8 @@
 
 void	no_path_error(t_shell *elem)
 {
-	printf("%s: no such file or directory\n", elem->command->cmd);
+	ft_putstr_fd(elem->command->cmd,2);
+	ft_putstr_fd(": no such file or directory\n", 2);
 	exit(127);
 }
 

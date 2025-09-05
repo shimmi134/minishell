@@ -37,13 +37,18 @@ int	is_sal(char *str)
 	return (1);
 }
 
+
+
 void	exit_message(t_shell *elem)
 {
 	if (ft_strchr(elem->command->cmd, '/') != NULL && ft_strncmp("exit",
 			elem->command->cmd, 4) != 0)
 		perror(elem->command->cmd);
 	else if (ft_strncmp("exit", elem->command->cmd, 4) != 0)
-		printf("%s: command not found\n", elem->command->cmd);
+	{
+		ft_putstr_fd(elem->command->cmd, 2);
+		ft_putendl_fd(": command not found", 2);
+	}
 	exit(127);
 }
 

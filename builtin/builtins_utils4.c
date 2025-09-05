@@ -47,7 +47,7 @@ int	*find_newline(t_shell *elem)
 	newline = 1;
 	while (i < count_len(elem->command->args)
 		&& !ft_strncmp(elem->command->args[i], "-n", 2)
-		&& len_spn(elem->command->args[i]) && valiaa(elem->command->args[i]))
+		&& len_spn(elem->command->args[i]) && valid_nl(elem->command->args[i]))
 	{
 		newline = 0;
 		i++;
@@ -108,7 +108,7 @@ int	do_env(t_env **env, t_shell *elem)
 	if (v != 0)
 	{
 		if (v == 1)
-			return (printf("Error copying the env.\n"), 1);
+			return (ft_putstr_fd("Error copying the env.\n", 2), 1);
 		else if (v == 2)
 			return (127);
 		else

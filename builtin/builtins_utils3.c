@@ -18,7 +18,7 @@ int	cd_home(t_shell *elem, t_env **env)
 
 	temp = in_env("HOME", env);
 	if (temp == NULL)
-		return (printf("cd: HOME not set\n"), 1);
+		return (ft_putstr_fd("cd: HOME not set\n", 2), 1);
 	else
 		change_path(temp, elem);
 	return (0);
@@ -49,7 +49,7 @@ int	cd_back(t_env **env, char *oldpwd)
 
 	temp = in_env("OLDPWD", env);
 	if (!temp)
-		return (free(oldpwd), printf("OLDPWD not set.\n"), 1);
+		return (free(oldpwd), ft_putstr_fd("OLDPWD not set.\n", 2), 1);
 	str = temp->value;
 	i = chdir(str);
 	if (i != -1)
@@ -58,7 +58,7 @@ int	cd_back(t_env **env, char *oldpwd)
 		return (0);
 	}
 	else
-		return (free(str), printf("OLDPWD not set correctly.\n"), 1);
+		return (free(str), ft_putstr_fd("OLDPWD not set correctly.\n", 2), 1);
 }
 
 int	cd_correct(t_env **env, char *oldpwd, char *arg)
@@ -92,7 +92,7 @@ int	do_cd(t_shell *elem, t_env **env)
 	int		i;
 
 	if (elem->command->args[0] != NULL && elem->command->args[1] != NULL)
-		return (printf("cd: too many arguments.\n"), 1);
+		return (ft_putstr_fd("cd: too many arguments.\n", 2), 1);
 	if (elem->command->args[0] == NULL || !ft_strncmp("~\0",
 			elem->command->args[0], 1))
 	{
@@ -105,8 +105,7 @@ int	do_cd(t_shell *elem, t_env **env)
 	if (i != -1)
 		i = cd_correct(env, oldpwd, elem->command->args[0]);
 	else
-		return (free(oldpwd), printf("cd: %s: %s\n", strerror(errno),
-				elem->command->args[0]), 1);
+		return (free(oldpwd), ft_putstr_fd("cd:",2), ft_putstr_fd(strerror(errno), 2), ft_putendl_fd(elem->command->args[0], 2), 1);
 	pwd_copy_for_env(env, elem->command->args[0]);
 	return (i);
 }

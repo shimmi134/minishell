@@ -42,12 +42,14 @@ int	custom_exit(int *exit_status, t_env *env, t_cmd *t_head)
 		val = ft_atoi(t_head->args[0]);
 	else if (t_head->args && t_head->args[0] && t_head->args[1])
 	{
-		printf("exit: too many arguments.\n");
+		ft_putstr_fd("exit: too many arguments.\n", 2);
 		val = 1;
 	}
 	else if (t_head->args)
 	{
-		printf("exit: %s: numeric argument required.\n", t_head->args[0]);
+		ft_putstr_fd("exit: ",2);
+		ft_putstr_fd(t_head->args[0], 2);
+		ft_putstr_fd(": numeric  argument required.\n", 2);
 		val = 2;
 	}
 	free_cmds(t_head);
@@ -67,13 +69,14 @@ void	do_exit(t_shell *elem)
 	else if (elem->command->args && elem->command->args[0]
 		&& elem->command->args[1])
 	{
-		printf("exit: too many arguments.\n");
+		ft_putstr_fd("exit: too many arguments.\n", 2);
 		val = 1;
 	}
 	else if (elem->command->args && !is_sal(elem->command->args[0]))
 	{
-		printf("exit: %s: numeric argument required.\n",
-			elem->command->args[0]);
+		ft_putstr_fd("exit: ",2);
+		ft_putstr_fd(elem->command->args[0], 2);
+		ft_putstr_fd(": numeric  argument required.\n", 2);
 		val = 2;
 	}
 	exit(val);
@@ -87,7 +90,7 @@ int	pre_struct_exit(t_cmd *t_head, int *exit_status, t_env *env, t_token *head)
 	if (ft_strcmp(t_head->cmd, "exit") == 0 && t_head->next == NULL)
 	{
 		if (t_head->args && t_head->args[0] != NULL && t_head->args[1] != NULL)
-			return (printf("exit: too many arguments.\n"), (*exit_status = 1),
+			return (ft_putstr_fd("exit: too many arguments.\n", 2), (*exit_status = 1),
 				0);
 		if (head)
 			free_tokens(head);
