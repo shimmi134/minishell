@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 22:14:12 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/05 21:55:47 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/05 22:42:07 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ void	add_append(t_token **tokens, t_cmd **cmds)
 	}
 	args_prev = ft_strdup_double((*cmds)->args);
 	cmd_prev = ft_strdup((*cmds)->cmd);
+	if ((*cmds)->cmd)
+		free_and_null (&(*cmds)->cmd);	
 	(*cmds)->next = new_cmd_token(*tokens);
 	*cmds = (*cmds)->next;
 	(*cmds)->append = 1;
