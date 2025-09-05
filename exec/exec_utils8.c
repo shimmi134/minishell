@@ -30,19 +30,19 @@ int	open_and_dup_outfile(char *path, int append)
 	int	res;
 
 	flags = 0;
-	fd = -1;
-	res = 0;
 	set_flags(&flags, append);
 	fd = open(path, flags, 0644);
 	if (fd < 0)
 	{
 		perror(path);
+		g_exit_code = 1;
 		return (1);
 	}
 	res = dup2(fd, STDOUT_FILENO);
 	if (res < 0)
 	{
 		perror(path);
+		g_exit_code = 1;
 		return (1);
 	}
 	close(fd);
@@ -78,7 +78,7 @@ void	prepare_pipe(int next_pipe[2], int need, int *next_read,
 		if (res < 0)
 		{
 			perror("pipe");
-			exit(1);
+			g_exit_code = 1;
 		}
 	}
 	if (need)

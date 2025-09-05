@@ -92,7 +92,7 @@ int	do_cd(t_shell *elem, t_env **env)
 	int		i;
 
 	if (elem->command->args[0] != NULL && elem->command->args[1] != NULL)
-		return (ft_putstr_fd("cd: too many arguments.\n", 2), 1);
+		return (ft_putstr_fd("cd: too many arguments\n", 2), 1);
 	if (elem->command->args[0] == NULL || !ft_strncmp("~\0",
 			elem->command->args[0], 1))
 	{
@@ -105,9 +105,11 @@ int	do_cd(t_shell *elem, t_env **env)
 	if (i != -1)
 		i = cd_correct(env, oldpwd, elem->command->args[0]);
 	else
-		return (free(oldpwd), ft_putstr_fd("cd:", 2),
-			ft_putstr_fd(strerror(errno), 2),
-			ft_putendl_fd(elem->command->args[0], 2), 1);
+		return (free(oldpwd), ft_putstr_fd("cd: ", 2),
+			ft_putstr_fd(elem->command->args[0], 2),
+			ft_putstr_fd(": ", 2),
+			ft_putendl_fd(strerror(errno), 2),
+			1);
 	pwd_copy_for_env(env, elem->command->args[0]);
 	return (i);
 }

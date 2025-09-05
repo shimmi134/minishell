@@ -39,9 +39,23 @@ int	is_sal(char *str)
 
 void	exit_message(t_shell *elem)
 {
+	int e_val;
+
 	if (ft_strchr(elem->command->cmd, '/') != NULL && ft_strncmp("exit",
 			elem->command->cmd, 4) != 0)
+	{
+		e_val = errno;
+		if (opendir(elem->command->cmd))
+		{
+			ft_putstr_fd(elem->command->cmd, 2);
+			ft_putendl_fd(": Is a directory", 2);
+			exit(126);
+		}
+		errno = e_val;
 		perror(elem->command->cmd);
+		if (errno == EACCES)
+			exit(126);
+	}
 	else if (ft_strncmp("exit", elem->command->cmd, 4) != 0)
 	{
 		ft_putstr_fd(elem->command->cmd, 2);

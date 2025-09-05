@@ -26,7 +26,7 @@ int	do_builtins(t_shell *elem, t_env **env)
 		return (do_export(elem, env));
 	else if (!ft_strcmp(elem->command->cmd, "cd"))
 		return (do_cd(elem, env));
-	return (127);
+	return (0);
 }
 
 void	close_prev_next(int *prev_fd, int next_read, int next_write)
