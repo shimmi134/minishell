@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:35:25 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/05 21:26:55 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/05 21:51:39 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,7 @@ void	handle_append(t_token **token, t_cmd **cmd)
 		*token = (*token)->next;
 	if ((*token)->next && !(*token)->next->new_word)
 	{
-		//printf("goes here\n");
 		arr = append_while(token);
-		//printf("arr after func = %s\n", arr);
 	}
 	else
 		arr = ft_strdup((*token)->value);
