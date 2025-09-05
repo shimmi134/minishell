@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/20 16:03:16 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/09/05 21:55:56 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/05 21:37:21 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	free_combined(int *exit_status, t_env *env)
 	if (env)
 		env = free_env_list_tmp(env);
 }
-
+/*
 void print_enum(t_token *list)
 {
 	if (list->type == 0)
@@ -101,7 +101,7 @@ void print_list(t_token *head)
     }
     	printf("NULL\n");
 }
-
+*/
 int	pre_exec(char *line, t_env **env, int *exit_status)
 {
 	t_token	*head;
@@ -115,7 +115,7 @@ int	pre_exec(char *line, t_env **env, int *exit_status)
 		node = lexer(line, *env);
 		line = NULL;
 		head = node;
-		print_list(node);
+		//print_list(node);
 		if (check_tokens(head) == 1)
 		{
 			if (init_execute(node, head, env, exit_status) == 1)
