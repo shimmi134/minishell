@@ -74,7 +74,7 @@ int	incorr_env(t_shell *elem)
 	if (str && !str2)
 		return (3);
 	if (v == -1)
-		return (ft_putstr_fd("env: '",2), ft_putstr_fd(strerror(errno), 2), ft_putstr_fd("': ", 2), ft_putendl_fd(str2, 2), 2);
+		return (ft_putstr_fd("env: '",2), ft_putstr_fd(str2, 2), ft_putstr_fd("': ", 2), ft_putendl_fd(strerror(errno), 2), 2);
 	return (str && ft_strncmp(str, "-i", 2) == 0 && str2 && ft_strncmp(str2,
 			"./minishell", ft_strlen(str2)) == 0);
 }
