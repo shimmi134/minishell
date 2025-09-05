@@ -25,6 +25,7 @@
 # include <string.h>
 # include <sys/wait.h>
 # include <unistd.h>
+#include <dirent.h>
 
 typedef enum s_type
 {

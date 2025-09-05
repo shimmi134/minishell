@@ -86,6 +86,8 @@ void	exec_command(t_shell *elem, t_env **env, char **envp)
 	char	**args;
 	char	**split;
 
+	if (elem->command->cmd == NULL)
+		exit(0);
 	if ((access(elem->command->cmd, F_OK) == 0 && ft_strchr(elem->command->cmd,
 				'/') != NULL) || ft_strncmp(elem->command->cmd, "", 1) == 0)
 		path = elem->command->cmd;
