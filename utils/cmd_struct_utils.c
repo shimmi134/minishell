@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:53:48 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/05 21:36:26 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/05 22:57:33 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ void	cmd_loop(t_token **tokens, t_cmd **cmds, int type, t_env *envp)
 			i++;
 		i = i - 1;
 		type = (*tokens)->type;
-		if (i > 0 && !(*tokens)->new_word && type != TOKEN_VARIABLE
-			&& !(*cmds)->infile && !(*cmds)->outfile)
+		if (i > 0 && !(*tokens)->new_word && type != TOKEN_VARIABLE)
+			// && !(*cmds)->infile && !(*cmds)->outfile)
 			handle_join(*cmds, i);
 		if ((*tokens)->type == TOKEN_VARIABLE)
 			*tokens = (*tokens)->next;
