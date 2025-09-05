@@ -31,8 +31,6 @@ void	handle_join(t_cmd *cmds, int i)
 
 	if (!cmds->args[i - 1] || !cmds->args[i])
 		return ;
-	if (!(is_token(cmds->args[i - 1][0])))
-		return ;
 	tmp = ft_strjoin(cmds->args[i - 1], cmds->args[i]);
 	free(cmds->args[i - 1]);
 	cmds->args[i - 1] = tmp;
