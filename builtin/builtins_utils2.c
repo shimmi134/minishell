@@ -6,7 +6,7 @@
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 13:21:28 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/30 18:30:04 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/09/05 20:05:21 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ int	incorr_env(t_shell *elem)
 	if (str && !str2)
 		return (3);
 	if (v == -1)
-		return (ft_putstr_fd("env: '",2), ft_putstr_fd(str2, 2), ft_putstr_fd("': ", 2), ft_putendl_fd(strerror(errno), 2), 2);
+		return (ft_putstr_fd("env: '", 2), ft_putstr_fd(str2, 2),
+			ft_putstr_fd("': ", 2), ft_putendl_fd(strerror(errno), 2), 2);
 	return (str && ft_strncmp(str, "-i", 2) == 0 && str2 && ft_strncmp(str2,
 			"./minishell", ft_strlen(str2)) == 0);
 }

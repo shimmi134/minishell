@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:22:28 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/09/04 21:21:30 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/05 20:04:45 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,9 @@ void	child_outfile(t_shell *elem)
 int	pre_start_check(int ac, char **av, char **ep)
 {
 	if (ac != 1)
-		return (ft_putstr_fd("Please only run the executable.\n",2), 0);
+		return (ft_putstr_fd("Please only run the executable.\n", 2), 0);
 	(void)av;
 	if (!ep || !ep[0])
-		return (ft_putstr_fd("Error, no env detected.\n",2), 0);
+		return (ft_putstr_fd("Error, no env detected.\n", 2), 0);
 	return (1);
 }

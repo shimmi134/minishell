@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_utils11.c                                     :+:      :+:    :+:   */
+/*   exec_utils11.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 21:47:17 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/24 18:49:22 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/09/05 20:05:08 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	custom_exit(int *exit_status, t_env *env, t_cmd *t_head)
 	}
 	else if (t_head->args)
 	{
-		ft_putstr_fd("exit: ",2);
+		ft_putstr_fd("exit: ", 2);
 		ft_putstr_fd(t_head->args[0], 2);
 		ft_putstr_fd(": numeric  argument required.\n", 2);
 		val = 2;
@@ -74,7 +74,7 @@ void	do_exit(t_shell *elem)
 	}
 	else if (elem->command->args && !is_sal(elem->command->args[0]))
 	{
-		ft_putstr_fd("exit: ",2);
+		ft_putstr_fd("exit: ", 2);
 		ft_putstr_fd(elem->command->args[0], 2);
 		ft_putstr_fd(": numeric  argument required.\n", 2);
 		val = 2;
@@ -90,8 +90,8 @@ int	pre_struct_exit(t_cmd *t_head, int *exit_status, t_env *env, t_token *head)
 	if (ft_strcmp(t_head->cmd, "exit") == 0 && t_head->next == NULL)
 	{
 		if (t_head->args && t_head->args[0] != NULL && t_head->args[1] != NULL)
-			return (ft_putstr_fd("exit: too many arguments.\n", 2), (*exit_status = 1),
-				0);
+			return (ft_putstr_fd("exit: too many arguments.\n", 2),
+				(*exit_status = 1), 0);
 		if (head)
 			free_tokens(head);
 		if (t_head->args && t_head->args[0] != NULL)
@@ -99,7 +99,7 @@ int	pre_struct_exit(t_cmd *t_head, int *exit_status, t_env *env, t_token *head)
 		free_cmds(t_head);
 		free_env_list_tmp(env);
 		free(exit_status);
-		exit (0);
+		exit(0);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:01:45 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/30 16:26:45 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/09/05 20:05:24 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,9 @@ int	do_cd(t_shell *elem, t_env **env)
 	if (i != -1)
 		i = cd_correct(env, oldpwd, elem->command->args[0]);
 	else
-		return (free(oldpwd), ft_putstr_fd("cd:",2), ft_putstr_fd(strerror(errno), 2), ft_putendl_fd(elem->command->args[0], 2), 1);
+		return (free(oldpwd), ft_putstr_fd("cd:", 2),
+			ft_putstr_fd(strerror(errno), 2),
+			ft_putendl_fd(elem->command->args[0], 2), 1);
 	pwd_copy_for_env(env, elem->command->args[0]);
 	return (i);
 }
