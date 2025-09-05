@@ -27,7 +27,7 @@ SRC = exec/exec_utils.c exec/exec_utils2.c exec/exec_utils3.c exec/exec_utils4.c
 	  main.c utils/signal_utils.c
 
 LIB = libft.a
-FLAGS = #-Wall -Werror -Wextra
+FLAGS = -Wall -Werror -Wextra
 HEADER = minishell.h
 OBJ = $(SRC:.c=.o)
 
