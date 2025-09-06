@@ -14,6 +14,15 @@
 
 volatile sig_atomic_t	g_exit_code = 0;
 
+void	set_sc(t_shell *elem)
+{
+	while (elem)
+	{
+		(*elem->exit_status_code) = 1;
+		elem = elem->next;
+	}
+}
+
 int	check_out_in(t_shell *elem)
 {
 	int	fd;
@@ -25,7 +34,7 @@ int	check_out_in(t_shell *elem)
 		fd = open(elem->command->infile, O_RDONLY);
 		if (fd < 0 && (*elem->exit_status_code) == 0)
 		{
-			(*elem->exit_status_code) = 1;
+			set_sc(elem);
 			perror(elem->command->infile);
 			return (1);
 		}
@@ -37,7 +46,7 @@ int	check_out_in(t_shell *elem)
 		fd = open(elem->command->outfile, flags, 0644);
 		if (fd < 0 && (*elem->exit_status_code) == 0)
 		{
-			(*elem->exit_status_code) = 1;
+			set_sc(elem);
 			perror(elem->command->outfile);
 			return (1);
 		}
