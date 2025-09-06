@@ -72,6 +72,27 @@ void	cmd_loop(t_token **tokens, t_cmd **cmds, int type, t_env *envp)
 		*tokens = (*tokens)->next;
 	}
 }
+void check_commands(t_cmd **cmds)
+{
+    if (!cmds || !*cmds)
+        return;
+
+    t_cmd *tmp = *cmds;
+
+    while (tmp)
+    {
+        if ((tmp->next && tmp->redirect && tmp->next->redirect) ||
+            (tmp->next && tmp->append && tmp->next->append))
+			{
+				if (tmp->cmd)
+					free(tmp->cmd);
+    	        tmp->cmd = NULL;
+			}
+
+        tmp = tmp->next;
+    }
+}
+
 
 t_cmd	*init_cmds(t_token *tokens, int exit_code, t_env *env)
 {
@@ -96,5 +117,7 @@ t_cmd	*init_cmds(t_token *tokens, int exit_code, t_env *env)
 			shift_left(cmds->args);
 		}
 	}
+	check_commands(&head);
+//	print_cmd_list(head);
 	return (head);
 }

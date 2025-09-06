@@ -111,6 +111,8 @@ void print_cmd_list(t_cmd *head)
         }
 		 if (current->append)
 		 	printf("[append]");
+		 if (current->redirect)
+		 	printf("[redirect]");
          if (current->heredoc)
 		 	printf("[heredoc] ");
        // if (current->heredoc_delim)
@@ -145,7 +147,7 @@ int	init_execute(t_token *node, t_token *head, t_env **env, int *exit_status)
 
 	element = NULL;
 	t_head = init_cmds(node, *exit_status, *env);
-//	print_cmd_list(t_head);
+	print_cmd_list(t_head);
 	if (pre_struct_exit(t_head, exit_status, *env, head))
 		return (1);
 	do_struct(&element, t_head, exit_status);

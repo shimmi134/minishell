@@ -51,13 +51,13 @@ void	add_append(t_token **tokens, t_cmd **cmds)
 	}
 	args_prev = ft_strdup_double((*cmds)->args);
 	cmd_prev = ft_strdup((*cmds)->cmd);
-	if ((*cmds)->cmd && !redirect)
-		free_and_null (&(*cmds)->cmd);	
+	//if ((*cmds)->cmd && !redirect)
+	//	free_and_null (&(*cmds)->cmd);	
 	(*cmds)->next = new_cmd_token(*tokens);
 	*cmds = (*cmds)->next;
 	(*cmds)->append = 1;
 	handle_append(tokens, cmds);
-	if (!redirect)
+	//if (!redirect)
 		(*cmds)->cmd = cmd_prev;
 	if (args_prev)
 	{
@@ -80,12 +80,13 @@ void	add_redirect(t_token **tokens, t_cmd **cmds)
 	}
 	args_prev = ft_strdup_double((*cmds)->args);
 	cmd_prev = ft_strdup((*cmds)->cmd);
-	if ((*cmds)->cmd && !append)
-		free_and_null (&(*cmds)->cmd);	
+//	if ((*cmds)->cmd && !append)
+	//	free_and_null (&(*cmds)->cmd);	
 	(*cmds)->next = new_cmd_token(*tokens);
+	(*cmds)->redirect = 1;
 	*cmds = (*cmds)->next;
 	handle_redirect(tokens, cmds, (*tokens)->type);
-	if (!append)
+	//if (!append)
 		(*cmds)->cmd = cmd_prev;
 	if (args_prev)
 	{
