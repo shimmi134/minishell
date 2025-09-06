@@ -34,14 +34,16 @@ int	open_and_dup_outfile(char *path, int append)
 	fd = open(path, flags, 0644);
 	if (fd < 0)
 	{
-		perror(path);
+		if (g_exit_code != 1)
+			perror(path);
 		g_exit_code = 1;
 		return (1);
 	}
 	res = dup2(fd, STDOUT_FILENO);
 	if (res < 0)
 	{
-		perror(path);
+		if (g_exit_code != 1)
+			perror(path);
 		g_exit_code = 1;
 		return (1);
 	}

@@ -14,6 +14,38 @@
 
 volatile sig_atomic_t	g_exit_code = 0;
 
+int	check_out_in(t_shell *elem)
+{
+	int	fd;
+	int	flags;
+
+	flags = 0;
+	if (elem->command->infile)
+	{
+		fd = open(elem->command->infile, O_RDONLY);
+		if (fd < 0 && g_exit_code == 0)
+		{
+			g_exit_code = 1;
+			perror(elem->command->infile);
+			return (1);
+		}
+		close(fd);
+	}
+	if (elem->command->outfile)
+	{
+		set_flags(&flags, elem->command->append);
+		fd = open(elem->command->outfile, flags, 0644);
+		if (fd < 0 && g_exit_code == 0)
+		{
+			g_exit_code = 1;
+			perror(elem->command->outfile);
+			return (1);
+		}
+		close(fd);
+	}
+	return (0);
+}
+
 pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 {
 	int		next_pipe[2];
@@ -21,11 +53,15 @@ pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 	int		need_next;
 	int		next_read;
 	int		next_write;
+	int		flag;
 
+	flag = 0;
 	init_rw(elem, &need_next, &next_read, &next_write);
 	next_pipe[0] = -1;
 	next_pipe[1] = -1;
 	prepare_pipe(next_pipe, need_next, &next_read, &next_write);
+	if (check_out_in(elem))
+		flag = 1;
 	pid = fork();
 	if (pid < 0)
 		perror("fork");
@@ -35,7 +71,8 @@ pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 	{
 		if (next_read != -1)
 			close(next_read);
-		child_process(elem, env, *prev_fd, next_write);
+		if (!flag)
+			child_process(elem, env, *prev_fd, next_write);
 		exit(1);
 	}
 	signal(SIGINT, SIG_IGN);
@@ -147,7 +184,7 @@ int	init_execute(t_token *node, t_token *head, t_env **env, int *exit_status)
 
 	element = NULL;
 	t_head = init_cmds(node, *exit_status, *env);
-	print_cmd_list(t_head);
+	//print_cmd_list(t_head);
 	if (pre_struct_exit(t_head, exit_status, *env, head))
 		return (1);
 	do_struct(&element, t_head, exit_status);
