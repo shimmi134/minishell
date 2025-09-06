@@ -25,7 +25,7 @@ int	check_out_in(t_shell *elem)
 		fd = open(elem->command->infile, O_RDONLY);
 		if (fd < 0 && g_exit_code == 0)
 		{
-			g_exit_code = 1;
+			(*elem->exit_status_code) = 1;
 			perror(elem->command->infile);
 			return (1);
 		}
@@ -37,7 +37,7 @@ int	check_out_in(t_shell *elem)
 		fd = open(elem->command->outfile, flags, 0644);
 		if (fd < 0 && g_exit_code == 0)
 		{
-			g_exit_code = 1;
+			(*elem->exit_status_code) = 1;
 			perror(elem->command->outfile);
 			return (1);
 		}
