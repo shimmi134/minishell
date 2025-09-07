@@ -44,6 +44,7 @@ void	child_exec_or_builtin(t_shell *elem, t_env **env)
 	int		code;
 
 	penv = NULL;
+	g_exit_code = 0;
 	if (elem->command->cmd != NULL && ft_strncmp(elem->type, "built-in",
 			ft_strlen(elem->type)) != 0)
 	{

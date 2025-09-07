@@ -119,6 +119,7 @@ typedef struct s_struct_var
 
 extern volatile sig_atomic_t	g_exit_code;
 
+int								check_out_in(t_shell *elem);
 int								made_out_of(char *str);
 int								end_of_delim(t_cmd **cmd);
 int								has_token(char *str);

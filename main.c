@@ -14,11 +14,12 @@
 
 volatile sig_atomic_t	g_exit_code = 0;
 
-void	set_sc(t_shell *elem)
+void	set_sc(t_shell *elem, int i)
 {
+	g_exit_code = i;
 	while (elem)
 	{
-		(*elem->exit_status_code) = 1;
+		(*elem->exit_status_code) = i;
 		elem = elem->next;
 	}
 }
@@ -32,24 +33,32 @@ int	check_out_in(t_shell *elem)
 	if (elem->command->infile)
 	{
 		fd = open(elem->command->infile, O_RDONLY);
-		if (fd < 0 && (*elem->exit_status_code) == 0)
+		if (fd < 0 && g_exit_code == 0)
 		{
-			set_sc(elem);
+			g_exit_code = 1;
+			//set_sc(elem, 1);
+			//ft_putstr_fd("gothere\n",2);
 			perror(elem->command->infile);
 			return (1);
 		}
+		else if (g_exit_code && fd < 0)
+			return (2);
 		close(fd);
 	}
-	if (elem->command->outfile)
+	else if (elem->command->outfile)
 	{
 		set_flags(&flags, elem->command->append);
 		fd = open(elem->command->outfile, flags, 0644);
-		if (fd < 0 && (*elem->exit_status_code) == 0)
+		if (fd < 0 && g_exit_code == 0)
 		{
-			set_sc(elem);
+			g_exit_code = 1;
+			//set_sc(elem, 1);
+			//ft_putstr_fd("gothere\n",2);
 			perror(elem->command->outfile);
 			return (1);
 		}
+		else if (g_exit_code && fd < 0)
+			return (2);
 		close(fd);
 	}
 	return (0);
@@ -71,6 +80,9 @@ pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 	prepare_pipe(next_pipe, need_next, &next_read, &next_write);
 	if (check_out_in(elem))
 		flag = 1;
+	//printf("Flag: %i\n", flag);
+	if (!flag && elem->command->cmd)
+		set_sc(elem, 0);
 	pid = fork();
 	if (pid < 0)
 		perror("fork");
@@ -113,7 +125,7 @@ void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
 			elem = elem->next;
 		}
 		else
-			break ;
+			break ;				
 	}
 	wait_children(pids, count, *last_status_ptr_out, fd_val);
 }
@@ -193,7 +205,7 @@ int	init_execute(t_token *node, t_token *head, t_env **env, int *exit_status)
 
 	element = NULL;
 	t_head = init_cmds(node, *exit_status, *env);
-	//print_cmd_list(t_head);
+	print_cmd_list(t_head);
 	if (pre_struct_exit(t_head, exit_status, *env, head))
 		return (1);
 	do_struct(&element, t_head, exit_status);

@@ -35,11 +35,15 @@ int	execute_loop_loop(t_shell *elem, t_env **env, int **last_status_ptr_out,
 	if (strncmp(elem->type, "built-in", 9) == 0 && elem->next == NULL
 		&& strncmp(elem->command->cmd, "exit", 4) != 0)
 	{
-		val = run_builtin(elem, env);
-		*last_status_ptr_out = &val;
-		elem = elem->next;
-		if (*fd_val != -1)
-			close(*fd_val);
+		if (!check_out_in(elem))
+		{
+			val = run_builtin(elem, env);
+			g_exit_code = val;
+			*last_status_ptr_out = &val;
+			elem = elem->next;
+			if (*fd_val != -1)
+				close(*fd_val);
+		}
 		return (1);
 	}
 	return (0);
@@ -115,7 +119,7 @@ int	pre_exec(char *line, t_env **env, int *exit_status)
 		node = lexer(line, *env);
 		line = NULL;
 		head = node;
-	//	print_list(node);
+		//print_list(node);
 		if (check_tokens(head) == 1)
 		{
 			if (init_execute(node, head, env, exit_status) == 1)
