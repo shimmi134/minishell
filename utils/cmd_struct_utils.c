@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:53:48 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/06 00:44:01 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/07 20:52:29 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,6 @@ void check_commands(t_cmd **cmds)
         return;
 
     t_cmd *tmp = *cmds;
-
     while (tmp)
     {
         if ((tmp->next && tmp->redirect && tmp->next->redirect) ||
@@ -87,8 +86,17 @@ void check_commands(t_cmd **cmds)
 				if (tmp->cmd)
 					free(tmp->cmd);
     	        tmp->cmd = NULL;
+				if (tmp->infile && !tmp->next->infile)
+				{
+					tmp->next->infile = tmp->infile;
+					tmp->infile = NULL;
+				}
+				else if (tmp->outfile && !tmp->next->outfile)
+				{
+					tmp->next->outfile = tmp->outfile;
+					tmp->outfile = NULL;
+				}	
 			}
-
         tmp = tmp->next;
     }
 }

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:35:25 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/07 19:31:50 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/07 20:51:39 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,8 @@ void	assign_ctl_tokens(t_token **token, t_cmd **cmd, t_env *envp)
 	type = (*token)->type;
 	if (type == TOKEN_REDIRECT_IN || type == TOKEN_REDIRECT_OUT)
 	{
-		if (!(*cmd)->outfile)
-			handle_redirect(token, cmd, type);
+		if ((type == TOKEN_REDIRECT_OUT && !(*cmd)->outfile) || (type == TOKEN_REDIRECT_IN && !(*cmd)->infile))
+			handle_redirect(token, cmd, (*token)->type);
 		else
 			add_redirect(token, cmd);
 	}

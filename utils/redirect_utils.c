@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 22:14:12 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/06 01:19:16 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/07 20:56:40 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,13 @@ void	handle_redirect(t_token **token, t_cmd **cmd, int type)
 	if (arr)
 	{
 		if (type == TOKEN_REDIRECT_IN)
+		{
 			(*cmd)->infile = arr;
+		}
 		else
+		{
 			(*cmd)->outfile = arr;
+		}
 	}
 	(*cmd)->redirect = 1;
 }
@@ -95,17 +99,14 @@ void	add_redirect(t_token **tokens, t_cmd **cmds)
 	}
 }
 
-char	*append_while(t_token **token)
+char *do_append_while(t_token ** token)
 {
 	char	*arr;
 	char	*tmp;
 	char	*tmp2;
 
 	arr = NULL;
-	if ((*token)->next && !(*token)->next->new_word
-				&& (*token)->next->type == TOKEN_WORD)
-	{
-		while (*token && (*token)->type == TOKEN_WORD)
+	while (*token && (*token)->type == TOKEN_WORD)
 		{
 			if ((*token)->next && !(*token)->next->new_word
 				&& (*token)->next->type == TOKEN_WORD)
@@ -121,10 +122,40 @@ char	*append_while(t_token **token)
 				free(tmp);
 				free(tmp2);
 			}
-			
 			else
 				break ;
 		}
+		return (arr);
+}
+
+char	*append_while(t_token **token)
+{
+	char *arr;
+
+	arr = NULL;
+	if ((*token)->next && !(*token)->next->new_word
+				&& (*token)->next->type == TOKEN_WORD)
+	{
+		arr = do_append_while(token);
+		// while (*token && (*token)->type == TOKEN_WORD)
+		// {
+		// 	if ((*token)->next && !(*token)->next->new_word
+		// 		&& (*token)->next->type == TOKEN_WORD)
+		// 	{
+		// 		if (!arr)
+		// 			tmp = ft_strdup((*token)->value);
+		// 		else
+		// 			tmp = arr;
+		// 		(*token)->new_word = 1;
+		// 		*token = (*token)->next;
+		// 		tmp2 = ft_strdup((*token)->value);
+		// 		arr = ft_strjoin(tmp, tmp2);
+		// 		free(tmp);
+		// 		free(tmp2);
+		// 	}
+		// 	else
+		// 		break ;
+		// }
 	}
 		else
 			return (ft_strdup((*token)->value));
