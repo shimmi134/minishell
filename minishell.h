@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/06 01:14:55 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/07 19:30:18 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_command
 	char						*outfile;
 	int							append;
 	int							redirect;
+	int							pipe;
 	int							heredoc;
 	char						**heredoc_delim;
 	int							heredoc_fd;

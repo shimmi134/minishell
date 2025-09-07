@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:34:22 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/06 01:15:08 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/07 19:31:16 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ t_cmd	*new_cmd_token(t_token *tokens)
 	init_heredoc_delim(tokens, &cmd);
 	cmd->heredoc_quoted = 0;
 	cmd->append = 0;
-	cmd->append = 0;
+	cmd->pipe = 0;
 	cmd->heredoc = 0;
 	cmd->heredoc_fd = -1;
 	cmd->exit_status = 0;

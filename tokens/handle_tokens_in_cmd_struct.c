@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:35:25 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/06 01:13:18 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/07 19:31:50 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	handle_pipes(t_cmd **cmds, t_token **tokens)
 	}
 	(*cmds)->next = new_cmd_token(*tokens);
 	*cmds = (*cmds)->next;
+	(*cmds)->pipe = 1;
 }
 
 void	handle_append(t_token **token, t_cmd **cmd)
