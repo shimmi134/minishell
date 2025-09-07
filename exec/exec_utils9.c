@@ -82,8 +82,11 @@ void	wait_children(int *pids, int count, int *last_status_ptr, int *fd_val)
 		close(*fd_val);
 	while (i < count)
 	{
-		waitpid(pids[i], &status, 0);
-		status_pointer(status, last_status_ptr);
+		if (pids[i] != 0)
+		{
+			waitpid(pids[i], &status, 0);
+			status_pointer(status, last_status_ptr);
+		}
 		i = i + 1;
 	}
 	free(pids);

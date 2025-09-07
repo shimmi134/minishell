@@ -14,56 +14,6 @@
 
 volatile sig_atomic_t	g_exit_code = 0;
 
-void	set_sc(t_shell *elem, int i)
-{
-	g_exit_code = i;
-	while (elem)
-	{
-		(*elem->exit_status_code) = i;
-		elem = elem->next;
-	}
-}
-
-int	check_out_in(t_shell *elem)
-{
-	int	fd;
-	int	flags;
-
-	flags = 0;
-	if (elem->command->infile)
-	{
-		fd = open(elem->command->infile, O_RDONLY);
-		if (fd < 0 && g_exit_code == 0)
-		{
-			g_exit_code = 1;
-			//set_sc(elem, 1);
-			//ft_putstr_fd("gothere\n",2);
-			perror(elem->command->infile);
-			return (1);
-		}
-		else if (g_exit_code && fd < 0)
-			return (2);
-		close(fd);
-	}
-	else if (elem->command->outfile)
-	{
-		set_flags(&flags, elem->command->append);
-		fd = open(elem->command->outfile, flags, 0644);
-		if (fd < 0 && g_exit_code == 0)
-		{
-			g_exit_code = 1;
-			//set_sc(elem, 1);
-			//ft_putstr_fd("gothere\n",2);
-			perror(elem->command->outfile);
-			return (1);
-		}
-		else if (g_exit_code && fd < 0)
-			return (2);
-		close(fd);
-	}
-	return (0);
-}
-
 pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 {
 	int		next_pipe[2];
@@ -78,11 +28,6 @@ pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 	next_pipe[0] = -1;
 	next_pipe[1] = -1;
 	prepare_pipe(next_pipe, need_next, &next_read, &next_write);
-	if (check_out_in(elem))
-		flag = 1;
-	//printf("Flag: %i\n", flag);
-	if (!flag && elem->command->cmd)
-		set_sc(elem, 0);
 	pid = fork();
 	if (pid < 0)
 		perror("fork");
@@ -92,8 +37,7 @@ pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 	{
 		if (next_read != -1)
 			close(next_read);
-		if (!flag)
-			child_process(elem, env, *prev_fd, next_write);
+		child_process(elem, env, *prev_fd, next_write);
 		exit(1);
 	}
 	signal(SIGINT, SIG_IGN);
@@ -101,28 +45,122 @@ pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 	return (pid);
 }
 
+int	check_out(t_shell *elem, int m)
+{
+	int fd;
+	int	flags;
+	int	p;
+
+	flags = 0;
+	p = m;
+	if (elem->command->outfile && !p)
+	{
+		set_flags(&flags, elem->command->append);
+		fd = open(elem->command->outfile, flags, 0644);
+		if (fd < 0 && !p)
+		{
+			g_exit_code = 1;
+			perror(elem->command->outfile);
+			p = 1;
+		}
+		close(fd);
+	}
+	return p;
+}
+
+int	check_in(t_shell *elem, int m)
+{
+	int fd;
+	int	flags;
+	int	p;
+
+	flags = 0;
+	p = m;
+	if (elem->command->infile)
+	{
+		fd = open(elem->command->infile, O_RDONLY);
+		if (fd < 0 && !p)
+		{
+			g_exit_code = 1;
+			perror(elem->command->infile);
+			p = 1;
+		}
+		close(fd);
+	}
+	return p;
+}
+
+int	check_out_in(t_shell *elem)
+{
+	int	fd;
+	int	p;
+	int	flags;
+	int	first;
+
+	flags = 0;
+	first = 1;
+	while (elem && (elem->command->pipe != 1 || first))
+	{
+		p = 0;
+		first = 0;
+		if (elem->command->infile_first)
+		{
+			p = check_in(elem, p);
+			p = check_out(elem, p);
+		}
+		else
+		{
+			p = check_out(elem, p);
+			p = check_in(elem, p);
+		}
+		if (p)
+			return (1);
+		elem = elem->next;
+	}
+	return (0);
+}
+
+
 void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
 		int **last_status_ptr_out)
 {
 	int	*pids;
 	int	pid;
 	int	count;
+	int	flag;
 
 	count = 0;
 	pids = calloc((count_commands(elem)) + 1, sizeof(int));
+	flag = 0;
 	while (elem && elem->type)
 	{
+		flag = check_out_in(elem);
+		while (flag)
+		{
+			elem = elem->next;
+			while (elem && !elem->command->pipe)
+				elem = elem->next;
+			if (elem)
+				flag = check_out_in(elem);
+			else
+				break ;
+		}
+		if (flag)
+			break;
 		if (elem->command->heredoc)
 		{
 			heredoc_execute_loop(elem, env, fd_val);
 			break ;
 		}
+		g_exit_code = 0;
 		if (execute_loop_loop(elem, env, last_status_ptr_out, fd_val) == 0)
 		{
 			pid = command_fork(elem, env, fd_val);
 			pids[count++] = (int)pid;
 			*last_status_ptr_out = elem->exit_status_code;
 			elem = elem->next;
+			while (elem && elem->command->pipe != 1 && g_exit_code)
+				elem = elem->next;
 		}
 		else
 			break ;				
@@ -173,12 +211,13 @@ void print_cmd_list(t_cmd *head)
 		 	printf("[redirect]");
          if (current->heredoc)
 		 	printf("[heredoc] ");
-       // if (current->heredoc_delim)
-       //     printf("heredoc_delim = %s\n", current->heredoc_delim);
+        //if (current->pipe)
 		if (current->infile)
 		 	printf("infile = %s\n", current->infile);
+		printf("inf_first = %i\n", current->infile_first);
         if (current->outfile)
 			printf("outfile = %s\n", current->outfile);
+		printf("pipe = %i\n", current->pipe);
 		if (current->exit_status)
 			printf("return exit status\n");
         if (current->args[i])
