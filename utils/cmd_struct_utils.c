@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:53:48 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/07 21:04:20 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/07 21:16:07 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,8 @@ void check_commands(t_cmd **cmds)
     t_cmd *tmp = *cmds;
     while (tmp)
     {
-        if ((tmp->next && tmp->redirect && tmp->next->redirect && !tmp->next->pipe) ||
-            (tmp->next && tmp->append && tmp->next->append && !tmp->next->pipe))
+        if ((tmp->next && (tmp->redirect || tmp->append) && (tmp->next->redirect || tmp->next->append) && !tmp->next->pipe)) //||
+          //  (tmp->next && tmp->append && tmp->next->append && !tmp->next->pipe))
 			{
 				if (tmp->cmd)
 					free(tmp->cmd);
