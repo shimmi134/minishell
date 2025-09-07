@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/07 19:30:18 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/07 21:43:22 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ typedef struct s_command
 	char						*outfile;
 	int							append;
 	int							redirect;
+	int							infile_first;
+	int							outfile_first;
 	int							pipe;
 	int							heredoc;
 	char						**heredoc_delim;
@@ -137,6 +139,7 @@ int								ft_strncmp(const char *s1, const char *s2,
 int								ft_strcmp(char *s1, char *s2);
 int								check_quotes(char *str);
 int								read_heredoc(t_heredoc *hd_temp, t_env *env);
+
 int								count_len(char **av);
 int								count_commands(t_shell *sh);
 int								ft_strspn(char *str, char *sep);
@@ -206,6 +209,7 @@ void							assign_after_var(char *str, t_quote_vars *vars,
 									int *i);
 void							handle_status(t_token **head, t_token **current,
 									char *str, int *i);
+void							check_first_file(t_cmd **cmd, int type);
 void							assign_var_token(t_struct_var *structs,
 									t_quote_vars *vars, char *str, int *i);
 void							assign_arr_memory(t_quote_vars *vars);
@@ -304,7 +308,7 @@ void							add_quoted_word_2(char *str, int *i, int type,
 void							quoted_arr_len(char *str, t_quote_vars *vars);
 void							init_quoted_vars(t_quote_vars *vars);
 void							free_and_null(char **str);
-void	add_redirect(t_token **tokens, t_cmd **cmds);
+void							add_redirect(t_token **tokens, t_cmd **cmds);
 void							free_quoted_vars(t_quote_vars **vars);
 void							flush_arr_in_single(t_struct_var *structs,
 									t_quote_vars *vars);

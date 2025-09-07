@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:34:22 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/07 21:00:02 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/07 21:37:36 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ t_cmd	*new_cmd_token(t_token *tokens)
 	cmd->heredoc_quoted = 0;
 	cmd->append = 0;
 	cmd->redirect = 0;
+	cmd->infile_first = 0;
+	cmd->outfile_first = 0;
 	cmd->pipe = 0;
 	cmd->heredoc = 0;
 	cmd->heredoc_fd = -1;

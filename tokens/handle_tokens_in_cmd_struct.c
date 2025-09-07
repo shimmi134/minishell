@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:35:25 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/07 20:51:39 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/07 21:41:11 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ void	handle_append(t_token **token, t_cmd **cmd)
 	arr = NULL;
 	arr2 = NULL;
 	(*cmd)->append = 1;
+	check_first_file(cmd, (*token)->type);
 	if ((*token)->next)
 		*token = (*token)->next;
 	if ((*token)->next && !(*token)->next->new_word)

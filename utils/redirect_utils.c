@@ -6,12 +6,22 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 22:14:12 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/07 20:56:40 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/07 21:41:35 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+void check_first_file(t_cmd **cmd, int type)
+{
+	if (!(*cmd)->infile_first && !(*cmd)->outfile_first)
+	{
+		if (type == TOKEN_REDIRECT_IN)
+			(*cmd)->infile_first = 1;
+		else
+			(*cmd)->outfile_first = 1;
+	}
+}
 void	handle_redirect(t_token **token, t_cmd **cmd, int type)
 {
 	char	*arr;
@@ -19,6 +29,7 @@ void	handle_redirect(t_token **token, t_cmd **cmd, int type)
 
 	arr = NULL;
 	arr2 = NULL;
+	check_first_file(cmd, type);
 	if ((*token)->next)
 		*token = (*token)->next;
 	if ((*token)->next && !(*token)->next->new_word)
