@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/09/08 16:18:39 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/09/08 19:48:21 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 	init_rw(elem, &need_next, &next_read, &next_write);
 	next_pipe[0] = -1;
 	next_pipe[1] = -1;
-	prepare_pipe(next_pipe, need_next, &next_read, &next_write);
+	if (elem->next && !elem->next->command->heredoc_delim)
+		prepare_pipe(next_pipe, need_next, &next_read, &next_write);
 	pid = fork();
 	if (pid < 0)
 		perror("fork");
@@ -92,6 +93,55 @@ void	do_commands(t_shell *elem, t_env **env, int fd_val)
 	if (old_stdin != -1)
 		close(old_stdin);
 }
+void print_cmd_list(t_cmd *head) 
+{
+    int i;
+
+    i = 0;
+    t_cmd *current = head;
+    while (current != NULL) 
+    {
+        printf("\n-----------------------\n");
+        if (current->cmd)
+            printf("cmd = %s\n", current->cmd);
+         if (current->append)
+            printf("[append]");
+         if (current->heredoc)
+            printf("[heredoc] ");
+             if (current->heredoc_delim && current->heredoc_delim[0])
+             {
+                i = 0;
+                 while (current->heredoc_delim[i])
+                 {
+                     if (current->heredoc_delim[i])
+                         printf("heredoc_delim[%d] = %s\n", i, current->heredoc_delim[i]);
+                     else
+                         printf("heredoc_delim[%d] is NULL\n", i);
+                         i++;
+                 }
+             }
+             
+        if (current->infile)
+            printf("infile = %s\n", current->infile);
+        if (current->outfile)
+            printf("outfile = %s\n", current->outfile);
+        if (current->args && current->args[i])
+           printf("args = ");
+		   /*
+       while(current->args && current->args[i])
+       {
+            if (current->args[i][0] && current->args[i][0] == '\0')
+                printf("[empty]\n");
+            else
+                printf("%s ", current->args[i]);
+            i++;
+       }*/
+        current = current->next;
+        i = 0;
+    }
+    printf("\n-----------------------\n");
+    //printf("NULL\n");
+}
 
 void	move_heredoc(t_cmd *t_head)
 {
@@ -124,6 +174,7 @@ int	init_execute(t_token *node, t_token *head, t_env **env, int *exit_status)
 
 	element = NULL;
 	t_head = init_cmds(node, *exit_status, *env);
+	print_cmd_list(t_head);
 	if (pre_struct_exit(t_head, exit_status, *env, head))
 		return (1);
 	do_struct(&element, t_head, exit_status);

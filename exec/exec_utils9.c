@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_utils9.c                                      :+:      :+:    :+:   */
+/*   exec_utils9.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:25:13 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/25 21:01:25 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/09/08 19:50:33 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	child_exec_or_builtin(t_shell *elem, t_env **env)
 		penv = create_envp(*env);
 		exec_command(elem, env, penv);
 	}
-	else
+	else if (elem->command->cmd != NULL)
 	{
 		if (ft_strncmp("exit", elem->command->cmd, 4) == 0)
 			do_exit(elem);
