@@ -64,7 +64,6 @@ int	pre_check_files(t_shell *elem)
 
 int	check_out_in(t_shell *elem)
 {
-	int	fd;
 	int	p;
 	int	first;
 
