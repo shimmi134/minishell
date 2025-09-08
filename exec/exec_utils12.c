@@ -39,7 +39,7 @@ int	is_sal(char *str)
 
 void	exit_message(t_shell *elem)
 {
-	int e_val;
+	int	e_val;
 
 	if (ft_strchr(elem->command->cmd, '/') != NULL && ft_strncmp("exit",
 			elem->command->cmd, 4) != 0)

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/09/06 01:20:27 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/08 16:18:39 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,7 @@ pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 	int		need_next;
 	int		next_read;
 	int		next_write;
-	int		flag;
 
-	flag = 0;
 	init_rw(elem, &need_next, &next_read, &next_write);
 	next_pipe[0] = -1;
 	next_pipe[1] = -1;
@@ -45,114 +43,19 @@ pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 	return (pid);
 }
 
-int	check_out(t_shell *elem, int m)
-{
-	int fd;
-	int	flags;
-	int	p;
-
-	flags = 0;
-	p = m;
-	if (elem->command->outfile && !p)
-	{
-		set_flags(&flags, elem->command->append);
-		fd = open(elem->command->outfile, flags, 0644);
-		if (fd < 0 && !p)
-		{
-			g_exit_code = 1;
-			perror(elem->command->outfile);
-			p = 1;
-		}
-		close(fd);
-	}
-	return p;
-}
-
-int	check_in(t_shell *elem, int m)
-{
-	int fd;
-	int	flags;
-	int	p;
-
-	flags = 0;
-	p = m;
-	if (elem->command->infile)
-	{
-		fd = open(elem->command->infile, O_RDONLY);
-		if (fd < 0 && !p)
-		{
-			g_exit_code = 1;
-			perror(elem->command->infile);
-			p = 1;
-		}
-		close(fd);
-	}
-	return p;
-}
-
-int	check_out_in(t_shell *elem)
-{
-	int	fd;
-	int	p;
-	int	flags;
-	int	first;
-
-	flags = 0;
-	first = 1;
-	while (elem && (elem->command->pipe != 1 || first))
-	{
-		p = 0;
-		first = 0;
-		if (elem->command->infile_first)
-		{
-			p = check_in(elem, p);
-			p = check_out(elem, p);
-		}
-		else
-		{
-			p = check_out(elem, p);
-			p = check_in(elem, p);
-		}
-		if (p)
-			return (1);
-		elem = elem->next;
-	}
-	return (0);
-}
-
-
 void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
 		int **last_status_ptr_out)
 {
 	int	*pids;
 	int	pid;
 	int	count;
-	int	flag;
 
 	count = 0;
 	pids = calloc((count_commands(elem)) + 1, sizeof(int));
-	flag = 0;
 	while (elem && elem->type)
 	{
-		flag = check_out_in(elem);
-		while (flag)
-		{
-			elem = elem->next;
-			while (elem && !elem->command->pipe)
-				elem = elem->next;
-			if (elem)
-				flag = check_out_in(elem);
-			else
-				break ;
-		}
-		if (flag)
-			break;
-		if (elem->command->heredoc)
-		{
-			heredoc_execute_loop(elem, env, fd_val);
+		if (early_break(elem, env, fd_val))
 			break ;
-		}
-		g_exit_code = 0;
 		if (execute_loop_loop(elem, env, last_status_ptr_out, fd_val) == 0)
 		{
 			pid = command_fork(elem, env, fd_val);
@@ -161,9 +64,10 @@ void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
 			elem = elem->next;
 			while (elem && elem->command->pipe != 1 && g_exit_code)
 				elem = elem->next;
+			g_exit_code = 0;
 		}
 		else
-			break ;				
+			break ;
 	}
 	wait_children(pids, count, *last_status_ptr_out, fd_val);
 }
@@ -244,7 +148,7 @@ int	init_execute(t_token *node, t_token *head, t_env **env, int *exit_status)
 
 	element = NULL;
 	t_head = init_cmds(node, *exit_status, *env);
-	print_cmd_list(t_head);
+	//print_cmd_list(t_head);
 	if (pre_struct_exit(t_head, exit_status, *env, head))
 		return (1);
 	do_struct(&element, t_head, exit_status);

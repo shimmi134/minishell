@@ -1,32 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_utils.c                                      :+:      :+:    :+:   */
+/*   redirect_utils2.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/05 18:25:32 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/09/05 20:04:38 by shimi-be         ###   ########.fr       */
+/*   Created: 2025/09/08 16:21:30 by shimi-be          #+#    #+#             */
+/*   Updated: 2025/09/08 16:21:31 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	ft_putchar_fd(char c, int fd)
+void	check_first_file(t_cmd **cmd, int type)
 {
-	write(fd, &c, 1);
-}
-
-void	ft_putstr_fd(char *s, int fd)
-{
-	int	i;
-
-	i = 0;
-	write(fd, s, ft_strlen(s));
-}
-
-void	ft_putendl_fd(char *s, int fd)
-{
-	ft_putstr_fd(s, fd);
-	write(fd, "\n", 1);
+	if (!(*cmd)->infile_first && !(*cmd)->outfile_first)
+	{
+		if (type == TOKEN_REDIRECT_IN)
+			(*cmd)->infile_first = 1;
+		else
+			(*cmd)->outfile_first = 1;
+	}
 }

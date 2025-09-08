@@ -1,32 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_utils.c                                      :+:      :+:    :+:   */
+/*   cmd_struct_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/05 18:25:32 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/09/05 20:04:38 by shimi-be         ###   ########.fr       */
+/*   Created: 2025/09/08 16:38:22 by shimi-be          #+#    #+#             */
+/*   Updated: 2025/09/08 16:38:23 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	ft_putchar_fd(char c, int fd)
+void	init_redir(t_cmd **cmd)
 {
-	write(fd, &c, 1);
-}
-
-void	ft_putstr_fd(char *s, int fd)
-{
-	int	i;
-
-	i = 0;
-	write(fd, s, ft_strlen(s));
-}
-
-void	ft_putendl_fd(char *s, int fd)
-{
-	ft_putstr_fd(s, fd);
-	write(fd, "\n", 1);
+	(*cmd)->infile = NULL;
+	(*cmd)->outfile = NULL;
+	(*cmd)->append = 0;
+	(*cmd)->redirect = 0;
+	(*cmd)->infile_first = 0;
+	(*cmd)->outfile_first = 0;
 }

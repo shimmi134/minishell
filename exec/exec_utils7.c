@@ -53,14 +53,12 @@ void	child_infile(t_shell *elem)
 		fd = open(elem->command->infile, O_RDONLY);
 		if (fd < 0)
 		{
-			perror(elem->command->infile);
 			g_exit_code = 1;
 			exit(1);
 		}
 		res = dup2(fd, STDIN_FILENO);
 		if (res < 0)
 		{
-			perror(elem->command->infile);
 			g_exit_code = 1;
 			exit(1);
 		}
@@ -81,13 +79,11 @@ void	child_outfile(t_shell *elem)
 		fd = open(elem->command->outfile, flags, 0644);
 		if (fd < 0)
 		{
-			perror(elem->command->outfile);
 			g_exit_code = 1;
 			exit(1);
 		}
 		if (dup2(fd, STDOUT_FILENO) < 0)
 		{
-			perror(elem->command->outfile);
 			g_exit_code = 1;
 			exit(1);
 		}

@@ -24,7 +24,7 @@ SRC = exec/exec_utils.c exec/exec_utils2.c exec/exec_utils3.c exec/exec_utils4.c
 	  tokens/handle_tokens_in_cmd_struct.c tokens/parsing.c tokens/token_type.c tokens/token_utils.c			\
 	  utils/allocate_utils.c utils/cleanup.c utils/redirect_utils.c utils/var_expand.c utils/assign_utils.c		\
 	  utils/cmd_struct_utils.c utils/cmd_struct_utils2.c utils/utils.c exec/exec_utils13.c builtin/builtins_utils7.c	\
-	  main.c utils/signal_utils.c utils/error_utils.c
+	  main.c utils/signal_utils.c utils/error_utils.c exec/exec_utils14.c utils/redirect_utils2.c cmd_struct/cmd_struct_utils.c
 
 LIB = libft.a
 FLAGS = #-Wall -Werror -Wextra

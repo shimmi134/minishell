@@ -6,22 +6,12 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 22:14:12 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/07 21:41:35 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/08 15:36:45 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void check_first_file(t_cmd **cmd, int type)
-{
-	if (!(*cmd)->infile_first && !(*cmd)->outfile_first)
-	{
-		if (type == TOKEN_REDIRECT_IN)
-			(*cmd)->infile_first = 1;
-		else
-			(*cmd)->outfile_first = 1;
-	}
-}
 void	handle_redirect(t_token **token, t_cmd **cmd, int type)
 {
 	char	*arr;
@@ -33,21 +23,15 @@ void	handle_redirect(t_token **token, t_cmd **cmd, int type)
 	if ((*token)->next)
 		*token = (*token)->next;
 	if ((*token)->next && !(*token)->next->new_word)
-	{
 		arr = append_while(token);
-	}
 	else
 		arr = ft_strdup((*token)->value);
 	if (arr)
 	{
 		if (type == TOKEN_REDIRECT_IN)
-		{
 			(*cmd)->infile = arr;
-		}
 		else
-		{
 			(*cmd)->outfile = arr;
-		}
 	}
 	(*cmd)->redirect = 1;
 }
@@ -66,14 +50,11 @@ void	add_append(t_token **tokens, t_cmd **cmds)
 	}
 	args_prev = ft_strdup_double((*cmds)->args);
 	cmd_prev = ft_strdup((*cmds)->cmd);
-	//if ((*cmds)->cmd && !redirect)
-	//	free_and_null (&(*cmds)->cmd);	
 	(*cmds)->next = new_cmd_token(*tokens);
 	*cmds = (*cmds)->next;
 	(*cmds)->append = 1;
 	handle_append(tokens, cmds);
-	//if (!redirect)
-		(*cmds)->cmd = cmd_prev;
+	(*cmds)->cmd = cmd_prev;
 	if (args_prev)
 	{
 		free((*cmds)->args);
@@ -86,7 +67,7 @@ void	add_redirect(t_token **tokens, t_cmd **cmds)
 	char	*cmd_prev;
 	char	**args_prev;
 	int		append;
-	
+
 	append = (*cmds)->append;
 	if (!(*cmds)->cmd)
 	{
@@ -95,14 +76,11 @@ void	add_redirect(t_token **tokens, t_cmd **cmds)
 	}
 	args_prev = ft_strdup_double((*cmds)->args);
 	cmd_prev = ft_strdup((*cmds)->cmd);
-//	if ((*cmds)->cmd && !append)
-	//	free_and_null (&(*cmds)->cmd);	
 	(*cmds)->next = new_cmd_token(*tokens);
 	(*cmds)->redirect = 1;
 	*cmds = (*cmds)->next;
 	handle_redirect(tokens, cmds, (*tokens)->type);
-	//if (!append)
-		(*cmds)->cmd = cmd_prev;
+	(*cmds)->cmd = cmd_prev;
 	if (args_prev)
 	{
 		free((*cmds)->args);
@@ -110,7 +88,7 @@ void	add_redirect(t_token **tokens, t_cmd **cmds)
 	}
 }
 
-char *do_append_while(t_token ** token)
+char	*do_append_while(t_token **token)
 {
 	char	*arr;
 	char	*tmp;
@@ -118,57 +96,36 @@ char *do_append_while(t_token ** token)
 
 	arr = NULL;
 	while (*token && (*token)->type == TOKEN_WORD)
+	{
+		if ((*token)->next && !(*token)->next->new_word
+			&& (*token)->next->type == TOKEN_WORD)
 		{
-			if ((*token)->next && !(*token)->next->new_word
-				&& (*token)->next->type == TOKEN_WORD)
-			{
-				if (!arr)
-					tmp = ft_strdup((*token)->value);
-				else
-					tmp = arr;
-				(*token)->new_word = 1;
-				*token = (*token)->next;
-				tmp2 = ft_strdup((*token)->value);
-				arr = ft_strjoin(tmp, tmp2);
-				free(tmp);
-				free(tmp2);
-			}
+			if (!arr)
+				tmp = ft_strdup((*token)->value);
 			else
-				break ;
+				tmp = arr;
+			(*token)->new_word = 1;
+			*token = (*token)->next;
+			tmp2 = ft_strdup((*token)->value);
+			arr = ft_strjoin(tmp, tmp2);
+			free(tmp);
+			free(tmp2);
 		}
-		return (arr);
+		else
+			break ;
+	}
+	return (arr);
 }
 
 char	*append_while(t_token **token)
 {
-	char *arr;
+	char	*arr;
 
 	arr = NULL;
 	if ((*token)->next && !(*token)->next->new_word
-				&& (*token)->next->type == TOKEN_WORD)
-	{
+		&& (*token)->next->type == TOKEN_WORD)
 		arr = do_append_while(token);
-		// while (*token && (*token)->type == TOKEN_WORD)
-		// {
-		// 	if ((*token)->next && !(*token)->next->new_word
-		// 		&& (*token)->next->type == TOKEN_WORD)
-		// 	{
-		// 		if (!arr)
-		// 			tmp = ft_strdup((*token)->value);
-		// 		else
-		// 			tmp = arr;
-		// 		(*token)->new_word = 1;
-		// 		*token = (*token)->next;
-		// 		tmp2 = ft_strdup((*token)->value);
-		// 		arr = ft_strjoin(tmp, tmp2);
-		// 		free(tmp);
-		// 		free(tmp2);
-		// 	}
-		// 	else
-		// 		break ;
-		// }
-	}
-		else
-			return (ft_strdup((*token)->value));
-		return (arr);
+	else
+		return (ft_strdup((*token)->value));
+	return (arr);
 }

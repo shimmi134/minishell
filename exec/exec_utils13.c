@@ -41,3 +41,51 @@ void	check_code(int *exit_status)
 		g_exit_code = 0;
 	}
 }
+
+int	pre_check_files(t_shell *elem)
+{
+	int	flag;
+
+	flag = check_out_in(elem);
+	while (flag)
+	{
+		elem = elem->next;
+		while (elem && !elem->command->pipe)
+			elem = elem->next;
+		if (elem)
+			flag = check_out_in(elem);
+		else
+			break ;
+	}
+	if (flag)
+		return (1);
+	return (0);
+}
+
+int	check_out_in(t_shell *elem)
+{
+	int	fd;
+	int	p;
+	int	first;
+
+	first = 1;
+	p = 0;
+	while (elem && (elem->command->pipe != 1 || first))
+	{
+		first = 0;
+		if (elem->command->infile_first)
+		{
+			p = check_in(elem, p);
+			p = check_out(elem, p);
+		}
+		else
+		{
+			p = check_out(elem, p);
+			p = check_in(elem, p);
+		}
+		elem = elem->next;
+	}
+	if (p)
+		return (1);
+	return (0);
+}

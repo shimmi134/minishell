@@ -27,3 +27,34 @@ void	shift_left_and_free(char **arr)
 	}
 	arr[i] = NULL;
 }
+
+void	shift_left(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr[i + 1])
+	{
+		arr[i] = arr[i + 1];
+		i++;
+	}
+	arr[i] = NULL;
+}
+
+void	change_infile(t_cmd *tmp)
+{
+	if (tmp->infile && !tmp->next->infile)
+	{
+		tmp->next->infile = tmp->infile;
+		tmp->infile = NULL;
+	}
+}
+
+void	change_outfile(t_cmd *tmp)
+{
+	if (tmp->outfile && !tmp->next->outfile)
+	{
+		tmp->next->outfile = tmp->outfile;
+		tmp->outfile = NULL;
+	}
+}

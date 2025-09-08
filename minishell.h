@@ -6,14 +6,14 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/07 21:43:22 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/08 16:22:46 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include <stdio.h>
+# include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <readline/history.h>
@@ -21,12 +21,11 @@
 # include <signal.h>
 # include <stdbool.h>
 # include <stddef.h>
-
+# include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/wait.h>
 # include <unistd.h>
-#include <dirent.h>
 
 typedef enum s_type
 {
@@ -122,6 +121,12 @@ typedef struct s_struct_var
 
 extern volatile sig_atomic_t	g_exit_code;
 
+int								early_break(t_shell *elem, t_env **env,
+									int *fd_val);
+int								check_files(t_shell **elem);
+int								check_out(t_shell *elem, int m);
+int								check_in(t_shell *elem, int m);
+int								pre_check_files(t_shell *elem);
 int								check_out_in(t_shell *elem);
 int								made_out_of(char *str);
 int								end_of_delim(t_cmd **cmd);
@@ -189,6 +194,10 @@ int								copy_pwd_env_np(t_env *node, char *arg);
 int								correct_export(char *str);
 int								unset_loop(t_shell *elem, t_env *prev,
 									t_env **env, int i);
+void							init_redir(t_cmd **cmd);
+void							change_outfile(t_cmd *tmp);
+void							change_infile(t_cmd *tmp);
+void							check_first_file(t_cmd **cmd, int type);
 void							ft_putendl_fd(char *s, int fd);
 void							ft_putstr_fd(char *s, int fd);
 void							ft_putchar_fd(char c, int fd);

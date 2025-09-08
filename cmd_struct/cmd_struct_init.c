@@ -51,14 +51,9 @@ t_cmd	*new_cmd_token(t_token *tokens)
 	cmd->args[count] = NULL;
 	cmd->cmd = NULL;
 	cmd->args[0] = NULL;
-	cmd->infile = NULL;
-	cmd->outfile = NULL;
 	init_heredoc_delim(tokens, &cmd);
 	cmd->heredoc_quoted = 0;
-	cmd->append = 0;
-	cmd->redirect = 0;
-	cmd->infile_first = 0;
-	cmd->outfile_first = 0;
+	init_redir(&cmd);
 	cmd->pipe = 0;
 	cmd->heredoc = 0;
 	cmd->heredoc_fd = -1;

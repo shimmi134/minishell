@@ -6,24 +6,11 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:53:48 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/07 21:16:07 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/08 15:35:10 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	shift_left(char **arr)
-{
-	int	i;
-
-	i = 0;
-	while (arr[i + 1])
-	{
-		arr[i] = arr[i + 1];
-		i++;
-	}
-	arr[i] = NULL;
-}
 
 void	handle_join(t_cmd *cmds, int i)
 {
@@ -65,42 +52,35 @@ void	cmd_loop(t_token **tokens, t_cmd **cmds, int type, t_env *envp)
 		i = i - 1;
 		type = (*tokens)->type;
 		if (i > 0 && !(*tokens)->new_word && type != TOKEN_VARIABLE
-			 && !(*cmds)->infile && !(*cmds)->outfile)
+			&& !(*cmds)->infile && !(*cmds)->outfile)
 			handle_join(*cmds, i);
 		if ((*tokens)->type == TOKEN_VARIABLE)
 			*tokens = (*tokens)->next;
 		*tokens = (*tokens)->next;
 	}
 }
-void check_commands(t_cmd **cmds)
+
+void	check_commands(t_cmd **cmds)
 {
-    if (!cmds || !*cmds)
-        return;
+	t_cmd	*tmp;
 
-    t_cmd *tmp = *cmds;
-    while (tmp)
-    {
-        if ((tmp->next && (tmp->redirect || tmp->append) && (tmp->next->redirect || tmp->next->append) && !tmp->next->pipe)) //||
-          //  (tmp->next && tmp->append && tmp->next->append && !tmp->next->pipe))
-			{
-				if (tmp->cmd)
-					free(tmp->cmd);
-    	        tmp->cmd = NULL;
-				if (tmp->infile && !tmp->next->infile)
-				{
-					tmp->next->infile = tmp->infile;
-					tmp->infile = NULL;
-				}
-				else if (tmp->outfile && !tmp->next->outfile)
-				{
-					tmp->next->outfile = tmp->outfile;
-					tmp->outfile = NULL;
-				}	
-			}
-        tmp = tmp->next;
-    }
+	if (!cmds || !*cmds)
+		return ;
+	tmp = *cmds;
+	while (tmp)
+	{
+		if ((tmp->next && (tmp->redirect || tmp->append) && (tmp->next->redirect
+					|| tmp->next->append) && !tmp->next->pipe))
+		{
+			if (tmp->cmd)
+				free(tmp->cmd);
+			tmp->cmd = NULL;
+			change_infile(tmp);
+			change_outfile(tmp);
+		}
+		tmp = tmp->next;
+	}
 }
-
 
 t_cmd	*init_cmds(t_token *tokens, int exit_code, t_env *env)
 {
@@ -126,6 +106,5 @@ t_cmd	*init_cmds(t_token *tokens, int exit_code, t_env *env)
 		}
 	}
 	check_commands(&head);
-//	print_cmd_list(head);
 	return (head);
 }
