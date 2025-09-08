@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:25:13 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/09/08 19:50:33 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/08 22:15:14 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	dup_next_to_stdout(int next_write)
 	res = 0;
 	if (next_write != -1)
 	{
+		ft_putstr_fd("DUPNEXTTO\n",2);
 		res = dup2(next_write, STDOUT_FILENO);
 		if (res < 0)
 		{

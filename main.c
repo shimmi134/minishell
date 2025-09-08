@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 12:36:52 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/09/08 19:48:21 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/08 22:40:58 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 
 	init_rw(elem, &need_next, &next_read, &next_write);
 	init_next_pipe(next_pipe);
-	if (elem->next && !elem->next->command->heredoc_delim)
+	if (elem->next && !elem->next->command->heredoc_delim && !elem->next->command->heredoc && elem->command->heredoc != -2)
 		prepare_pipe(next_pipe, need_next, &next_read, &next_write);
 	pid = fork();
 	if (pid < 0)
@@ -56,7 +56,7 @@ void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
 	{
 		if (early_break(elem, env, fd_val))
 			break ;
-		if (execute_loop_loop(elem, env, last_status_ptr_out, fd_val) == 0)
+		if (elem->command->heredoc != 1 && execute_loop_loop(elem, env, last_status_ptr_out, fd_val) == 0)
 		{
 			pid = command_fork(elem, env, fd_val);
 			pids[count++] = (int)pid;
@@ -65,6 +65,12 @@ void	execute_loop(t_shell *elem, t_env **env, int *fd_val,
 			while (elem && elem->command->pipe != 1 && g_exit_code)
 				elem = elem->next;
 			g_exit_code = 0;
+		}
+		else if (elem->command->heredoc == 1)
+		{
+			elem = elem->next;
+			while (elem && elem->command->pipe != 1)
+				elem = elem->next;
 		}
 		else
 			break ;
@@ -92,6 +98,65 @@ void	do_commands(t_shell *elem, t_env **env, int fd_val)
 	if (old_stdin != -1)
 		close(old_stdin);
 }
+void print_cmd_list(t_cmd *head) 
+{
+    int i;
+
+    i = 0;
+    t_cmd *current = head;
+    while (current != NULL) 
+	{
+        printf("\n-----------------------\n");
+        if (current->cmd)
+        {
+            if (current->cmd[0] == '\0')
+                printf("cmd = [empty]\n");
+            else
+                printf("cmd = %s\n", current->cmd);
+        }
+		 if (current->append)
+		 	printf("[append]");
+		 if (current->redirect)
+		 	printf("[redirect]");
+         if (current->heredoc)
+		 	printf("[heredoc] ");
+        if (current->heredoc_delim[0])
+             {
+                i = 0;
+                 while (current->heredoc_delim[i])
+                 {
+                     if (current->heredoc_delim[i])
+                         printf("heredoc_delim[%d] = %s\n", i, current->heredoc_delim[i]);
+                     else
+                         printf("heredoc_delim[%d] is NULL\n", i);
+                         i++;
+                 }
+             }
+        //if (current->pipe)
+		if (current->infile)
+		 	printf("infile = %s\n", current->infile);
+		printf("inf_first = %i\n", current->infile_first);
+        if (current->outfile)
+			printf("outfile = %s\n", current->outfile);
+		printf("pipe = %i\n", current->pipe);
+		if (current->exit_status)
+			printf("return exit status\n");
+        if (current->args[i])
+           printf("args = ");
+       while(current->args[i])
+       {
+            if (current->args[i][0] == '\0')
+                printf("[empty]\n");
+            else
+                printf("%s ", current->args[i]);
+            i++;
+       }
+        current = current->next;
+        i = 0;
+    }
+    printf("\n-----------------------\n");
+    //printf("NULL\n");
+}
 
 int	init_execute(t_token *node, t_token *head, t_env **env, int *exit_status)
 {
@@ -100,10 +165,15 @@ int	init_execute(t_token *node, t_token *head, t_env **env, int *exit_status)
 
 	element = NULL;
 	t_head = init_cmds(node, *exit_status, *env);
+	print_cmd_list(t_head);
 	if (pre_struct_exit(t_head, exit_status, *env, head))
 		return (1);
 	do_struct(&element, t_head, exit_status);
 	do_commands(element, env, -1);
+	if (element->command->heredoc)
+	{
+		write(1, "\n", 1);
+	}
 	if (t_head)
 		free_cmds(t_head);
 	if (element != NULL)
@@ -131,6 +201,8 @@ int	main(int argc, char *argv[], char *envp[])
 			return (printf("Error, copying the env.\n"), 1);
 		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN);
+		fflush(stdout);
+		printf("here\n");
 		line = readline("\033[1;34mminishell>\033[0m ");
 		check_code(exit_status);
 		if (check_line(line) == 1)

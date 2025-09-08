@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:35:25 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/08 15:37:20 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/09/08 20:33:18 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	handle_heredoc(t_cmd **cmd, t_token **token)
 	(*cmd)->heredoc_delim[i] = ft_strdup((*token)->value);
 	if ((*token)->inside_single || (*token)->inside_double)
 		(*cmd)->heredoc_quoted = 1;
+	else
+		(*cmd)->heredoc_quoted = 0;
 }
 
 void	handle_varible(t_cmd **cmd, t_token **token, t_env *envp)

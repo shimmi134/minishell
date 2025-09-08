@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:53:48 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/08 20:07:38 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/09/08 21:57:55 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void	check_commands(t_cmd **cmds)
 		if (tmp->next && tmp->heredoc && tmp->heredoc_delim
 			&& !tmp->next->heredoc_delim && !tmp->next->pipe)
 		{
+			printf("here\n");
 			tmp->next->heredoc_delim = tmp->heredoc_delim;
 			tmp->next->heredoc = 1;
 			tmp->next->heredoc_quoted = tmp->heredoc_quoted;

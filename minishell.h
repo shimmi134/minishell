@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 03:05:53 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/08 19:50:44 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/08 22:20:08 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ int								ft_strncmp(const char *s1, const char *s2,
 									size_t n);
 int								ft_strcmp(char *s1, char *s2);
 int								check_quotes(char *str);
-int								read_heredoc(t_heredoc *hd_temp, t_env *env);
+int								read_heredoc(t_heredoc *hd_temp, t_env *env, t_shell *element);
 
 int								count_len(char **av);
 int								count_commands(t_shell *sh);
@@ -345,7 +345,7 @@ void							add_arr(t_quote_vars *vars,
 void							handle_slash(t_token **head, t_token **current,
 									char *str, int *i);
 void							heredoc_loop(int pipefd[2], t_heredoc *hd_temp,
-									t_env *env);
+									t_env *env, t_shell *elem);
 void							expand_or_write(char *line, t_env *env,
 									int pipefd, t_heredoc *hd_temp);
 void							write_expand(char *line, t_env *env,

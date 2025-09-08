@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:22:28 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/09/05 20:04:45 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/09/08 21:08:35 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	child_infile(t_shell *elem)
 			g_exit_code = 1;
 			exit(1);
 		}
+		ft_putstr_fd("CHILDINFILE\n",2);
 		res = dup2(fd, STDIN_FILENO);
 		if (res < 0)
 		{

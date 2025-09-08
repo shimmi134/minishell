@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test_utils8.c                                      :+:      :+:    :+:   */
+/*   exec_utils8.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/18 15:24:40 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/08/25 17:36:28 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/09/08 21:08:16 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ int	open_and_dup_outfile(char *path, int append)
 		g_exit_code = 1;
 		return (1);
 	}
+	ft_putstr_fd("OPENANDDUP\n", 2);
 	res = dup2(fd, STDOUT_FILENO);
 	if (res < 0)
 	{
@@ -96,6 +97,7 @@ void	dup_prev_to_stdin(int prev_fd)
 	res = 0;
 	if (prev_fd != -1)
 	{
+		ft_putstr_fd("DUPPREVTO\n",2 );
 		res = dup2(prev_fd, STDIN_FILENO);
 		if (res < 0)
 		{

@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 04:43:52 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/08 19:52:19 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/08 23:08:46 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	init_heredoc(t_heredoc *hd_temp, t_env *env, t_shell *element, int *fd_val)
 	status = 0;
 	if (hd_temp->heredoc_delim)
 	{
-		hd_temp->heredoc_fd = read_heredoc(hd_temp, env);
+		hd_temp->heredoc_fd = read_heredoc(hd_temp, env, element);
 		if (hd_temp->heredoc_fd == -1)
 			return (free_heredoc(hd_temp), 0);
 		status = execute_pipe_command(fd_val, env, element);
@@ -103,7 +103,7 @@ int	wait_status(pid_t pid)
 	return (0);
 }
 
-int	read_heredoc(t_heredoc *hd_temp, t_env *env)
+int	read_heredoc(t_heredoc *hd_temp, t_env *env, t_shell *elem)
 {
 	int		status;
 	pid_t	pid;
@@ -120,7 +120,7 @@ int	read_heredoc(t_heredoc *hd_temp, t_env *env)
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_IGN);
 		close(pipefd[0]);
-		heredoc_loop(pipefd, hd_temp, env);
+		heredoc_loop(pipefd, hd_temp, env, elem);
 	}
 	close(pipefd[1]);
 	signal(SIGINT, SIG_IGN);
