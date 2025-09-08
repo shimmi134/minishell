@@ -88,3 +88,9 @@ int	early_break(t_shell *elem, t_env **env, int *fd_val)
 		return (1);
 	return (0);
 }
+
+void	init_next_pipe(int next_pipe[2])
+{
+	next_pipe[0] = -1;
+	next_pipe[1] = -1;
+}

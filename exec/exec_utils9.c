@@ -58,6 +58,7 @@ void	child_exec_or_builtin(t_shell *elem, t_env **env)
 		code = do_builtins(elem, env);
 		exit(code);
 	}
+	exit (0);
 }
 
 void	child_process(t_shell *elem, t_env **env, int prev_fd, int next_write)

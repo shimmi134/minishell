@@ -23,8 +23,7 @@ pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 	int		next_write;
 
 	init_rw(elem, &need_next, &next_read, &next_write);
-	next_pipe[0] = -1;
-	next_pipe[1] = -1;
+	init_next_pipe(next_pipe);
 	if (elem->next && !elem->next->command->heredoc_delim)
 		prepare_pipe(next_pipe, need_next, &next_read, &next_write);
 	pid = fork();
@@ -37,7 +36,7 @@ pid_t	command_fork(t_shell *elem, t_env **env, int *prev_fd)
 		if (next_read != -1)
 			close(next_read);
 		child_process(elem, env, *prev_fd, next_write);
-		exit(1);
+		exit(0);
 	}
 	signal(SIGINT, SIG_IGN);
 	close_prev_next(prev_fd, next_read, next_write);
@@ -93,79 +92,6 @@ void	do_commands(t_shell *elem, t_env **env, int fd_val)
 	if (old_stdin != -1)
 		close(old_stdin);
 }
-void print_cmd_list(t_cmd *head) 
-{
-    int i;
-
-    i = 0;
-    t_cmd *current = head;
-    while (current != NULL) 
-    {
-        printf("\n-----------------------\n");
-        if (current->cmd)
-            printf("cmd = %s\n", current->cmd);
-         if (current->append)
-            printf("[append]");
-         if (current->heredoc)
-            printf("[heredoc] ");
-             if (current->heredoc_delim && current->heredoc_delim[0])
-             {
-                i = 0;
-                 while (current->heredoc_delim[i])
-                 {
-                     if (current->heredoc_delim[i])
-                         printf("heredoc_delim[%d] = %s\n", i, current->heredoc_delim[i]);
-                     else
-                         printf("heredoc_delim[%d] is NULL\n", i);
-                         i++;
-                 }
-             }
-             
-        if (current->infile)
-            printf("infile = %s\n", current->infile);
-        if (current->outfile)
-            printf("outfile = %s\n", current->outfile);
-        if (current->args && current->args[i])
-           printf("args = ");
-		   /*
-       while(current->args && current->args[i])
-       {
-            if (current->args[i][0] && current->args[i][0] == '\0')
-                printf("[empty]\n");
-            else
-                printf("%s ", current->args[i]);
-            i++;
-       }*/
-        current = current->next;
-        i = 0;
-    }
-    printf("\n-----------------------\n");
-    //printf("NULL\n");
-}
-
-void	move_heredoc(t_cmd *t_head)
-{
-	t_cmd *temp = t_head;
-	while (temp)
-	{
-		if (temp->heredoc)
-		{
-			t_cmd *temp2 = temp;
-			while (temp->next != NULL && temp->next->pipe != 1)
-				temp = temp->next;
-			if (temp != temp2)
-			{
-				temp->heredoc = temp2->heredoc;
-				temp->heredoc_delim = ft_strdup_double(temp2->heredoc_delim);
-				temp2->heredoc = 0;
-				if (temp2->heredoc_delim)
-					free_split(temp2->heredoc_delim);
-				temp2->heredoc_delim = NULL;
-			}
-		}
-		temp = temp->next;
-	}
-}
 
 int	init_execute(t_token *node, t_token *head, t_env **env, int *exit_status)
 {
@@ -174,7 +100,6 @@ int	init_execute(t_token *node, t_token *head, t_env **env, int *exit_status)
 
 	element = NULL;
 	t_head = init_cmds(node, *exit_status, *env);
-	print_cmd_list(t_head);
 	if (pre_struct_exit(t_head, exit_status, *env, head))
 		return (1);
 	do_struct(&element, t_head, exit_status);

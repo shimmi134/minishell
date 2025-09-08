@@ -194,6 +194,7 @@ int								copy_pwd_env_np(t_env *node, char *arg);
 int								correct_export(char *str);
 int								unset_loop(t_shell *elem, t_env *prev,
 									t_env **env, int i);
+void							init_next_pipe(int next_pipe[2]);
 void							free_split(char **sp);
 void							init_redir(t_cmd **cmd);
 void							change_outfile(t_cmd *tmp);

@@ -18,9 +18,7 @@ void	do_heredoc(t_cmd *t_head, t_env *env, int *exit_status, int *fd_val)
 	t_shell		*element;
 	int			hd_res;
 
-	printf("%i\n", t_head->heredoc_fd);
 	heredoc = init_heredoc_struct(t_head);
-	printf("%i\n", heredoc->heredoc_fd);
 	do_struct(&element, t_head, exit_status);
 	hd_res = init_heredoc(heredoc, env, element, fd_val);
 	*exit_status = hd_res;

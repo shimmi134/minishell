@@ -32,7 +32,7 @@ t_heredoc	*init_heredoc_struct(t_cmd *cmd)
 	{
 		heredoc->args = ft_strdup_double(cmd->args);
 		if (!heredoc->args)
-			printf("dup_double failed\n");
+			ft_putstr_fd("dup_double failed\n", 2);
 	}
 	else
 		heredoc->args = NULL;

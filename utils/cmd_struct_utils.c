@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:53:48 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/08 19:55:20 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/08 20:07:38 by shimi-be         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,6 @@ void	check_commands(t_cmd **cmds)
 {
 	t_cmd	*tmp;
 
-	if (!cmds || !*cmds)
-		return ;
 	tmp = *cmds;
 	while (tmp)
 	{
@@ -78,7 +76,8 @@ void	check_commands(t_cmd **cmds)
 			change_infile(tmp);
 			change_outfile(tmp);
 		}
-		if (tmp->next && tmp->heredoc && tmp->heredoc_delim && !tmp->next->heredoc_delim && !tmp->next->pipe)
+		if (tmp->next && tmp->heredoc && tmp->heredoc_delim
+			&& !tmp->next->heredoc_delim && !tmp->next->pipe)
 		{
 			tmp->next->heredoc_delim = tmp->heredoc_delim;
 			tmp->next->heredoc = 1;
@@ -112,6 +111,7 @@ t_cmd	*init_cmds(t_token *tokens, int exit_code, t_env *env)
 			shift_left(cmds->args);
 		}
 	}
-	check_commands(&head);
+	if (head)
+		check_commands(&head);
 	return (head);
 }
