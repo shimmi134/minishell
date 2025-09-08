@@ -93,6 +93,30 @@ void	do_commands(t_shell *elem, t_env **env, int fd_val)
 		close(old_stdin);
 }
 
+void	move_heredoc(t_cmd *t_head)
+{
+	t_cmd *temp = t_head;
+	while (temp)
+	{
+		if (temp->heredoc)
+		{
+			t_cmd *temp2 = temp;
+			while (temp->next != NULL && temp->next->pipe != 1)
+				temp = temp->next;
+			if (temp != temp2)
+			{
+				temp->heredoc = temp2->heredoc;
+				temp->heredoc_delim = ft_strdup_double(temp2->heredoc_delim);
+				temp2->heredoc = 0;
+				if (temp2->heredoc_delim)
+					free_split(temp2->heredoc_delim);
+				temp2->heredoc_delim = NULL;
+			}
+		}
+		temp = temp->next;
+	}
+}
+
 int	init_execute(t_token *node, t_token *head, t_env **env, int *exit_status)
 {
 	t_cmd	*t_head;

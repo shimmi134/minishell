@@ -79,7 +79,7 @@ int	check_files(t_shell **elem)
 
 int	early_break(t_shell *elem, t_env **env, int *fd_val)
 {
-	if (elem->command->heredoc)
+	if (elem->command->heredoc && elem->command->heredoc_delim)
 	{
 		heredoc_execute_loop(elem, env, fd_val);
 		return (1);
