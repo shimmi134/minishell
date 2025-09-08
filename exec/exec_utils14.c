@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils14.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shimi-be <shimi-be@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 15:43:04 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/09/08 15:43:06 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/09/08 19:19:09 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	check_files(t_shell **elem)
 
 int	early_break(t_shell *elem, t_env **env, int *fd_val)
 {
-	if (elem->command->heredoc)
+	if (elem->command->heredoc && elem->command->heredoc_delim)
 	{
 		heredoc_execute_loop(elem, env, fd_val);
 		return (1);

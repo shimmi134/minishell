@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:53:48 by joshapir          #+#    #+#             */
-/*   Updated: 2025/09/08 15:35:10 by shimi-be         ###   ########.fr       */
+/*   Updated: 2025/09/08 19:55:20 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,13 @@ void	check_commands(t_cmd **cmds)
 			tmp->cmd = NULL;
 			change_infile(tmp);
 			change_outfile(tmp);
+		}
+		if (tmp->next && tmp->heredoc && tmp->heredoc_delim && !tmp->next->heredoc_delim && !tmp->next->pipe)
+		{
+			tmp->next->heredoc_delim = tmp->heredoc_delim;
+			tmp->next->heredoc = 1;
+			tmp->next->heredoc_quoted = tmp->heredoc_quoted;
+			tmp->heredoc_delim = NULL;
 		}
 		tmp = tmp->next;
 	}

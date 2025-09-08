@@ -6,7 +6,7 @@
 /*   By: joshapir <joshapir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 18:21:23 by shimi-be          #+#    #+#             */
-/*   Updated: 2025/09/03 20:30:34 by joshapir         ###   ########.fr       */
+/*   Updated: 2025/09/08 19:39:40 by joshapir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	execute_pipe_command(int *fd_val, t_env *env, t_shell *element)
 	int		status;
 
 	status = 0;
-	if (*fd_val != -1)
+	if (*fd_val != -1 && element->command->cmd)
 	{
 		dup2(*fd_val, STDIN_FILENO);
 		close(*fd_val);
